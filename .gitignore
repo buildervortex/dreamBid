@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.log
+*.tmp
+Thumbs.db
+node_modules/
+wwwroot/
