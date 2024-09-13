@@ -68,7 +68,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(                    // The key used to validate the token's signature. This key is usually stored securely 
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
         )
-
     };
 });
 
@@ -86,4 +85,4 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
-app.Run(); app.UseHttpsRedirection();
+app.Run();
