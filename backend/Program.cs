@@ -1,9 +1,13 @@
 using DreamBid.Data;
+using DreamBid.Interfaces;
 using DreamBid.Models;
+using DreamBid.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,40 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+
+// Config the swagger
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// Override the default System.Text.Json formatter
+builder.Services.AddControllers().AddNewtonsoftJson(options =>      // This method adds Newtonsoft.Json as the JSON serializer/deserializer instead of the default System.Text.Json. Newtonsoft.Json is a widely-used JSON library in .NET applications that provides more flexibility, especially for complex serialization scenarios, like handling circular references or custom data formatting.
+                                                                    // customize how serialization and deserialization are handled.
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore         // This setting controls how reference loops in objects are handled during serialization.A reference loop occurs when two objects reference each other. Without proper handling, this could lead to an infinite loop while serializing, causing the program to crash. By setting ReferenceLoopHandling.Ignore, Newtonsoft.Json will ignore the reference loop and stop the recursive serialization, which prevents potential crashes and infinite loops.
+);
 
 /* Configure all the database connectivity */
 // read environment variables
@@ -70,6 +108,10 @@ builder.Services.AddAuthentication(options =>
         )
     };
 });
+
+// Set the dependency injections for Services
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 var app = builder.Build();
 
