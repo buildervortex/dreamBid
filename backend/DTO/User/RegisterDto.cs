@@ -13,5 +13,9 @@ namespace DreamBid.Dtos.Account
 
         [Required]
         public string? Password { get; set; }
+        [Required]
+        public DateTime DOB { get; set; }
+        [Required]
+        public string? FullName { get; set; }
     }
 }

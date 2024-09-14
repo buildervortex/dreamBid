@@ -34,7 +34,9 @@ namespace DreamBid.Controllers
                 var applicationUser = new ApplicationUser           // UserName and Email are set from the data received in the registerDto object.
                 {
                     UserName = registerDto.Username,
-                    Email = registerDto.Email
+                    Email = registerDto.Email,
+                    DOB = registerDto.DOB,
+                    FullName = registerDto.FullName
                 };
 
                 var createdUser = await _userManager.CreateAsync(applicationUser, registerDto.Password);        // attempts to create a new user in the system with the provided applicationUser object and registerDto.Password (hashed and stored).
