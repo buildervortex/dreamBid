@@ -1,3 +1,4 @@
+using DreamBid.Middlewares;
 using DreamBid.Startups;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,9 @@ builder.Services.AddControllers();
 
 
 var app = builder.Build();
+
+// add the middlwares
+// app.UseMiddleware<ErrorHandlingMiddlware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
