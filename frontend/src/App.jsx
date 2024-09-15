@@ -7,6 +7,7 @@ import { ThemeProvider } from '@emotion/react';
 import Layout from './layout/Layout';
 import { useState } from 'react';
 import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
+import HomePage from './pages/home';
 
 
 const navLinks = [
@@ -27,6 +28,8 @@ function App() {
         <Layout onThemeChange={handleThemeChange} navLinks={navLinks}>
           <CssBaseLine />
           <Routes>
+
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Routes>

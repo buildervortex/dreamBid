@@ -1,13 +1,16 @@
 import { DarkMode, Home, LightMode } from "@mui/icons-material";
 import { AppBar, Box, Button, IconButton, ToggleButton, ToggleButtonGroup, Toolbar, Typography } from "@mui/material";
 import Themes from "../utils/theme";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = ({ onThemeChange,navLinks }) => {
+    const navigate = useNavigate();
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
+                        onClick={()=>navigate("/")}
                         size="large"
                         edge="start"
                         color="inherit"
@@ -17,10 +20,10 @@ const NavBar = ({ onThemeChange,navLinks }) => {
                         <Home />
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        News
+                        DreamBid
                     </Typography>
-                    <Button color="inherit">Login</Button>
-                    <ToggleButtonGroup exclusive onChange={onThemeChange}>
+                    {navLinks.map(navLink=><Button color="inherit" key={navLink.name} sx={{textTransform:"capitalize"}} onClick={()=>navigate(navLink.path)}>{navLink.name}</Button>)}
+                    <ToggleButtonGroup exclusive onChange={onThemeChange} sx={{ml:2}}>
                         <ToggleButton value={Themes[0].name}>
                             <LightMode></LightMode>
                         </ToggleButton>
