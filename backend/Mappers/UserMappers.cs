@@ -10,7 +10,8 @@ namespace DreamBid.Mappers
             return new UserDto
             {
                 UserName = userModel.UserName,
-                Email = userModel.Email
+                Email = userModel.Email,
+                Id = userModel.Id
             };
         }
 

@@ -1,6 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
-using System.Security.Claims;
 using DreamBid.Dtos.Account;
 using DreamBid.Dtos.Error;
 using DreamBid.Extensions;
@@ -35,10 +32,9 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
             var UserRole = "User";
-            if (!ModelState.IsValid)                            //  This checks if the data received in the registerDto object is valid according to the validation rules defined in the model (such as required fields or data formats).
-            {
-                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
-            }
+            //  This checks if the data received in the registerDto object is valid according to the validation rules defined in the model (such as required fields or data formats).
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+
             var user = registerDto.ToUserFromRegisterDto();
 
             var createdUserResult = await _userManager.CreateAsync(user, registerDto.Password);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
@@ -71,16 +67,13 @@ namespace DreamBid.Controllers
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
             if (!result.Succeeded)
                 return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
 
             Response.Headers["Authorization"] = _tokenService.CreateToken(user, "User");
 
-            return Ok(new UserDto
-            {
-                UserName = user.UserName,
-                Email = user.Email
-            });
+            return Ok(user.ToUserDto());
         }
 
         [Authorize]
