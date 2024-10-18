@@ -22,10 +22,11 @@ namespace DreamBid.Service.Configuration
                 options.TokenValidationParameters = new TokenValidationParameters   // This section sets the rules for validating JWT tokens.
                 {
                     ValidateIssuer = true,                                          // Ensures the token has been issued by a trusted issuer. "true" is (Recommended for production; checks the iss claim in the token)
-                    ValidIssuer = configuration["JWT:Issure"],              // The issuer value that you expect. This should match the iss claim in the token. can put Any valid string representing the trusted issuer, 
                     ValidateAudience = true,                                        // Ensures that the token is intended for the correct audience (i.e., the resource that the token is intended for). "true" is (Recommended in most cases; checks the aud claim in the token)
-                    ValidAudience = configuration["JWT:Audience"],          // The expected audience for your tokens. This should match the aud claim in the token.Any string that represents your API or application.
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,                                // Ensures the token's signature is valid by checking it against the key used to sign the token.
+                    ValidIssuer = configuration["JWT:Issure"],              // The issuer value that you expect. This should match the iss claim in the token. can put Any valid string representing the trusted issuer, 
+                    ValidAudience = configuration["JWT:Audience"],          // The expected audience for your tokens. This should match the aud claim in the token.Any string that represents your API or application.
                     IssuerSigningKey = new SymmetricSecurityKey(                    // The key used to validate the token's signature. This key is usually stored securely 
                         System.Text.Encoding.UTF8.GetBytes(configuration["JWT:SigninKey"])
                     )

@@ -24,7 +24,7 @@ namespace DreamBid.Startups.Configuration
                 options.Password.RequireNonAlphanumeric = false;                    // This configuration specifies whether passwords must contain at least one non-alphanumeric character (e.g., special characters like !, @, #). Setting this to false means that while passwords 
                 options.Password.RequiredLength = 6;                                // This sets the minimum length for passwords.
                                                                                     // configure the login configurations
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);   // the login in timeout to log out
+                // options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);   // the login in timeout to log out
                 options.Lockout.MaxFailedAccessAttempts = 5;                        // maximum failed attepmts
                                                                                     // set the user requirements
                 options.User.RequireUniqueEmail = true;                             // set the 

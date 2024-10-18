@@ -20,12 +20,13 @@ namespace DreamBid.Service
         }
 
 
-        public string CreateToken(User user)
+        public string CreateToken(User user, String role)
         {
             var claims = new List<Claim>{               // This defines a list of claims, which represent pieces of information about the user that will be included in the token. Claims are key-value pairs embedded in the token and are accessible after the token is decoded. These claims allow the system to know the user's identity (e.g., email, username).
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
                 new Claim(JwtRegisteredClaimNames.GivenName,user.UserName),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString())
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                new Claim(ClaimTypes.Role,role)
             };
 
             //  This defines the algorithm and key that will be used to sign the JWT. Specifies that the HMAC-SHA512 algorithm will be used for signing the token. This ensures that the token is securely signed and tamper-proof.

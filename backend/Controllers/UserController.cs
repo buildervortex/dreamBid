@@ -1,26 +1,33 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
+using System.Security.Claims;
 using DreamBid.Dtos.Account;
 using DreamBid.Dtos.Error;
+using DreamBid.Extensions;
 using DreamBid.Interfaces;
-using DreamBid.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DreamBid.Controllers
 {
-    [Route("api/v1/account")]
+    [Route("api/v1/accounts")]
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<DreamBid.Models.User> _userManager;
+        private readonly SignInManager<DreamBid.Models.User> _signInManager;
         private readonly ITokenService _tokenService;
 
-        public AccountController(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager)
+        private readonly ILogger<AccountController> _logger;
+
+        public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger)
         {
             this._userManager = userManager;
             this._tokenService = tokenService;
             this._signInManager = signInManager;
+            this._logger = logger;
         }
 
         [HttpPost("register")]
@@ -32,7 +39,7 @@ namespace DreamBid.Controllers
                 {
                     return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
                 }
-                var User = new User           // UserName and Email are set from the data received in the registerDto object.
+                var user = new DreamBid.Models.User           // UserName and Email are set from the data received in the registerDto object.
                 {
                     UserName = registerDto.Username,
                     Email = registerDto.Email,
@@ -40,18 +47,18 @@ namespace DreamBid.Controllers
                     FullName = registerDto.FullName
                 };
 
-                var createdUserResult = await _userManager.CreateAsync(User, registerDto.Password);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
+                var createdUserResult = await _userManager.CreateAsync(user, registerDto.Password);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
 
                 if (createdUserResult.Succeeded)                          // createdUserResult.Succeeded is a boolean indicating if the creation was successful.
                 {
-                    var roleResult = await _userManager.AddToRolesAsync(User, new string[] { "User" });  // If the user creation succeeds, the method assigns the user to a role (in this case, the "User" role). Asynchronously adds the user to one or more roles. In this case, the user is assigned the "User" role.new string[] { "User" }: This is an array of roles that the user will be added to. You can specify more roles in this array if needed.
+                    var roleResult = await _userManager.AddToRolesAsync(user, new string[] { "User" });  // If the user creation succeeds, the method assigns the user to a role (in this case, the "User" role). Asynchronously adds the user to one or more roles. In this case, the user is assigned the "User" role.new string[] { "User" }: This is an array of roles that the user will be added to. You can specify more roles in this array if needed.
                     if (roleResult.Succeeded)                       // This checks if assigning the role to the user was successful.
                     {
+                        Response.Headers["Authorization"] = _tokenService.CreateToken(user, "User");
                         return Ok(new UserDto                    //  If the user was successfully created and assigned the role, the method returns an HTTP 200 Ok response.
                         {
-                            UserName = User.UserName,
-                            Email = User.Email,
-                            Token = _tokenService.CreateToken(User)
+                            UserName = user.UserName,
+                            Email = user.Email,
                         });
                     }
                     else
@@ -86,11 +93,48 @@ namespace DreamBid.Controllers
             if (!result.Succeeded)
                 return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
 
+            Response.Headers["Authorization"] = _tokenService.CreateToken(user, "User");
+
             return Ok(new UserDto
             {
                 UserName = user.UserName,
-                Email = user.Email,
-                Token = _tokenService.CreateToken(user)
+                Email = user.Email
+            });
+        }
+
+        [Authorize]
+        [HttpDelete("me")]
+        public async Task<IActionResult> DeleteUser()
+        {
+            var userId = User.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+
+            await _userManager.DeleteAsync(user);
+
+            return Ok(new UserDto
+            {
+                UserName = user.UserName,
+                Email = user.Email
+            });
+
+        }
+
+        [HttpGet("me")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetUser()
+        {
+            var userId = User.GetUserId();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+
+            return Ok(new UserDto
+            {
+                UserName = user.UserName,
+                Email = user.Email
             });
         }
     }
