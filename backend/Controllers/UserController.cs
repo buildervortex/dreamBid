@@ -5,6 +5,7 @@ using DreamBid.Dtos.Account;
 using DreamBid.Dtos.Error;
 using DreamBid.Extensions;
 using DreamBid.Interfaces;
+using DreamBid.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,48 +34,28 @@ namespace DreamBid.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            try
+            var UserRole = "User";
+            if (!ModelState.IsValid)                            //  This checks if the data received in the registerDto object is valid according to the validation rules defined in the model (such as required fields or data formats).
             {
-                if (!ModelState.IsValid)                            //  This checks if the data received in the registerDto object is valid according to the validation rules defined in the model (such as required fields or data formats).
-                {
-                    return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
-                }
-                var user = new DreamBid.Models.User           // UserName and Email are set from the data received in the registerDto object.
-                {
-                    UserName = registerDto.Username,
-                    Email = registerDto.Email,
-                    DOB = registerDto.DOB,
-                    FullName = registerDto.FullName
-                };
-
-                var createdUserResult = await _userManager.CreateAsync(user, registerDto.Password);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
-
-                if (createdUserResult.Succeeded)                          // createdUserResult.Succeeded is a boolean indicating if the creation was successful.
-                {
-                    var roleResult = await _userManager.AddToRolesAsync(user, new string[] { "User" });  // If the user creation succeeds, the method assigns the user to a role (in this case, the "User" role). Asynchronously adds the user to one or more roles. In this case, the user is assigned the "User" role.new string[] { "User" }: This is an array of roles that the user will be added to. You can specify more roles in this array if needed.
-                    if (roleResult.Succeeded)                       // This checks if assigning the role to the user was successful.
-                    {
-                        Response.Headers["Authorization"] = _tokenService.CreateToken(user, "User");
-                        return Ok(new UserDto                    //  If the user was successfully created and assigned the role, the method returns an HTTP 200 Ok response.
-                        {
-                            UserName = user.UserName,
-                            Email = user.Email,
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(500, ErrorMessage.ErrorMessageFromIdentityResult(roleResult));
-                    }
-                }
-                else
-                {
-                    return StatusCode(500, ErrorMessage.ErrorMessageFromIdentityResult(createdUserResult));
-                }
+                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
             }
-            catch (Exception e)
+            var user = registerDto.ToUserFromRegisterDto();
+
+            var createdUserResult = await _userManager.CreateAsync(user, registerDto.Password);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
+
+            if (!createdUserResult.Succeeded) return StatusCode(500, ErrorMessage.ErrorMessageFromIdentityResult(createdUserResult));
+
+            var roleResult = await _userManager.AddToRolesAsync(user, new string[] { UserRole });
+
+            if (!roleResult.Succeeded)
             {
-                return StatusCode(500, ErrorMessage.ErrorMessageFromString("An unexpected error occoured"));
+                await _userManager.DeleteAsync(user);
+                return StatusCode(500, ErrorMessage.ErrorMessageFromIdentityResult(roleResult));
             }
+
+            Response.Headers["Authorization"] = _tokenService.CreateToken(user, UserRole);
+
+            return Ok(user.ToUserDto());
         }
 
         [HttpPost("login")]
@@ -113,11 +94,7 @@ namespace DreamBid.Controllers
 
             await _userManager.DeleteAsync(user);
 
-            return Ok(new UserDto
-            {
-                UserName = user.UserName,
-                Email = user.Email
-            });
+            return Ok(user.ToUserDto());
 
         }
 
@@ -131,11 +108,7 @@ namespace DreamBid.Controllers
 
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
-            return Ok(new UserDto
-            {
-                UserName = user.UserName,
-                Email = user.Email
-            });
+            return Ok(user.ToUserDto());
         }
     }
 }
