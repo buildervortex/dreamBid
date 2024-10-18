@@ -22,7 +22,7 @@ namespace backend.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("DreamBid.Models.ApplicationUser", b =>
+            modelBuilder.Entity("DreamBid.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -121,21 +121,15 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d7a05829-bc00-4c68-87a8-1f75e3ac3deb",
+                            Id = "aaf8bc9f-ce51-4435-a041-0eaa2fd43344",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "986344ac-c90a-46f9-b4f0-a531a6790b9e",
+                            Id = "4358de70-d52e-4a55-a8d4-922b901a1c3f",
                             Name = "User",
                             NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "22809957-5546-4d8f-befd-3a92dec7b173",
-                            Name = "Seller",
-                            NormalizedName = "SELLER"
                         });
                 });
 
@@ -256,7 +250,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("DreamBid.Models.ApplicationUser", null)
+                    b.HasOne("DreamBid.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -265,7 +259,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("DreamBid.Models.ApplicationUser", null)
+                    b.HasOne("DreamBid.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -280,7 +274,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DreamBid.Models.ApplicationUser", null)
+                    b.HasOne("DreamBid.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -289,7 +283,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("DreamBid.Models.ApplicationUser", null)
+                    b.HasOne("DreamBid.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

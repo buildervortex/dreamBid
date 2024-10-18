@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DreamBid.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>          // Here, ApplicationUser is a custom class derived from IdentityUser to include extra user properties if needed.
+    public class ApplicationDbContext : IdentityDbContext<User>          // Here, ApplicationUser is a custom class derived from IdentityUser to include extra user properties if needed.
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -23,10 +23,6 @@ namespace DreamBid.Data
                 new IdentityRole{
                     Name = "User",
                     NormalizedName = "USER"
-                },
-                new IdentityRole{
-                    Name = "Seller",
-                    NormalizedName = "SELLER"
                 }
             };
             builder.Entity<IdentityRole>().HasData(roles);      // Update the IdentityRole table with given roles

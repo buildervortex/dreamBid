@@ -12,11 +12,11 @@ namespace DreamBid.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly ITokenService _tokenService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, ITokenService tokenService, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<User> userManager, ITokenService tokenService, SignInManager<User> signInManager)
         {
             this._userManager = userManager;
             this._tokenService = tokenService;
@@ -32,7 +32,7 @@ namespace DreamBid.Controllers
                 {
                     return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
                 }
-                var applicationUser = new ApplicationUser           // UserName and Email are set from the data received in the registerDto object.
+                var User = new User           // UserName and Email are set from the data received in the registerDto object.
                 {
                     UserName = registerDto.Username,
                     Email = registerDto.Email,
@@ -40,18 +40,18 @@ namespace DreamBid.Controllers
                     FullName = registerDto.FullName
                 };
 
-                var createdUserResult = await _userManager.CreateAsync(applicationUser, registerDto.Password);        // attempts to create a new user in the system with the provided applicationUser object and registerDto.Password (hashed and stored).
+                var createdUserResult = await _userManager.CreateAsync(User, registerDto.Password);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
 
                 if (createdUserResult.Succeeded)                          // createdUserResult.Succeeded is a boolean indicating if the creation was successful.
                 {
-                    var roleResult = await _userManager.AddToRolesAsync(applicationUser, new string[] { "User" });  // If the user creation succeeds, the method assigns the user to a role (in this case, the "User" role). Asynchronously adds the user to one or more roles. In this case, the user is assigned the "User" role.new string[] { "User" }: This is an array of roles that the user will be added to. You can specify more roles in this array if needed.
+                    var roleResult = await _userManager.AddToRolesAsync(User, new string[] { "User" });  // If the user creation succeeds, the method assigns the user to a role (in this case, the "User" role). Asynchronously adds the user to one or more roles. In this case, the user is assigned the "User" role.new string[] { "User" }: This is an array of roles that the user will be added to. You can specify more roles in this array if needed.
                     if (roleResult.Succeeded)                       // This checks if assigning the role to the user was successful.
                     {
                         return Ok(new UserDto                    //  If the user was successfully created and assigned the role, the method returns an HTTP 200 Ok response.
                         {
-                            UserName = applicationUser.UserName,
-                            Email = applicationUser.Email,
-                            Token = _tokenService.CreateToken(applicationUser)
+                            UserName = User.UserName,
+                            Email = User.Email,
+                            Token = _tokenService.CreateToken(User)
                         });
                     }
                     else

@@ -4,6 +4,6 @@ namespace DreamBid.Interfaces
 {
     public interface ITokenService
     {
-        string CreateToken(ApplicationUser user);
+        string CreateToken(User user);
     }
 }

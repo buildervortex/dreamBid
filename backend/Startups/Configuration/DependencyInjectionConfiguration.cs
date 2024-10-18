@@ -14,7 +14,7 @@ namespace DreamBid.Startups.Configuration
             services.AddScoped<ITokenService, TokenService>();
 
             // This line registers the authentication services with the ASP.NET Core Dependency Injection (DI) system. It specifies the configuration for the authentication schemes used in the application.
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            services.AddIdentity<User, IdentityRole>(options =>
             {
                 // configure the identity service.
                 // configure the password strength
