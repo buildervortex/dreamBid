@@ -2,7 +2,7 @@ using DreamBid.Interfaces;
 
 namespace DreamBid.Service
 {
-    public class FileManagerService:IFileManagerService
+    public class FileManagerService : IFileManagerService
     {
         private string _baseDirectory;
         public FileManagerService(string baseDriectory)
@@ -62,6 +62,13 @@ namespace DreamBid.Service
                 rewriteFileName = $"{directoryPath}/{fileNameWirhoutExtension}{sufix++}{fileExtension}";
             }
             return rewriteFileName;
+        }
+
+        public async Task<Boolean> IsFileExists(string path)
+        {
+            var FullPath = Path.Combine(this._baseDirectory, path);
+
+            return File.Exists(FullPath);
         }
     }
 }

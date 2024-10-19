@@ -4,6 +4,7 @@ using DreamBid.Dtos.User;
 using DreamBid.Extensions;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
+using HeyRed.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -134,6 +135,21 @@ namespace DreamBid.Controllers
                 return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to upate the user"));
 
             return Ok(user.ToUserDto());
+        }
+
+        [HttpGet("me/profilePicture")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetProfilePicture()
+        {
+            var userId = User.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+
+            var profilePicturePath = user.ProfilePicuturePath;
+            if (profilePicturePath == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
+
+            var fileBytes = await this._fileManagerService.GetFile(profilePicturePath);
+            return File(fileBytes, MimeTypesMap.GetMimeType(profilePicturePath));
         }
     }
 }
