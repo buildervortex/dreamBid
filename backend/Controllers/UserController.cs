@@ -91,6 +91,8 @@ namespace DreamBid.Controllers
 
             await _userManager.DeleteAsync(user);
 
+            this.DeleteUserData(user);
+
             return Ok(user.ToUserDto());
 
         }
@@ -110,7 +112,7 @@ namespace DreamBid.Controllers
 
         [HttpPost("me")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDto updateUserDto)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
@@ -119,16 +121,6 @@ namespace DreamBid.Controllers
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
-
-
-            if (updateUserDto.ProfilePicture != null && updateUserDto.ProfilePicture.Length > 0)
-            {
-                this._fileManagerService.DeleteFiles(user.ProfilePicuturePath);
-                var fileName = $"{user.Id}{Path.GetExtension(updateUserDto.ProfilePicture.FileName)}";
-                var filePath = Path.Combine(this._profilePicturePath, fileName);
-                string storedFilePath = await this._fileManagerService.StoreFile(updateUserDto.ProfilePicture, filePath, true);
-                user.ProfilePicuturePath = storedFilePath;
-            }
 
             var result = await _userManager.UpdateAsync(updateUserDto.ToUserFromUpdateUserDto(user));
 
@@ -152,8 +144,38 @@ namespace DreamBid.Controllers
             var fileBytes = await this._fileManagerService.GetFile(profilePicturePath);
 
             if (fileBytes == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
-            
+
             return File(fileBytes, MimeTypesMap.GetMimeType(profilePicturePath));
+        }
+
+        [HttpPost("me/profilePicture")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> UpdateProfilePicture([FromForm] IFormFile profilePicture)
+        {
+            var userId = User.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+
+            if (profilePicture != null && profilePicture.Length > 0)
+            {
+                this._fileManagerService.DeleteFiles(user.ProfilePicuturePath);
+                var fileName = $"{user.Id}{Path.GetExtension(profilePicture.FileName)}";
+                var filePath = Path.Combine(this._profilePicturePath, fileName);
+                string storedFilePath = await this._fileManagerService.StoreFile(profilePicture, filePath, true);
+                user.ProfilePicuturePath = storedFilePath;
+            }
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to upate the user"));
+
+            return Ok();
+        }
+
+        private void DeleteUserData(DreamBid.Models.User user)
+        {
+            // delete profile picture
+            this._fileManagerService.DeleteFile(user.ProfilePicuturePath);
         }
     }
 }

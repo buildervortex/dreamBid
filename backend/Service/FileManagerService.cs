@@ -88,6 +88,15 @@ namespace DreamBid.Service
         public void DeleteFile(string? path)
         {
             if (path == null) return;
+            var fullPath = Path.Combine(this._baseDirectory, path);
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+        }
+        private void DeleteFileFullPath(string? path)
+        {
+            if (path == null) return;
             if (File.Exists(path))
             {
                 File.Delete(path);
@@ -103,7 +112,7 @@ namespace DreamBid.Service
             if (files == null) return;
             foreach (string fileName in files)
             {
-                this.DeleteFile(fileName);
+                this.DeleteFileFullPath(fileName);
             }
         }
 

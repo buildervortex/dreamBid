@@ -14,6 +14,5 @@ namespace DreamBid.Dtos.User
         [StringLength(255, MinimumLength = 4)]
         public string? FullName { get; set; }
 
-        public IFormFile? ProfilePicture { get; set; }
     }
 }
