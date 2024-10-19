@@ -60,4 +60,29 @@ export default class AccountViewModel{
 
     }
 
+    static async updateProfilePicture(file){
+      
+        const response = await AccountService.updateProfilePicture(file);
+
+        if ("error" in response){
+            return ErrorMessage.errorMessageFromString(response.error);
+        }
+
+        return response;
+
+    }
+
+    static async deleteProfilePicture(){
+        const response = await AccountService.deleteProfilePicture();
+    
+        if ("error" in response){
+            return ErrorMessage.errorMessageFromString(response.error);
+        }
+
+        return response;
+
+    }
+
+
+
 }

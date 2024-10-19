@@ -7,6 +7,9 @@ export default class AccountMapper {
         accountDto.email = data.email;
         accountDto.id = data.id;
         accountDto.userName = data.userName;
+        accountDto.fullName = data.fullName;
+        accountDto.DOB = data.DOB;
+        accountDto.bio = data.bio;
 
         return accountDto;
     }

@@ -24,8 +24,21 @@ export default class AccountService{
     }
 
     static async getProfilePicture(){
-      const response= await API.get("/account/me/profilePicture");
+      const response = await API.get("/account/me/profilePicture");
       return response.data;
 
     }
+
+    static async updateProfilePicture(){
+      const response = await API.post("/account/me/profilePicture");
+      return response;
+
+    }
+
+    static async deleteProfilePicture(){
+      const response = await API.delete("/account/me/profilePicture");
+      return response;
+    }
+
+
 }
