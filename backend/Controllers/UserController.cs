@@ -41,7 +41,7 @@ namespace DreamBid.Controllers
 
             var user = registerDto.ToUserFromRegisterDto();
 
-            var createdUserResult = await _userManager.CreateAsync(user, registerDto.Password);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
+            var createdUserResult = await _userManager.CreateAsync(user, registerDto.Password!);        // attempts to create a new user in the system with the provided User object and registerDto.Password (hashed and stored).
 
             if (!createdUserResult.Succeeded) return StatusCode(500, ErrorMessage.ErrorMessageFromIdentityResult(createdUserResult));
 
@@ -123,9 +123,10 @@ namespace DreamBid.Controllers
 
             if (updateUserDto.ProfilePicture != null && updateUserDto.ProfilePicture.Length > 0)
             {
+                this._fileManagerService.DeleteFiles(user.ProfilePicuturePath);
                 var fileName = $"{user.Id}{Path.GetExtension(updateUserDto.ProfilePicture.FileName)}";
                 var filePath = Path.Combine(this._profilePicturePath, fileName);
-                string storedFilePath = await this._fileManagerService.StoreFile(updateUserDto.ProfilePicture, filePath);
+                string storedFilePath = await this._fileManagerService.StoreFile(updateUserDto.ProfilePicture, filePath, true);
                 user.ProfilePicuturePath = storedFilePath;
             }
 
@@ -149,6 +150,9 @@ namespace DreamBid.Controllers
             if (profilePicturePath == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
 
             var fileBytes = await this._fileManagerService.GetFile(profilePicturePath);
+
+            if (fileBytes == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
+            
             return File(fileBytes, MimeTypesMap.GetMimeType(profilePicturePath));
         }
     }
