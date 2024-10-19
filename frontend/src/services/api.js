@@ -3,6 +3,9 @@ import axios from "axios";
 const API = axios.create({
     baseURL: "http://localhost:5189/api/v1",
     timeout: 10000,
+    headers: {
+        "Content-Type": "application/json"
+    },
     validateStatus: function () {
         return true;
     }
@@ -10,7 +13,7 @@ const API = axios.create({
 
 API.interceptors.response.use(
     response => {
-        const token = response.headers["Authorization"];
+        const token = response.headers["x-auth-token"];
         if (token) {
             localStorage.setItem("jwtToken", token);
         }

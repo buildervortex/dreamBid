@@ -49,7 +49,7 @@ namespace DreamBid.Controllers
                 return StatusCode(500, ErrorMessage.ErrorMessageFromIdentityResult(roleResult));
             }
 
-            Response.Headers["Authorization"] = _tokenService.CreateToken(user, UserRole);
+            Response.Headers.Append("x-auth-token",_tokenService.CreateToken(user, UserRole));
 
             return Ok(user.ToUserDto());
         }
@@ -71,7 +71,7 @@ namespace DreamBid.Controllers
             if (!result.Succeeded)
                 return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
 
-            Response.Headers["Authorization"] = _tokenService.CreateToken(user, "User");
+            Response.Headers.Append("x-auth-token",_tokenService.CreateToken(user, "User"));
 
             return Ok(user.ToUserDto());
         }
