@@ -17,5 +17,15 @@ export default class AccountService{
 
      }
  
-   
+    static async updateAccount(updateAccountDto){
+      const response = await API.post("/account/me",updateAccountDto);
+      return response.data;
+
+    }
+
+    static async getProfilePicture(){
+      const response= await API.get("/account/me/profilePicture");
+      return response.data;
+
+    }
 }
