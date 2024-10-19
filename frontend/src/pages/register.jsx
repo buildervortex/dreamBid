@@ -6,9 +6,9 @@ const RegisterPage = () => {
     const registerAccountDto = new RegisterAccountDto();
     registerAccountDto.fullName = "example full name";
     registerAccountDto.DOB = new Date("2004-8-15");
-    registerAccountDto.email = "exampleemail15l@example.com";
+    registerAccountDto.email = "exampleemail16l@example.com";
     registerAccountDto.password = "2304asdfASDFA@$12541";
-    registerAccountDto.username = "exampleUserName15";
+    registerAccountDto.username = "exampleUserName16";
 
     const response = await AuthViewModel.registerAccount(registerAccountDto);
     console.log(response)
