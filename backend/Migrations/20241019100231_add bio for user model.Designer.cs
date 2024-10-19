@@ -4,6 +4,7 @@ using DreamBid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241019100231_add bio for user model")]
+    partial class addbioforusermodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,9 +77,6 @@ namespace backend.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("ProfilePicuturePath")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -127,13 +127,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "40d50bf5-e95e-4509-8820-fa17dddf67b3",
+                            Id = "4fe0fe44-9844-465c-b2fa-e92b0a1f0d65",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cd9039f0-8fd3-4e7e-9aa0-f523c7f7046f",
+                            Id = "3429de83-e3f1-4b6a-9f6e-25234bccfd71",
                             Name = "User",
                             NormalizedName = "USER"
                         });

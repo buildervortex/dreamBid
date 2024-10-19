@@ -10,7 +10,7 @@ namespace DreamBid.Startups
             services.ConfigureSwagger();
             services.ConfigureJsonOptions();
             services.ConfigureDatabase(configuration);
-            services.ConfigureDependencies();
+            services.ConfigureDependencies(configuration);
             services.ConfigureAuthentication(configuration);
         }
     }

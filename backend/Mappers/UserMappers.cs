@@ -1,4 +1,5 @@
 using DreamBid.Dtos.Account;
+using DreamBid.Dtos.User;
 using DreamBid.Models;
 
 namespace DreamBid.Mappers
@@ -11,7 +12,10 @@ namespace DreamBid.Mappers
             {
                 UserName = userModel.UserName,
                 Email = userModel.Email,
-                Id = userModel.Id
+                Id = userModel.Id,
+                Bio = userModel.Bio,
+                FullName = userModel.FullName,
+                DOB = userModel.DOB
             };
         }
 
@@ -24,6 +28,17 @@ namespace DreamBid.Mappers
                 DOB = registerDto.DOB,
                 FullName = registerDto.FullName
             };
+        }
+
+        public static User ToUserFromUpdateUserDto(this UpdateUserDto updateUserDto, User? existingUser)
+        {
+            var user = existingUser ?? new User();
+
+            user.Bio = updateUserDto.Bio;
+            user.DOB = updateUserDto.DOB ?? user.DOB;
+            user.FullName = updateUserDto.FullName ?? user.FullName;
+
+            return user;
         }
 
     }
