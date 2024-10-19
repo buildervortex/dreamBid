@@ -1,5 +1,6 @@
 using DreamBid.Dtos.Account;
 using DreamBid.Dtos.Error;
+using DreamBid.Dtos.User;
 using DreamBid.Extensions;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
@@ -17,15 +18,17 @@ namespace DreamBid.Controllers
         private readonly UserManager<DreamBid.Models.User> _userManager;
         private readonly SignInManager<DreamBid.Models.User> _signInManager;
         private readonly ITokenService _tokenService;
-
+        private readonly IFileManagerService _fileManagerService;
         private readonly ILogger<AccountController> _logger;
+        private readonly string _profilePicturePath = "users/profilePictures/";
 
-        public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger, IFileManagerService fileManagerService)
         {
             this._userManager = userManager;
             this._tokenService = tokenService;
             this._signInManager = signInManager;
             this._logger = logger;
+            this._fileManagerService = fileManagerService;
         }
 
         [HttpPost("register")]
@@ -49,13 +52,13 @@ namespace DreamBid.Controllers
                 return StatusCode(500, ErrorMessage.ErrorMessageFromIdentityResult(roleResult));
             }
 
-            Response.Headers.Append("x-auth-token",_tokenService.CreateToken(user, UserRole));
+            Response.Headers.Append("x-auth-token", _tokenService.CreateToken(user, UserRole));
 
             return Ok(user.ToUserDto());
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
@@ -71,13 +74,13 @@ namespace DreamBid.Controllers
             if (!result.Succeeded)
                 return Unauthorized(ErrorMessage.ErrorMessageFromString("Invalid Username or Password"));
 
-            Response.Headers.Append("x-auth-token",_tokenService.CreateToken(user, "User"));
+            Response.Headers.Append("x-auth-token", _tokenService.CreateToken(user, "User"));
 
             return Ok(user.ToUserDto());
         }
 
-        [Authorize]
         [HttpDelete("me")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser()
         {
             var userId = User.GetUserId();
@@ -100,6 +103,35 @@ namespace DreamBid.Controllers
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+
+            return Ok(user.ToUserDto());
+        }
+
+        [HttpPost("me")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDto updateUserDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+
+            var userId = User.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+
+
+            if (updateUserDto.ProfilePicture != null && updateUserDto.ProfilePicture.Length > 0)
+            {
+                var fileName = $"{user.Id}{Path.GetExtension(updateUserDto.ProfilePicture.FileName)}";
+                var filePath = Path.Combine(this._profilePicturePath, fileName);
+                string storedFilePath = await this._fileManagerService.StoreFile(updateUserDto.ProfilePicture, filePath);
+                user.ProfilePicuturePath = storedFilePath;
+            }
+
+            var result = await _userManager.UpdateAsync(updateUserDto.ToUserFromUpdateUserDto(user));
+
+            if (!result.Succeeded)
+                return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to upate the user"));
 
             return Ok(user.ToUserDto());
         }

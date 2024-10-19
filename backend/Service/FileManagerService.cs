@@ -1,6 +1,8 @@
+using DreamBid.Interfaces;
+
 namespace DreamBid.Service
 {
-    public class FileManagerService
+    public class FileManagerService:IFileManagerService
     {
         private string _baseDirectory;
         public FileManagerService(string baseDriectory)

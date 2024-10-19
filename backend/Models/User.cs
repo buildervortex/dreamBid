@@ -6,5 +6,7 @@ namespace DreamBid.Models
     {
         public string FullName { get; set; }
         public DateTime DOB { get; set; }
+        public string? Bio { get; set; }
+        public string? ProfilePicuturePath { get; set; }
     }
 }
