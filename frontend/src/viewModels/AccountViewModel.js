@@ -72,16 +72,7 @@ export default class AccountViewModel{
       
     }
 
-    static async deleteProfilePicture(){
-        const response = await AccountService.deleteProfilePicture();
-    
-        if ("error" in response){
-            return ErrorMessage.errorMessageFromString(response.error);
-        }
-
-       
-
-    }
+   
 
 
 
