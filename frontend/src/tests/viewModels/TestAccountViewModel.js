@@ -2,26 +2,26 @@ import AccountViewModel from "../../viewModels/AccountViewModel";
 import ErrorMessage from "../../viewModels/ErrorViewModel";
 import Test from "../utils/testUtils";
 
-export async function testDeleteAccount() {
+export async function testDeleteAccount(success, failed) {
 
     const response = await AccountViewModel.deleteAccount();
 
     let fullName = "example full name";
-    let DOB = new Date("2004-8-15");
+    let DOB = new Date("2004-8-11");
     let email = `exampleemail100@example.com`;
     let username = `exampleUserName100`;
 
     if (!(response instanceof ErrorMessage)) {
 
-        Test.assertNotNull(response.id, "deleteAccount id");
-        Test.assertNull(response.bio, "deleteAccount bio")
-        Test.assertEqual(response.DOB.toISOString(), DOB.toISOString(), "deleteAccount DOB")
-        Test.assertEqual(response.fullName, fullName, "deleteAccount fullName")
-        Test.assertEqual(response.email, email, "deleteAccount email")
-        Test.assertEqual(response.userName, username, "deleteAccount userName")
+        Test.assertNotNull(response.id, "deleteAccount id", success, failed);
+        Test.assertNull(response.bio, "deleteAccount bio", success, failed)
+        Test.assertEqual(response.DOB.toDateString(), DOB.toDateString(), "deleteAccount DOB", success, failed)
+        Test.assertEqual(response.fullName, fullName, "deleteAccount fullName", success, failed)
+        Test.assertEqual(response.email, email, "deleteAccount email", success, failed)
+        Test.assertEqual(response.userName, username, "deleteAccount userName", success, failed)
     }
     else {
-        Test.assertHasOwnProperty(response, "error", `deleteAccount error happend. ${response.error}`,"red");
+        Test.assertHasOwnProperty(response, "error", `deleteAccount error happend. ${response.error}`, success, failed, "red");
     }
 
 }
