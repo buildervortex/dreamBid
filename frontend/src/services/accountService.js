@@ -6,6 +6,7 @@ export default class AccountService{
     static async deleteAccount(){
       
         const response = await API.delete("/account/me");
+        console.log(response);
         return response.data;
 
     }
@@ -36,9 +37,9 @@ export default class AccountService{
     }
 
     static async deleteProfilePicture(){
-      const response = await API.delete("/account/me/profilePicture");
+      const response = await API.delete();
       return response;
     }
-
+      
 
 }

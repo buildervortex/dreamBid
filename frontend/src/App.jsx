@@ -8,6 +8,7 @@ import Layout from './layout/Layout';
 import { useState } from 'react';
 import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
 import HomePage from './pages/home';
+import TestPage from './pages/test';
 
 
 const navLinks = [
@@ -32,6 +33,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/test" element={<TestPage/> } />
           </Routes>
         </Layout>
       </ThemeProvider>

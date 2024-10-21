@@ -2,6 +2,7 @@ import { Api } from "@mui/icons-material";
 import AccountMapper from "../mappers/AccountMapper";
 import AccountService from "../services/accountService";
 import ErrorMessage from "./ErrorViewModel";
+import { validateUpdateAccountDto } from "../dto/account/updateAccountDto";
 
 
 
@@ -68,8 +69,7 @@ export default class AccountViewModel{
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
-        return response;
-
+      
     }
 
     static async deleteProfilePicture(){
@@ -79,7 +79,7 @@ export default class AccountViewModel{
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
-        return response;
+       
 
     }
 
