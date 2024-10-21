@@ -5,7 +5,7 @@ class RegisterAccountDto {
     email = "";
     password = "";
     username = "";
-    DOB = "";
+    DOB = new Date();
     fullName = "";
 }
 

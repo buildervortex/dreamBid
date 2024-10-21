@@ -11,6 +11,8 @@ import HomePage from './pages/home';
 import AuctionManagementPage from './pages/auctionManagemet';
 import WishListPage from './pages/vehiclewishlist';
 import SellerDashbordPage from './pages/sellerdashbord';
+import TestPage from './tests/test';
+
 
 const navLinks = [
   { path: "/", name: "Home" },
@@ -41,6 +43,7 @@ function App() {
             <Route path="/auctionManagement" element={<AuctionManagementPage />} />
             <Route path="/wishlist" element={<WishListPage />} />
             <Route path="/sellerdashbord" element={<SellerDashbordPage />} />
+            <Route path="/test" element={<TestPage/> } />
           </Routes>
         </Layout>
       </ThemeProvider>

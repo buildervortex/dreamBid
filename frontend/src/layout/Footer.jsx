@@ -14,7 +14,6 @@ const Footer = () => {
     theme.palette.mode === "dark"
       ? theme.palette.grey[900]
       : theme.palette.grey[300];
-  console.log(theme.palette);
   return (
     <Box
       component="footer"
