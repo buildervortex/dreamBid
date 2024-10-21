@@ -1,7 +1,6 @@
 import TestResults from "./components/display";
+import { TestMain } from "./Main";
 import Test from "./utils/testUtils";
-import { testDeleteAccount } from "./viewModels/TestAccountViewModel";
-import { testRegisterAccount } from "./viewModels/TestAuthViewModel";
 import { useState } from "react";
 
 const TestPage = () => {
@@ -16,11 +15,7 @@ const TestPage = () => {
   const failed = (content) => addFail(results, content, setResults);
 
   const TestApi = async () => {
-    console.log("Start test on register Account");
-    await testRegisterAccount(success, failed);
-    console.log("\nStart test on delete account");
-    await testDeleteAccount(success, failed);
-    console.log("\n\n");
+    TestMain(success, failed);
   };
 
   return (
