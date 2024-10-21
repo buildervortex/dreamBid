@@ -1,7 +1,7 @@
 class AccountDto {
     userName = "";
     fullName ="";
-    DOB = "";
+    DOB = new Date();
     email = "";
     id = "";
     bio = "";

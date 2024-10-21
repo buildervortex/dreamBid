@@ -6,7 +6,6 @@ export default class AccountService{
     static async deleteAccount(){
       
         const response = await API.delete("/accounts/me");
-        console.log(response);
         return response.data;
 
     }

@@ -8,7 +8,7 @@ import Layout from './layout/Layout';
 import { useState } from 'react';
 import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
 import HomePage from './pages/home';
-import TestPage from './pages/test';
+import TestPage from './tests/test';
 
 
 const navLinks = [
