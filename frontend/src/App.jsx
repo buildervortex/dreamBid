@@ -10,6 +10,8 @@ import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
 import HomePage from './pages/home';
 
 
+
+
 const navLinks = [
   { path: "/login", name: "Login" },
   { path: "/register", name: "Register" }
@@ -24,6 +26,7 @@ function App() {
   }
   return (
     <>
+   
       <ThemeProvider theme={theme.theme}>
         <Layout onThemeChange={handleThemeChange} navLinks={navLinks}>
           <CssBaseLine />
