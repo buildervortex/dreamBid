@@ -8,9 +8,9 @@ export async function testRegisterAccount(success, failed) {
     const registerAccountDto = new RegisterAccountDto();
     registerAccountDto.fullName = "example full name";
     registerAccountDto.DOB = new Date("2004-8-12");
-    registerAccountDto.email = `exampleemail100@example.com`;
+    registerAccountDto.email = `exampleemail102@example.com`;
     registerAccountDto.password = "2304asdfASDFA@$12541";
-    registerAccountDto.username = `exampleUserName100`;
+    registerAccountDto.username = `exampleUserName102`;
 
     const response = await AuthViewModel.registerAccount(registerAccountDto);
 

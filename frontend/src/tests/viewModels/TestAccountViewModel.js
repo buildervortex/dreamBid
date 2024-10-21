@@ -8,8 +8,8 @@ export async function testDeleteAccount(success, failed) {
 
     let fullName = "example full name";
     let DOB = new Date("2004-8-11");
-    let email = `exampleemail100@example.com`;
-    let username = `exampleUserName100`;
+    let email = `exampleemail102@example.com`;
+    let username = `exampleUserName102`;
 
     if (!(response instanceof ErrorMessage)) {
 
