@@ -7,11 +7,11 @@ export default class AuthService {
 
     }
 
-    static async loginAccount(loginAccountDto)   {
+    static async loginAccount(loginAccountDto) {
 
-        const response = await API.post("/accounts/login" ,loginAccountDto);
+        const response = await API.post("/accounts/login", loginAccountDto);
         return response.data;
-        
+
     }
-    
+
 }

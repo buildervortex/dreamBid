@@ -7,11 +7,14 @@ namespace DreamBid.Startups
     {
         public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.ConfigureSwagger();
+            services.ConfigureHttp();
+            services.AddControllers();
+            services.AddEndpointsApiExplorer();
             services.ConfigureJsonOptions();
             services.ConfigureDatabase(configuration);
             services.ConfigureDependencies(configuration);
             services.ConfigureAuthentication(configuration);
+            services.ConfigureSwagger();
         }
     }
 }

@@ -1,4 +1,5 @@
 using DreamBid.Interfaces;
+using DreamBid.Utils;
 
 namespace DreamBid.Service
 {
@@ -7,118 +8,94 @@ namespace DreamBid.Service
         private string _baseDirectory;
         public FileManagerService(string baseDriectory)
         {
-            this._baseDirectory = Path.GetFullPath(baseDriectory);
+            this._baseDirectory = Path.GetFullPath(FileManagementUtil.GetOsDependentPath(baseDriectory));
 
         }
 
         /*
         * The path should not starts with /. as an example the base directory should be ./hello/world and the below given path should be auction/images/fileName.txt
         */
-        public async Task<string> StoreFile(IFormFile file, string path, Boolean overWrite = false)
+        /// <summary>
+        /// The path 
+        /// </summary>
+        /// <param name="file">This should be the IFormFile object</param>
+        /// <param name="subFilePath">This path should not starts with /. As an example auction/images/fileName.txt don't give it like /auction/images/fileName.txt</param>
+        /// <param name="overWrite">OverWrite if the file exists</param>
+        /// <returns>The subFilePath name from the base directory</returns>
+        public async Task<string> StoreFile(IFormFile file, string subFilePath, Boolean overWrite = false)
         {
-            // get the absolute path
-            var FullPath = Path.Combine(this._baseDirectory, path);
+            subFilePath = FileManagementUtil.GetOsDependentPath(subFilePath);
 
-            // breakdown the directory path
-            var directoryPath = Path.GetDirectoryName(FullPath);
+            // get the absolute subFilePath
+            var FullPath = Path.Combine(this._baseDirectory, subFilePath);
 
-            if (directoryPath == null) return null;
-
-            Directory.CreateDirectory(directoryPath);
+            // ensure the directory path exists
+            if (!FileManagementUtil.EnsureDirectoryPathExists(FullPath)) return null;
 
             // check the existancy of the given file
-            var rewriteFilePath = FullPath;
             if (!overWrite)
             {
-                rewriteFilePath = this.RewriteFileName(FullPath);
+                // rewriteFilePath = this.RewriteFileName(FullPath);
+                FullPath = FileManagementUtil.GetNonExistingFilePath(FullPath);
             }
 
             // write the file content
-            using (FileStream fileStream = new FileStream(rewriteFilePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(fileStream);
+                using (FileStream fileStream = new FileStream(FullPath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+            }
+            catch (Exception e)
+            {
+                return null;
             }
 
-            // return rewriteFilePath;
-            return this.GetFileSuffix(rewriteFilePath);
+            // return FullPath;
+            return this.GetFileSuffix(FullPath);
 
         }
 
-        public async Task<byte[]> GetFile(string path)
+        public async Task<byte[]> GetFile(string subFilePath)
         {
-            // get the absolute path
-            var FullPath = Path.Combine(this._baseDirectory, path);
-
-            if (!File.Exists(FullPath)) return null;
-
-            return await File.ReadAllBytesAsync(FullPath);
-        }
-
-        private string RewriteFileName(string filePath)
-        {
-            var rewriteFileName = filePath;
-            var sufix = 0;
-            var fileNameWirhoutExtension = Path.GetFileNameWithoutExtension(filePath);
-            var fileExtension = Path.GetExtension(filePath);
-            var directoryPath = Path.GetDirectoryName(filePath);
-
-            while (File.Exists(rewriteFileName))
+            subFilePath = FileManagementUtil.GetOsDependentPath(subFilePath);
+            // get the absolute subFilePath
+            var FullPath = Path.Combine(this._baseDirectory, subFilePath);
+            try
             {
-                rewriteFileName = $"{directoryPath}/{fileNameWirhoutExtension}{sufix++}{fileExtension}";
+                if (!File.Exists(FullPath)) return null;
+                return await File.ReadAllBytesAsync(FullPath);
             }
-            return rewriteFileName;
-        }
-
-        public Boolean IsFileExists(string path)
-        {
-            var FullPath = Path.Combine(this._baseDirectory, path);
-
-            return File.Exists(FullPath);
-        }
-
-        private string[]? FindFilesAnyExtension(string fullPath)
-        {
-            if (!File.Exists(fullPath)) return null;
-            var baseNamePattern = $"{Path.GetFileNameWithoutExtension(fullPath)}.*";
-            var directoryPath = Path.GetDirectoryName(fullPath);
-            if (directoryPath == null) return null;
-            return Directory.GetFiles(directoryPath, baseNamePattern, SearchOption.AllDirectories);
-        }
-
-        public void DeleteFile(string? path)
-        {
-            if (path == null) return;
-            var fullPath = Path.Combine(this._baseDirectory, path);
-            if (File.Exists(fullPath))
+            catch (Exception e)
             {
-                File.Delete(fullPath);
+                return null;
             }
-        }
-        private void DeleteFileFullPath(string? path)
-        {
-            if (path == null) return;
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-        }
 
-        public void DeleteFiles(string? path)
-        {
-            if (path == null) return;
-
-            var FullPath = Path.Combine(this._baseDirectory, path);
-            var files = this.FindFilesAnyExtension(FullPath);
-            if (files == null) return;
-            foreach (string fileName in files)
-            {
-                this.DeleteFileFullPath(fileName);
-            }
         }
 
         private string GetFileSuffix(string fullPath)
         {
             return fullPath.Substring(this._baseDirectory.Length).TrimStart(Path.DirectorySeparatorChar);
+        }
+
+        public bool RemoveFile(string subFilePath)
+        {
+            subFilePath = FileManagementUtil.GetOsDependentPath(subFilePath);
+            var FullPath = Path.Combine(this._baseDirectory, subFilePath);
+            if (FileManagementUtil.IsFileExists(FullPath))
+            {
+                return FileManagementUtil.DeleteFile(FullPath);
+            }
+            return false;
+        }
+
+        public Boolean RemoveFileWithAnyExtension(string subFilePath)
+        {
+            subFilePath = FileManagementUtil.GetOsDependentPath(subFilePath);
+            var FullPath = Path.Combine(this._baseDirectory, subFilePath);
+            var FileExistsWithGivenBaseName = FileManagementUtil.FindFilesWithAnyExtension(FullPath);
+            return FileManagementUtil.DeleteFiles(FileExistsWithGivenBaseName);
         }
     }
 }

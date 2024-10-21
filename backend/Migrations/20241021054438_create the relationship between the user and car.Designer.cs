@@ -4,6 +4,7 @@ using DreamBid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241021054438_create the relationship between the user and car")]
+    partial class createtherelationshipbetweentheuserandcar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,13 +180,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "38caa32f-acc3-4118-b380-96fdf4a98945",
+                            Id = "c92f2931-c3ec-475e-a426-ae4ed0d70e37",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "99d739ad-aa94-4b9f-a146-4f5ce4a0c44e",
+                            Id = "9944f8b2-e4c0-477e-b905-6f9509b0b722",
                             Name = "User",
                             NormalizedName = "USER"
                         });
