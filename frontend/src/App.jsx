@@ -8,11 +8,17 @@ import Layout from './layout/Layout';
 import { useState } from 'react';
 import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
 import HomePage from './pages/home';
-
+import AuctionManagementPage from './pages/auctionManagemet';
+import WishListPage from './pages/vehiclewishlist';
+import SellerDashbordPage from './pages/sellerdashbord';
 
 const navLinks = [
+  { path: "/", name: "Home" },
   { path: "/login", name: "Login" },
-  { path: "/register", name: "Register" }
+  { path: "/register", name: "Register" },
+  { path: "/auctionManagement", name: "Auction Management"},
+  { path: "/wishlist", name: "Wishlist"},
+  { path: "/sellerdashbord", name: "Seller Dashbord"},
 ]
 
 function App() {
@@ -32,6 +38,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/auctionManagement" element={<AuctionManagementPage />} />
+            <Route path="/wishlist" element={<WishListPage />} />
+            <Route path="/sellerdashbord" element={<SellerDashbordPage />} />
           </Routes>
         </Layout>
       </ThemeProvider>
