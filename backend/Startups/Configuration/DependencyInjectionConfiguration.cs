@@ -1,6 +1,7 @@
 using DreamBid.Data;
 using DreamBid.Interfaces;
 using DreamBid.Models;
+using DreamBid.Repository;
 using DreamBid.Service;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,6 +13,7 @@ namespace DreamBid.Startups.Configuration
         public static void ConfigureDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ICarRepository, CarRepository>();
 
             // register file manager service
             services.AddSingleton<IFileManagerService>(provider => new FileManagerService(configuration["DreamBidBaseDirectory"]));
@@ -32,6 +34,8 @@ namespace DreamBid.Startups.Configuration
                                                                                     // set the user requirements
                 options.User.RequireUniqueEmail = true;                             // set the 
             }).AddEntityFrameworkStores<ApplicationDbContext>();                    // This method specifies that Identity should use ApplicationDbContext for storing user data. 
+
+            // Add the Repositories
 
         }
     }

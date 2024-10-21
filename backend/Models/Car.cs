@@ -21,7 +21,7 @@ namespace DreamBid.Models
 
         [Required]
         [CarManufacturedYear]
-        public short Year { get; set; }
+        public int Year { get; set; }
 
         [Required]
         [Range(0, 1000000)]
@@ -43,10 +43,12 @@ namespace DreamBid.Models
 
         // Foreign key property that stores the user id
         public string UserId { get; set; }
-        
+
         // Navigation property 
         [ForeignKey("UserId")]
         public User User { get; set; }
+
+        public ICollection<Image> Images { get; set; }
 
     }
 }

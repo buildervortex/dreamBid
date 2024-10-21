@@ -7,16 +7,16 @@ namespace DreamBid.Dtos.Car
 
         public string Model { get; set; }
 
-        public short Year { get; set; }
+        public int Year { get; set; }
 
-        public float Mileage { get; set; }
+        public double Mileage { get; set; }
 
         public string VIN { get; set; }
 
 
         public string ConditionReport { get; set; }
 
-        public float StartingPrice { get; set; }
+        public double StartingPrice { get; set; }
 
         public double? ReservePrice { get; set; }
     }
