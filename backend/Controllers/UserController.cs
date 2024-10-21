@@ -4,6 +4,7 @@ using DreamBid.Dtos.User;
 using DreamBid.Extensions;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
+using DreamBid.Utils;
 using HeyRed.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ namespace DreamBid.Controllers
         private readonly ITokenService _tokenService;
         private readonly IFileManagerService _fileManagerService;
         private readonly ILogger<AccountController> _logger;
-        private readonly string _profilePicturePath = "users/profilePictures/";
+        private readonly string _profilePicturePath = FileManagementUtil.GetOsDependentPath("users/profilePictures/");
 
         public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger, IFileManagerService fileManagerService)
         {
@@ -150,20 +151,29 @@ namespace DreamBid.Controllers
 
         [HttpPost("me/profilePicture")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> UpdateProfilePicture([FromForm] IFormFile profilePicture)
+        public async Task<IActionResult> SaveProfilePicture([FromForm]IFormFile profilePicture)
         {
             var userId = User.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
-            if (profilePicture != null && profilePicture.Length > 0)
-            {
-                this._fileManagerService.DeleteFiles(user.ProfilePicuturePath);
-                var fileName = $"{user.Id}{Path.GetExtension(profilePicture.FileName)}";
-                var filePath = Path.Combine(this._profilePicturePath, fileName);
-                string storedFilePath = await this._fileManagerService.StoreFile(profilePicture, filePath, true);
-                user.ProfilePicuturePath = storedFilePath;
-            }
+            if (profilePicture == null || profilePicture.Length <= 0) return BadRequest(ErrorMessage.ErrorMessageFromString("Place give valid image for the profile picture"));
+
+            // remove existing profile picture
+            if (user.ProfilePicuturePath != null) this._fileManagerService.RemoveFileWithAnyExtension(user.ProfilePicuturePath);
+
+            // generate new profile picture filename
+            var fileName = $"{user.Id}{Path.GetExtension(profilePicture.FileName)}";
+            var subFilePathName = Path.Combine(this._profilePicturePath, fileName);
+
+            // store the profile picture
+            this._logger.LogCritical("Saving");
+            var newFilePath = await this._fileManagerService.StoreFile(profilePicture, subFilePathName, true);
+            this._logger.LogCritical($"The value is {newFilePath}");
+            this._logger.LogCritical("Saved");
+            if (newFilePath == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to save the profile picture"));
+            user.ProfilePicuturePath = newFilePath;
+
             var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
@@ -175,7 +185,8 @@ namespace DreamBid.Controllers
         private void DeleteUserData(DreamBid.Models.User user)
         {
             // delete profile picture
-            this._fileManagerService.DeleteFile(user.ProfilePicuturePath);
+            if (user.ProfilePicuturePath != null)
+                this._fileManagerService.RemoveFileWithAnyExtension(user.ProfilePicuturePath);
         }
     }
 }
