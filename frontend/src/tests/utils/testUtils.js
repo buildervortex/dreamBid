@@ -5,7 +5,7 @@ export default class Test {
             if (success) success(testName)
         }
         else {
-            printFail(`Test: ${testName}. The asserEqual failed. The first value is ${value1} and the second value is ${value2}`, bodyColor)
+            printFail(`Test: ${testName}. The asserEqual failed. The first value is ( ${value1} ) and the second value is ( ${value2} )`, bodyColor)
             if (throwError) throw Error(`Test: ${testName} Failed`);
             if (failed) failed(testName)
         }
@@ -17,7 +17,7 @@ export default class Test {
             if (success) success(testName)
         }
         else {
-            printFail(`Test: ${testName}. The assertNotEqual failed. The first value is ${value1} and the second value is ${value2}`, bodyColor)
+            printFail(`Test: ${testName}. The assertNotEqual failed. The first value is ( ${value1} ) and the second value is ( ${value2} )`, bodyColor)
             if (throwError) throw Error(`Test: ${testName} Failed`);
             if (failed) failed(testName)
         }
@@ -28,9 +28,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertNull failed. Expected null but got ${value}`, bodyColor);
+            printFail(`Test: ${testName}. The assertNull failed. Expected null but got ( ${value} )`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected null but got ${value}`);
+                throw Error(`Test: ${testName} failed. Expected null but got ( ${value} )`);
             }
             if (failed) failed(testName)
         }
@@ -54,9 +54,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertTrue failed. Expected true but got ${value}`, bodyColor);
+            printFail(`Test: ${testName}. The assertTrue failed. Expected true but got ( ${value} )`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected true but got ${value}`);
+                throw Error(`Test: ${testName} failed. Expected true but got ( ${value} )`);
             }
             if (failed) failed(testName)
         }
@@ -67,9 +67,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertFalse failed. Expected false but got ${value}`, bodyColor);
+            printFail(`Test: ${testName}. The assertFalse failed. Expected false but got ( ${value} )`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected false but got ${value}`);
+                throw Error(`Test: ${testName} failed. Expected false but got ( ${value} )`);
             }
             if (failed) failed(testName)
         }
@@ -94,9 +94,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertHasProperty failed. The property '${property}' is not present in the object.`, bodyColor);
+            printFail(`Test: ${testName}. The assertHasProperty failed. The property ( ${property} ) is not present in the object.`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected the object to have property '${property}'.`);
+                throw Error(`Test: ${testName} failed. Expected the object to have property ( ${property} ).`);
             }
             if (failed) failed(testName)
         }
@@ -107,9 +107,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertHasOwnProperty failed. The property '${property}' is not an own property of the object.`, bodyColor);
+            printFail(`Test: ${testName}. The assertHasOwnProperty failed. The property ( ${property} ) is not an own property of the object.`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected the object to have its own property '${property}'.`);
+                throw Error(`Test: ${testName} failed. Expected the object to have its own property ( ${property} ).`);
             }
             if (failed) failed(testName)
         }
@@ -175,9 +175,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertInstanceOf failed. Expected instance to be of type ${constructor.name}.`, bodyColor);
+            printFail(`Test: ${testName}. The assertInstanceOf failed. Expected instance to be of type ( ${constructor.name} ).`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected instance of ${constructor.name}.`);
+                throw Error(`Test: ${testName} failed. Expected instance of ( ${constructor.name} ).`);
             }
             if (failed) failed(testName)
         }
@@ -189,9 +189,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertType failed. Expected type ${expectedType} but got ${actualType}.`, bodyColor);
+            printFail(`Test: ${testName}. The assertType failed. Expected type ( ${expectedType} ) but got ( ${actualType} ).`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected type ${expectedType} but got ${actualType}.`);
+                throw Error(`Test: ${testName} failed. Expected type ( ${expectedType} ) but got ( ${actualType} ).`);
             }
             if (failed) failed(testName)
         }
@@ -203,9 +203,9 @@ export default class Test {
             printPass(`Test: ${testName}`, bodyColor);
             if (success) success(testName)
         } else {
-            printFail(`Test: ${testName}. The assertLength failed. Expected length ${expectedLength} but got ${actualLength}.`, bodyColor);
+            printFail(`Test: ${testName}. The assertLength failed. Expected length ( ${expectedLength} ) but got ( ${actualLength} ).`, bodyColor);
             if (throwError) {
-                throw Error(`Test: ${testName} failed. Expected length ${expectedLength} but got ${actualLength}.`);
+                throw Error(`Test: ${testName} failed. Expected length ( ${expectedLength} ) but got ( ${actualLength} ).`);
             }
             if (failed) failed(testName)
         }

@@ -15,7 +15,9 @@ const TestPage = () => {
   const failed = (content) => addFail(results, content, setResults);
 
   const TestApi = async () => {
-    TestMain(success, failed);
+    let x = { passed: [], failed: [] };
+    setResults(x);
+    await TestMain(success, failed);
   };
 
   return (
