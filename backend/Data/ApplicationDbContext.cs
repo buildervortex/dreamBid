@@ -25,12 +25,19 @@ namespace DreamBid.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Specify Relationships Between Car -> Image
-            builder.Entity<Image>()
-                .HasOne(i => i.Car)
-                .WithMany(a => a.Images)
+            builder.Entity<Car>()
+                .HasMany(c => c.Images)
+                .WithOne(i => i.Car)
                 .HasForeignKey(i => i.CarId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
 
+            // Specify Relationships Between User -> Image
+            builder.Entity<User>()
+                .HasOne(u => u.Image)
+                .WithOne(i => i.User)
+                .HasForeignKey<Image>(i => i.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+                
             List<IdentityRole> roles = new List<IdentityRole>   // Creates a list of IdentityRole objects to represent predefined roles in the application.
             {
                 new IdentityRole{

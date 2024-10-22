@@ -14,6 +14,8 @@ namespace DreamBid.Startups.Configuration
         {
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<ICleanUpService, CleanUpService>();
 
             // register file manager service
             services.AddSingleton<IFileManagerService>(provider => new FileManagerService(configuration["DreamBidBaseDirectory"]));

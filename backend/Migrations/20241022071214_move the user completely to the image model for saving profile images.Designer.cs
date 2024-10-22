@@ -4,6 +4,7 @@ using DreamBid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241022071214_move the user completely to the image model for saving profile images")]
+    partial class movetheusercompletelytotheimagemodelforsavingprofileimages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,8 +104,7 @@ namespace backend.Migrations
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Images");
                 });
@@ -135,9 +137,6 @@ namespace backend.Migrations
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int?>("ImageId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
@@ -212,13 +211,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "824a75e6-d8e6-4d3d-b483-64d9a308d702",
+                            Id = "ab1812a5-a5c4-476a-b8f6-d3d48d5914ec",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "744deda6-9a4c-4e5f-9085-66fc7512edf6",
+                            Id = "892149ee-853c-416a-89c3-827fc4c8cd14",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -346,12 +345,12 @@ namespace backend.Migrations
                     b.HasOne("DreamBid.Models.Car", "Car")
                         .WithMany("Images")
                         .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DreamBid.Models.User", "User")
-                        .WithOne("Image")
-                        .HasForeignKey("DreamBid.Models.Image", "UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .WithMany("Images")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Car");
 
@@ -418,8 +417,7 @@ namespace backend.Migrations
                 {
                     b.Navigation("Cars");
 
-                    b.Navigation("Image")
-                        .IsRequired();
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,5 +15,17 @@ namespace DreamBid.Mappers
                 Image = imageData
             };
         }
+
+        public static Image ToImage(this IFormFile formFile, string fileSubPath, int? CarId = null, string? UserId = null)
+        {
+            return new Image
+            {
+                CarId = CarId,
+                UserId = UserId,
+                FileName = formFile.FileName,
+                FilePath = fileSubPath,
+                Length = formFile.Length
+            };
+        }
     }
 }

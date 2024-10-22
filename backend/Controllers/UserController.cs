@@ -20,17 +20,16 @@ namespace DreamBid.Controllers
         private readonly UserManager<DreamBid.Models.User> _userManager;
         private readonly SignInManager<DreamBid.Models.User> _signInManager;
         private readonly ITokenService _tokenService;
-        private readonly IFileManagerService _fileManagerService;
         private readonly ILogger<AccountController> _logger;
-        private readonly string _profilePicturePath = FileManagementUtil.GetOsDependentPath("users/profilePictures/");
+        private readonly ICleanUpService _cleanUpService;
 
-        public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger, IFileManagerService fileManagerService)
+        public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger, ICleanUpService cleanUpService)
         {
             this._userManager = userManager;
             this._tokenService = tokenService;
             this._signInManager = signInManager;
             this._logger = logger;
-            this._fileManagerService = fileManagerService;
+            this._cleanUpService = cleanUpService;
         }
 
         [HttpPost("register")]
@@ -90,9 +89,11 @@ namespace DreamBid.Controllers
 
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
-            await _userManager.DeleteAsync(user);
+            var result = await _userManager.DeleteAsync(user);
 
-            this.DeleteUserData(user);
+            if (!result.Succeeded) return StatusCode(500, ErrorMessage.ErrorMessageFromString("The user deletion failed"));
+
+            this._cleanUpService.CleanUpUser(userId);
 
             return Ok(user.ToUserDto());
 
@@ -131,62 +132,5 @@ namespace DreamBid.Controllers
             return Ok(user.ToUserDto());
         }
 
-        [HttpGet("me/profilePicture")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> GetProfilePicture()
-        {
-            var userId = User.GetUserId();
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
-
-            var profilePicturePath = user.ProfilePicuturePath;
-            if (profilePicturePath == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
-
-            var fileBytes = await this._fileManagerService.GetFile(profilePicturePath);
-
-            if (fileBytes == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
-
-            return File(fileBytes, MimeTypesMap.GetMimeType(profilePicturePath));
-        }
-
-        [HttpPost("me/profilePicture")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> SaveProfilePicture(IFormFile profilePicture)
-        {
-            var userId = User.GetUserId();
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
-
-            if (profilePicture == null || profilePicture.Length <= 0) return BadRequest(ErrorMessage.ErrorMessageFromString("Invalid image for the profile picture"));
-
-            // remove existing profile picture
-            if (user.ProfilePicuturePath != null) this._fileManagerService.RemoveFileWithAnyExtension(user.ProfilePicuturePath);
-
-            // generate new profile picture filename
-            var fileName = $"{user.Id}{Path.GetExtension(profilePicture.FileName)}";
-            var subFilePathName = Path.Combine(this._profilePicturePath, fileName);
-
-            // store the profile picture
-            var newFilePath = await this._fileManagerService.StoreFile(profilePicture, subFilePathName, true);
-            if (newFilePath == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to save the profile picture"));
-            user.ProfilePicuturePath = newFilePath;
-
-            var result = await _userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
-            {
-                this._fileManagerService.RemoveFile(newFilePath);
-                return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to upate the user"));
-            }
-
-            return Ok();
-        }
-
-        private void DeleteUserData(DreamBid.Models.User user)
-        {
-            // delete profile picture
-            if (user.ProfilePicuturePath != null)
-                this._fileManagerService.RemoveFileWithAnyExtension(user.ProfilePicuturePath);
-        }
     }
 }

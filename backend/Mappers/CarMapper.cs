@@ -9,7 +9,7 @@ namespace DreamBid.Mappers
         {
             return new CarDto
             {
-                Id = carModel.Id.ToString(),
+                Id = carModel.Id,
                 ConditionReport = carModel.ConditionReport,
                 Make = carModel.Make,
                 Mileage = carModel.Mileage,
