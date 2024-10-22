@@ -8,6 +8,7 @@ namespace DreamBid.Data
     public class ApplicationDbContext : IdentityDbContext<User>          // Here, ApplicationUser is a custom class derived from IdentityUser to include extra user properties if needed.
     {
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Image> Images { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
 
@@ -21,6 +22,13 @@ namespace DreamBid.Data
                 .HasOne(c => c.User)
                 .WithMany(u => u.Cars)
                 .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Specify Relationships Between Car -> Image
+            builder.Entity<Image>()
+                .HasOne(i => i.Car)
+                .WithMany(a => a.Images)
+                .HasForeignKey(i => i.CarId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             List<IdentityRole> roles = new List<IdentityRole>   // Creates a list of IdentityRole objects to represent predefined roles in the application.

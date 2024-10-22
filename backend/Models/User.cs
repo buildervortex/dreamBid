@@ -12,6 +12,6 @@ namespace DreamBid.Models
         public string? ProfilePicuturePath { get; set; } = null;
 
         // The Navigation property to the related cars
-        public ICollection<Car> Cars { get; set; }
+        public ICollection<Car> Cars { get; set; } = new List<Car>();
     }
 }

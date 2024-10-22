@@ -4,6 +4,7 @@ using DreamBid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241021190816_add the image model and the relationship between car and images")]
+    partial class addtheimagemodelandtherelationshipbetweencarandimages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,8 +94,8 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("Length")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Length")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -206,13 +209,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "826e629f-a6ba-4a43-a68a-5162ef378391",
+                            Id = "907f9693-2f1f-4614-931b-53c1a90f014d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "73e10db5-3177-483d-9ede-30d9703cbd55",
+                            Id = "13cdc34c-65fa-4a55-b08e-b5c5db22c062",
                             Name = "User",
                             NormalizedName = "USER"
                         });

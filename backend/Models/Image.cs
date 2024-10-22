@@ -12,6 +12,9 @@ namespace DreamBid.Models
 
         public string FileName { get; set; }
         public string FilePath { get; set; }
-        public int Length { get; set; }
+        public long Length { get; set; }
+
+        public int? CarId { get; set; }
+        public Car Car { get; set; }
     }
 }

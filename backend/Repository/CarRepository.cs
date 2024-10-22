@@ -69,9 +69,26 @@ namespace DreamBid.Repository
 
         }
 
+        public async Task<List<Image>> GetAllImages(GetAllImagesQueryObject getAllImagesQueryObject, int carId)
+        {
+            var images = _context.Images.Where(i => i.CarId == carId).AsQueryable();
+
+            images = getAllImagesQueryObject.IsDecsending ? images.OrderByDescending(i => i.Id) : images.OrderBy(i => i.Id);
+
+            var skipNumber = (getAllImagesQueryObject.PageNumber - 1) * getAllImagesQueryObject.PageSize;
+            return await images.Skip(skipNumber).Take(getAllImagesQueryObject.PageSize).ToListAsync();
+        }
+
         public async Task<Car?> GetCarByIdAsync(int id, string userId)
         {
             return await _context.Cars.FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+        }
+
+        public async Task<Image?> SaveImage(Image image)
+        {
+            await this._context.Images.AddAsync(image);
+            await this._context.SaveChangesAsync();
+            return image;
         }
 
         public async Task<Car?> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId)

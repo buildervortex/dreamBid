@@ -151,13 +151,13 @@ namespace DreamBid.Controllers
 
         [HttpPost("me/profilePicture")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> SaveProfilePicture([FromForm]IFormFile profilePicture)
+        public async Task<IActionResult> SaveProfilePicture(IFormFile profilePicture)
         {
             var userId = User.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
-            if (profilePicture == null || profilePicture.Length <= 0) return BadRequest(ErrorMessage.ErrorMessageFromString("Place give valid image for the profile picture"));
+            if (profilePicture == null || profilePicture.Length <= 0) return BadRequest(ErrorMessage.ErrorMessageFromString("Invalid image for the profile picture"));
 
             // remove existing profile picture
             if (user.ProfilePicuturePath != null) this._fileManagerService.RemoveFileWithAnyExtension(user.ProfilePicuturePath);
@@ -167,17 +167,17 @@ namespace DreamBid.Controllers
             var subFilePathName = Path.Combine(this._profilePicturePath, fileName);
 
             // store the profile picture
-            this._logger.LogCritical("Saving");
             var newFilePath = await this._fileManagerService.StoreFile(profilePicture, subFilePathName, true);
-            this._logger.LogCritical($"The value is {newFilePath}");
-            this._logger.LogCritical("Saved");
             if (newFilePath == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to save the profile picture"));
             user.ProfilePicuturePath = newFilePath;
 
             var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
+            {
+                this._fileManagerService.RemoveFile(newFilePath);
                 return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error. Failed to upate the user"));
+            }
 
             return Ok();
         }

@@ -48,7 +48,7 @@ namespace DreamBid.Models
         [ForeignKey("UserId")]
         public User User { get; set; }
 
-        public ICollection<Image> Images { get; set; }
+        public ICollection<Image> Images { get; set; } = new List<Image>();
 
     }
 }
