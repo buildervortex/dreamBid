@@ -1,3 +1,4 @@
+using DreamBid.Data;
 using DreamBid.Dtos.Account;
 using DreamBid.Dtos.Error;
 using DreamBid.Dtos.User;
@@ -21,15 +22,18 @@ namespace DreamBid.Controllers
         private readonly SignInManager<DreamBid.Models.User> _signInManager;
         private readonly ITokenService _tokenService;
         private readonly ILogger<AccountController> _logger;
-        private readonly ICleanUpService _cleanUpService;
 
-        public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger, ICleanUpService cleanUpService)
+        private readonly ApplicationDbContext _context;
+        private readonly IFileManagerService _fileManagerService;
+
+        public AccountController(UserManager<DreamBid.Models.User> userManager, ITokenService tokenService, SignInManager<DreamBid.Models.User> signInManager, ILogger<AccountController> logger, ApplicationDbContext context, IFileManagerService fileManagerService)
         {
             this._userManager = userManager;
             this._tokenService = tokenService;
             this._signInManager = signInManager;
             this._logger = logger;
-            this._cleanUpService = cleanUpService;
+            this._context = context;
+            this._fileManagerService = fileManagerService;
         }
 
         [HttpPost("register")]
@@ -89,11 +93,10 @@ namespace DreamBid.Controllers
 
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
+            await user.CleanUpUser(this._fileManagerService, this._context, this._logger);
             var result = await _userManager.DeleteAsync(user);
 
             if (!result.Succeeded) return StatusCode(500, ErrorMessage.ErrorMessageFromString("The user deletion failed"));
-
-            this._cleanUpService.CleanUpUser(userId);
 
             return Ok(user.ToUserDto());
 

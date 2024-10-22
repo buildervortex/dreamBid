@@ -12,10 +12,7 @@ namespace DreamBid.Startups.Configuration
         // Add Extension to tthe IServiceCollection
         public static void ConfigureDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<ICarRepository, CarRepository>();
-            services.AddScoped<IImageRepository, ImageRepository>();
-            services.AddScoped<ICleanUpService, CleanUpService>();
+
 
             // register file manager service
             services.AddSingleton<IFileManagerService>(provider => new FileManagerService(configuration["DreamBidBaseDirectory"]));
@@ -38,6 +35,9 @@ namespace DreamBid.Startups.Configuration
             }).AddEntityFrameworkStores<ApplicationDbContext>();                    // This method specifies that Identity should use ApplicationDbContext for storing user data. 
 
             // Add the Repositories
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
 
         }
     }

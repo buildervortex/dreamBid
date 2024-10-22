@@ -1,44 +1,49 @@
+using DreamBid.Data;
 using DreamBid.Interfaces;
+using DreamBid.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace DreamBid
+namespace DreamBid.Extensions
 {
-    public class CleanUpService : ICleanUpService
+    public static class CleanUpService
     {
-        private readonly IFileManagerService _fileManagerService;
-        private readonly UserManager<DreamBid.Models.User> _userManager;
-        private readonly IImageRepository _imageRepository;
+        public static async Task CleanUpUser(this User user, IFileManagerService fileManagerService, ApplicationDbContext context, ILogger logger)
+        {
 
-        public CleanUpService(IFileManagerService fileManagerService, UserManager<DreamBid.Models.User> userManager, IImageRepository imageRepository)
-        {
-            this._fileManagerService = fileManagerService;
-            this._userManager = userManager;
-            this._imageRepository = imageRepository;
-        }
-        public async Task CleanUpUser(string userId)
-        {
-            var user = await _userManager.Users.Include(u => u.Image).Include(c => c.Cars).SingleOrDefaultAsync(u => u.Id == userId);
             if (user == null) return;
 
+            if (context.Entry(user).Collection(u => u.Cars).IsLoaded == false)
+            {
+                await context.Entry(user).Collection(u => u.Cars).LoadAsync();
+            }
+            if (context.Entry(user).Reference(i => i.Image).IsLoaded == false)
+            {
+                await context.Entry(user).Reference(i => i.Image).LoadAsync();
+            }
             if (user.Image == null) return;
 
-            this._fileManagerService.RemoveFileWithAnyExtension(user.Image.FilePath);
+            fileManagerService.RemoveFileWithAnyExtension(user.Image.FilePath);
+
 
             // Remove cars
             foreach (var car in user.Cars)
             {
-                await this.CleanUpCar(car.Id);
+                await car.CleanUpCar(fileManagerService, context);
             }
 
         }
 
-        public async Task CleanUpCar(int carId)
+        public static async Task CleanUpCar(this Car car, IFileManagerService fileManagerService, ApplicationDbContext context)
         {
-            var images = await _imageRepository.GetCarImages(carId);
-            foreach (var image in images)
+
+            if (context.Entry(car).Collection(u => u.Images).IsLoaded == false)
             {
-                this._fileManagerService.RemoveFile(image.FilePath);
+                await context.Entry(car).Collection(u => u.Images).LoadAsync();
+            }
+            foreach (var image in car.Images)
+            {
+                fileManagerService.RemoveFile(image.FilePath);
             }
         }
     }

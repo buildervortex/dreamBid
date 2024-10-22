@@ -1,3 +1,4 @@
+using DreamBid.Data;
 using DreamBid.Dtos.Car;
 using DreamBid.Dtos.Error;
 using DreamBid.Dtos.Image;
@@ -21,14 +22,12 @@ namespace DreamBid.Controllers
         private readonly ICarRepository _carRepository;
         private readonly UserManager<DreamBid.Models.User> _userManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly ICleanUpService _cleanUpService;
-        public CarController(IFileManagerService fileManagerService, ICarRepository carRepository, UserManager<DreamBid.Models.User> userManager, ILogger<AccountController> logger, ICleanUpService cleanUpService)
+        public CarController(IFileManagerService fileManagerService, ICarRepository carRepository, UserManager<DreamBid.Models.User> userManager, ILogger<AccountController> logger)
         {
             this._fileManagerService = fileManagerService;
             this._carRepository = carRepository;
             this._userManager = userManager;
             this._logger = logger;
-            this._cleanUpService = cleanUpService;
         }
 
         [HttpPost]
@@ -122,8 +121,6 @@ namespace DreamBid.Controllers
 
             var car = await this._carRepository.DeleteCar(id, userId);
             if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
-
-            await this._cleanUpService.CleanUpCar(car.Id);
 
             return Ok(car.ToCarDto());
         }

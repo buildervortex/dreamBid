@@ -229,23 +229,5 @@ namespace DreamBid.Controllers
             return Ok(images.Select(i => i.ToImageDto()));
         }
 
-        public async void DeleteUserProfilePicture(string userId)
-        {
-            var user = await _userManager.Users.Include(u => u.Image).SingleOrDefaultAsync(u => u.Id == userId);
-            if (user == null) return;
-
-            if (user.Image == null) return;
-
-            this._fileManagerService.RemoveFileWithAnyExtension(user.Image.FilePath);
-        }
-
-        public async void DeleteAllCarImages(int carId)
-        {
-            var images = await _imageRepository.GetCarImages(carId);
-            foreach (var image in images)
-            {
-                this._fileManagerService.RemoveFile(image.FilePath);
-            }
-        }
     }
 }

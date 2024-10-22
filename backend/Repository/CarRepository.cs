@@ -1,5 +1,6 @@
 using DreamBid.Data;
 using DreamBid.Dtos.Car;
+using DreamBid.Extensions;
 using DreamBid.Helpers.Car;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
@@ -11,10 +12,12 @@ namespace DreamBid.Repository
     public class CarRepository : ICarRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IFileManagerService _fileManagerService;
 
-        public CarRepository(ApplicationDbContext context)
+        public CarRepository(ApplicationDbContext context, IFileManagerService fileManagerService)
         {
             this._context = context;
+            this._fileManagerService = fileManagerService;
         }
         public async Task<Car> AddCarAsync(Car car)
         {
@@ -30,9 +33,12 @@ namespace DreamBid.Repository
 
             if (existingCar == null) return null;
 
+            await existingCar.CleanUpCar(this._fileManagerService, this._context);
+
             _context.Cars.Remove(existingCar);
 
             await _context.SaveChangesAsync();
+
 
             return existingCar;
         }
