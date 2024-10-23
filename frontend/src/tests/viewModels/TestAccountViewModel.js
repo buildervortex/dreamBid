@@ -11,8 +11,8 @@ export async function testDeleteAccount(success, failed) {
 
     let fullName = "example full name";
     let DOB = new Date("2004-8-11");
-    let email = `exampleemail103@example.com`;
-    let username = `exampleUserName103`;
+    let email = `exampleemail104@example.com`;
+    let username = `exampleUserName104`;
 
     if (!(response instanceof ErrorMessage)) {
 
@@ -46,7 +46,8 @@ export async function testGetAccount(success,failed) {
         Test.assertEqual(response.fullName,fullName,"getAccount fullName",success,failed)
         Test.assertEqual(response.email,email,"getAccount email",success,failed)
         Test.assertEqual(response.userName,username,"getAccount userName",success,failed)
-
+    
+        
     }
     else{
         Test.assertHasOwnProperty(response,"error",`getAccount error happend. ${response.error}`,success,failed,"red");
@@ -106,7 +107,7 @@ export async function testUpdateProfilePicture(success, failed) {
     } else {
         Test.fail("No response from updateProfilePicture API", success, failed);
     }
-    
+
 }
 
 

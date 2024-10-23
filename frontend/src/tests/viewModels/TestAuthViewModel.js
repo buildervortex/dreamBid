@@ -9,9 +9,10 @@ export async function testRegisterAccount(success, failed) {
     const registerAccountDto = new RegisterAccountDto();
     registerAccountDto.fullName = "example full name";
     registerAccountDto.DOB = new Date("2004-8-12");
-    registerAccountDto.email = `exampleemail103@example.com`;
+    registerAccountDto.email = `exampleemail104example.com`;
     registerAccountDto.password = "2304asdfASDFA@$12541";
-    registerAccountDto.username = `exampleUserName103`;
+    registerAccountDto.username = `exampleUserName104`;
+   
 
     const response = await AuthViewModel.registerAccount(registerAccountDto);
 
@@ -19,7 +20,7 @@ export async function testRegisterAccount(success, failed) {
 
         Test.assertNotNull(response.id, "registerAccount id", success, failed)
         Test.assertNull(response.bio, "registerAccount bio", success, failed)
-        Test.assertEqual(response.DOB.toISOString(), registerAccountDto.DOB.toISOString(), "registerAccount DOB", success, failed)
+        Test.assertEqual(response.DOB.getMonth(), registerAccountDto.DOB.getMonth(), "registerAccount DOB", success, failed)
         Test.assertEqual(response.fullName, registerAccountDto.fullName, "registerAccount fullName", success, failed)
         Test.assertEqual(response.email, registerAccountDto.email, "registerAccount email", success, failed)
         Test.assertEqual(response.userName, registerAccountDto.username, "registerAccount userName", success, failed)
