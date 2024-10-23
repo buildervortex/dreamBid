@@ -58,7 +58,7 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> GetAuction([FromRoute] int id)
         {
             var auction = await this._auctionRepository.GetAuction(id);
-            if (auction == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+            if (auction == null) return NotFound(ErrorMessage.ErrorMessageFromString("Auction Not Found"));
 
             return Ok(auction.ToAuctionDto());
         }
@@ -70,6 +70,19 @@ namespace DreamBid.Controllers
             var auctionDtos = auctions.Select(a => a.ToAuctionDto()).ToList();
 
             return Ok(auctionDtos);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeleteAuction([FromRoute] int id)
+        {
+            var userId = User.GetUserId();
+            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+
+            var auction = await this._auctionRepository.DeleteAuction(id);
+            if (auction == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+
+            return Ok(auction.ToAuctionDto());
+
         }
     }
 }

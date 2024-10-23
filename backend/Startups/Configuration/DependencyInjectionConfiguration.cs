@@ -39,6 +39,7 @@ namespace DreamBid.Startups.Configuration
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IAuctionRepository, AuctionRepository>();
+            services.AddScoped<IBidRepository, BidRepository>();
 
         }
     }

@@ -12,6 +12,7 @@ namespace DreamBid.Data
 
         public DbSet<Auction> Auction { get; set; }
         public DbSet<Image> Image { get; set; }
+        public DbSet<Bid> Bids { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
 
@@ -46,6 +47,13 @@ namespace DreamBid.Data
                 .HasOne(a => a.Car)
                 .WithMany(c => c.Auctions)
                 .HasForeignKey(a => a.CarId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Specify Relationships between bid -> auction
+            builder.Entity<Bid>()
+                .HasOne(b => b.Auction)
+                .WithMany(a => a.Bids)
+                .HasForeignKey(b => b.AuctionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             List<IdentityRole> roles = new List<IdentityRole>   // Creates a list of IdentityRole objects to represent predefined roles in the application.

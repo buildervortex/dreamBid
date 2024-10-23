@@ -15,5 +15,7 @@ namespace DreamBid.Helpers.Auction
         [Range(1, int.MaxValue)]
         public int PageSize { get; set; } = 20;
 
+        public string? userId { get; set; } = null;
+
     }
 }

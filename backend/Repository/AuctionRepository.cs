@@ -21,9 +21,27 @@ namespace DreamBid.Repository
             return auction;
         }
 
+        public async Task<Auction> DeleteAuction(int id)
+        {
+            var existingAuction = await _context.Auction.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (existingAuction == null) return null;
+
+            _context.Auction.Remove(existingAuction);
+
+            await _context.SaveChangesAsync();
+
+            return existingAuction;
+        }
+
         public async Task<List<Auction>> GetAllAuctions(GetAllAuctionQueryObject queryObject)
         {
             var auctions = _context.Auction.AsQueryable().Where(a => a.IsActive == queryObject.Active);
+
+            if (queryObject.userId != null)
+            {
+                auctions = auctions.Where(a => a.Car.UserId == queryObject.userId);
+            }
 
             if (queryObject.OrderBy.Equals("EndTime", StringComparison.OrdinalIgnoreCase))
             {

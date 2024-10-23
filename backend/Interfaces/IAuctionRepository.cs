@@ -10,5 +10,7 @@ namespace DreamBid.Interfaces
         Task<Auction?> GetAuction(int id);
 
         Task<List<Auction>> GetAllAuctions(GetAllAuctionQueryObject getAllAuctionQueryObject);
+
+        Task<Auction> DeleteAuction(int id);
     }
 }

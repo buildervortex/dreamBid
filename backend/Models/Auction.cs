@@ -27,6 +27,8 @@ namespace DreamBid.Models
         [ForeignKey("CarId")]
         public Car Car { get; set; }
 
+        public ICollection<Bid> Bids { get; set; } = new List<Bid>();
+
         public ValidationResult Validation()
         {
             if (auctionStartTime.Date < DateTime.UtcNow.Date)
