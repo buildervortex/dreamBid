@@ -50,5 +50,7 @@ namespace DreamBid.Models
 
         public ICollection<Image> Images { get; set; } = new List<Image>();
 
+        public ICollection<Auction> Auctions { get; set; } = new List<Auction>();
+
     }
 }
