@@ -11,9 +11,11 @@ export default class AuthViewModel {
             return ErrorMessage.errorMessageFromJoiError(error);
 
         const response = await AuthService.registerAccount(registerAccountDto);
+
         if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
+
         return AccountMapper.ToAccountDto(response);
     }
      
@@ -30,8 +32,4 @@ export default class AuthViewModel {
         return AccountMapper.ToAccountDto(response);
 
     }
-
-
-
-
 }

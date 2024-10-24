@@ -5,7 +5,7 @@ import { Profiler } from "react";
 
 class UpdateAccountDto{
     bio="";
-    DOB="";
+    DOB= new Date();
     fullName="";
    
 }

@@ -21,7 +21,7 @@ namespace DreamBid.Mappers
                 Id = bid.Id,
                 AuctionId = bid.AuctionId,
                 BidAmount = bid.BidAmount,
-                BidDateTime = bid.BidDateTime,
+                BidDateTime = DateTime.SpecifyKind(bid.BidDateTime,DateTimeKind.Utc),
                 UserId = bid.UserId
             };
         }
