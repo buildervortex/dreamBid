@@ -42,13 +42,13 @@ namespace DreamBid.Controllers
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
             var car = await _carRepository.GetCarByIdAsync(id, userId);
-
             if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
 
             var auction = addAuctionDto.ToAuctionFromAddAuctionDto();
             auction.CarId = car.Id;
 
             auction = await this._auctionRepository.AddAuctionAsync(auction);
+            if (auction == null) return BadRequest(ErrorMessage.ErrorMessageFromString("Auction add failed. Check whether there is existing active auction for this car"));
 
             return Ok(auction.ToAuctionDto());
         }

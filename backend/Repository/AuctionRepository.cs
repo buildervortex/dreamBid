@@ -15,6 +15,7 @@ namespace DreamBid.Repository
         }
         public async Task<Auction> AddAuctionAsync(Auction auction)
         {
+            
             await _context.Auction.AddAsync(auction);
             await _context.SaveChangesAsync();
 
