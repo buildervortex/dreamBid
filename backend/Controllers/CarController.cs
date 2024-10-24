@@ -1,13 +1,9 @@
-using DreamBid.Data;
 using DreamBid.Dtos.Car;
 using DreamBid.Dtos.Error;
-using DreamBid.Dtos.Image;
 using DreamBid.Extensions;
 using DreamBid.Helpers.Car;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
-using DreamBid.Models;
-using DreamBid.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

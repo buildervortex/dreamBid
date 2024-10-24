@@ -1,9 +1,11 @@
+using DreamBid.Data;
 using DreamBid.Dtos.Bid;
 using DreamBid.Dtos.Error;
 using DreamBid.Extensions;
 using DreamBid.Helpers.Bid;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
+using DreamBid.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +17,16 @@ namespace DreamBid.Controllers
     {
         private readonly UserManager<DreamBid.Models.User> _userManager;
         private readonly IAuctionRepository _auctionRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IBidRepository _bidRepository;
-        public BidController(UserManager<DreamBid.Models.User> userManager, IAuctionRepository auctionRepository, IBidRepository bidRepository)
+        private readonly IPayPalService _payPayService;
+        public BidController(UserManager<DreamBid.Models.User> userManager, IAuctionRepository auctionRepository, IBidRepository bidRepository, IPayPalService payPalService, ITransactionRepository transactionRepository)
         {
             this._userManager = userManager;
             this._auctionRepository = auctionRepository;
             this._bidRepository = bidRepository;
+            this._payPayService = payPalService;
+            this._transactionRepository = transactionRepository;
         }
         [HttpPost("{auctionId:int}")]
         [Authorize(Roles = "User")]
@@ -42,10 +48,15 @@ namespace DreamBid.Controllers
             bid.UserId = userId;
 
             bid = await this._bidRepository.AddBid(bid);
+            var transaction = await this._transactionRepository.CreateTransaction(bid.BidAmount, bid.Id);
 
-            return Ok(bid.ToBidDto());
+            var createdPayment = _payPayService.CreatePayment(bid.BidAmount, transaction.Id.ToString(), $"Dreambid auction payment on auction id {auctionId}");
+            var approvalUrl = createdPayment.links.FirstOrDefault(link => link.rel.Equals("approval_url", StringComparison.OrdinalIgnoreCase))?.href;
+
+            return Ok(
+                new { approvalUrl = approvalUrl }
+            );
         }
-
 
         [HttpGet("{bidId:int}")]
         public async Task<IActionResult> GetBid([FromRoute] int bidId)

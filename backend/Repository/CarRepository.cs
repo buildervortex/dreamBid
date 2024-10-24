@@ -99,9 +99,25 @@ namespace DreamBid.Repository
 
         public async Task<Car?> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId)
         {
-            var existingCar = await _context.Cars.FirstOrDefaultAsync(c => c.Id == carId && c.UserId == userId);
+            var existingCar = await _context.Cars.Include(c => c.Auctions).FirstOrDefaultAsync(c => c.Id == carId && c.UserId == userId);
 
             if (existingCar == null) return null;
+
+            // Only update the starting and reservePrices if there is no remaining auctions
+            if (updateCarDto.ReservePrice != existingCar.ReservePrice)
+            {
+                if (existingCar.Auctions.Count != 0)
+                {
+                    updateCarDto.ReservePrice = existingCar.ReservePrice;
+                }
+            }
+            if (updateCarDto.StartingPrice != existingCar.StartingPrice)
+            {
+                if (existingCar.Auctions.Count != 0)
+                {
+                    updateCarDto.StartingPrice = existingCar.StartingPrice;
+                }
+            }
 
             updateCarDto.ToCarFromUpdateCarDto(existingCar);
 
