@@ -15,7 +15,7 @@ namespace DreamBid.Mappers
                 Id = userModel.Id,
                 Bio = userModel.Bio,
                 FullName = userModel.FullName,
-                DOB = userModel.DOB
+                DOB = DateTime.SpecifyKind(userModel.DOB,DateTimeKind.Utc)
             };
         }
 

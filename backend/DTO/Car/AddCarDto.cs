@@ -15,11 +15,11 @@ namespace DreamBid.Dtos.Car
 
         [Required]
         [CarManufacturedYear]
-        public short Year { get; set; }
+        public int Year { get; set; }
 
         [Required]
         [Range(0, 1000000)]
-        public float Mileage { get; set; }
+        public double Mileage { get; set; }
 
         [Required]
         [MaxLength(20)]
@@ -29,7 +29,7 @@ namespace DreamBid.Dtos.Car
         public string ConditionReport { get; set; }
 
         [Required]
-        public float StartingPrice { get; set; }
+        public double StartingPrice { get; set; }
 
         public double? ReservePrice { get; set; }
     }

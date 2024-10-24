@@ -8,14 +8,14 @@ class LoginAccountDto {
     password="";
 }
 
-export function validateLoginAccountDto(LoginAccountDto)
+export function validateLoginAccountDto(loginAccountDto)
 {
    const schema = Joi.object({
    email: Joi.string().required(),
    password: Joi.string().min(8).max(255).required(),
 
    } )
-   return schema.validate(LoginAccountDto);
+   return schema.validate(loginAccountDto);
 }
 
 export default LoginAccountDto;

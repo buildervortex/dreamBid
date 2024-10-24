@@ -7,27 +7,27 @@ import { validateUpdateAccountDto } from "../dto/account/updateAccountDto";
 
 
 
-export default class AccountViewModel{
+export default class AccountViewModel {
 
-    static async deleteAccount(){
+    static async deleteAccount() {
 
 
         const response = await AccountService.deleteAccount();
-        
-        if ("error" in response){
-          return ErrorMessage.errorMessageFromString(response.error);
-          
+
+        if ("error" in response) {
+            return ErrorMessage.errorMessageFromString(response.error);
+
         }
-        
+
         return AccountMapper.ToAccountDto(response);
     }
 
 
-    static async getAccount(){
+    static async getAccount() {
 
         const response = await AccountService.getAccount();
 
-        if ("error" in response){
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
@@ -35,25 +35,25 @@ export default class AccountViewModel{
     }
 
 
-    static async updateAccount(updateAccountDto){
+    static async updateAccount(updateAccountDto) {
 
-        const error = validateUpdateAccountDto(updateAccountDto);
+        const { error } = validateUpdateAccountDto(updateAccountDto);
 
-        if(error)
-           return ErrorMessage.errorMessageFromJoiError(error);
+        if (error)
+            return ErrorMessage.errorMessageFromJoiError(error);
 
-        const response =await AccountService.updateAccount(updateAccountDto);
-        if ("error" in response){
+        const response = await AccountService.updateAccount(updateAccountDto);
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
-      return AccountMapper.ToAccountDto(response);
-        
+        return AccountMapper.ToAccountDto(response);
+
     }
-     
-    static async getProfilePicture(){
-       
+
+    static async getProfilePicture() {
+
         const response = await AccountService.getProfilePicture();
-        if("error"in response){
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
@@ -61,18 +61,18 @@ export default class AccountViewModel{
 
     }
 
-    static async updateProfilePicture(file){
-      
+    static async updateProfilePicture(file) {
+
         const response = await AccountService.updateProfilePicture(file);
 
-        if ("error" in response){
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
-      
+
     }
 
-   
+
 
 
 

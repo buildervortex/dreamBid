@@ -22,6 +22,72 @@ namespace backend.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("DreamBid.Models.Auction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("WinnderId")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("auctionEndTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("auctionStartTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<double?>("highestBidAmount")
+                        .HasColumnType("double");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.ToTable("Auctions");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Bid", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuctionId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("BidAmount")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("BidDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("TransactionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuctionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bids");
+                });
+
             modelBuilder.Entity("DreamBid.Models.Car", b =>
                 {
                     b.Property<int>("Id")
@@ -62,14 +128,82 @@ namespace backend.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<short>("Year")
-                        .HasColumnType("smallint");
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Cars");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("Length")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Transaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double");
+
+                    b.Property<int>("BidId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaypalTransactionId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BidId")
+                        .IsUnique();
+
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("DreamBid.Models.User", b =>
@@ -101,6 +235,9 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -123,9 +260,6 @@ namespace backend.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("ProfilePicuturePath")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
@@ -177,13 +311,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "38caa32f-acc3-4118-b380-96fdf4a98945",
+                            Id = "a9430e6f-b32c-4f1f-bd5d-3db25749dfc6",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "99d739ad-aa94-4b9f-a146-4f5ce4a0c44e",
+                            Id = "b4bf9083-8e5d-4f46-bac6-39d8cf73ec51",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -295,6 +429,36 @@ namespace backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DreamBid.Models.Auction", b =>
+                {
+                    b.HasOne("DreamBid.Models.Car", "Car")
+                        .WithMany("Auctions")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Bid", b =>
+                {
+                    b.HasOne("DreamBid.Models.Auction", "Auction")
+                        .WithMany("Bids")
+                        .HasForeignKey("AuctionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DreamBid.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Auction");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DreamBid.Models.Car", b =>
                 {
                     b.HasOne("DreamBid.Models.User", "User")
@@ -304,6 +468,34 @@ namespace backend.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Image", b =>
+                {
+                    b.HasOne("DreamBid.Models.Car", "Car")
+                        .WithMany("Images")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("DreamBid.Models.User", "User")
+                        .WithOne("Image")
+                        .HasForeignKey("DreamBid.Models.Image", "UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Car");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Transaction", b =>
+                {
+                    b.HasOne("DreamBid.Models.Bid", "Bid")
+                        .WithOne("Transaction")
+                        .HasForeignKey("DreamBid.Models.Transaction", "BidId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bid");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -357,9 +549,30 @@ namespace backend.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DreamBid.Models.Auction", b =>
+                {
+                    b.Navigation("Bids");
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Bid", b =>
+                {
+                    b.Navigation("Transaction")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DreamBid.Models.Car", b =>
+                {
+                    b.Navigation("Auctions");
+
+                    b.Navigation("Images");
+                });
+
             modelBuilder.Entity("DreamBid.Models.User", b =>
                 {
                     b.Navigation("Cars");
+
+                    b.Navigation("Image")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
