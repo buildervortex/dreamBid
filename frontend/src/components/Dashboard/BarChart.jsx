@@ -44,8 +44,8 @@ const BarChart = () => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-md shadow-md">
-      <h2 className="text-lg font-bold mb-4">Bidding History Overview</h2>
+    <div className="bg-white p-4 rounded-md shadow-md transform transition-transform duration-200 hover:scale-105">
+      <h2 className="text-lg font-bold mb-4 text-black">Bidding History Overview</h2> {/* Set text color to black */}
       <Bar data={data} options={options} />
     </div>
   );

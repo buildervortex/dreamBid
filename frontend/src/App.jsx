@@ -10,11 +10,19 @@ import Themes, { getCurrentTheme, saveCurrentTheme } from './utils/theme';
 import HomePage from './pages/home';
 import AuctionDetails from './pages/AuctionDetails';
 import Dashboard from './pages/Dashboard';
+import AuctionManagementPage from './pages/auctionManagemet';
+import WishListPage from './pages/vehiclewishlist';
+import SellerDashbordPage from './pages/sellerdashbord';
+import TestPage from './tests/test';
 
 // Navigation links
 const navLinks = [
+  { path: "/", name: "Home" },
   { path: "/login", name: "Login" },
-  { path: "/register", name: "Register" }
+  { path: "/register", name: "Register" },
+  { path: "/auctionManagement", name: "Auction Management"},
+  { path: "/wishlist", name: "Wishlist"},
+  { path: "/sellerdashbord", name: "Seller Dashbord"},
 ]
 
 function App() {
@@ -46,6 +54,10 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/AuctionDetails" element={<AuctionDetails />} />
             <Route path="/Dashboard" element={<Dashboard />} />
+            <Route path="/auctionManagement" element={<AuctionManagementPage />} />
+            <Route path="/wishlist" element={<WishListPage />} />
+            <Route path="/sellerdashbord" element={<SellerDashbordPage />} />
+            <Route path="/test" element={<TestPage/> } />
           </Routes>
         </Layout>
       </ThemeProvider>

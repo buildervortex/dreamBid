@@ -1,96 +1,100 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const Comment = ({ username, text, time }) => {
+const Comment = ({ username, text, time, avatar }) => {
+  // State to keep track of likes and replies
+  const [likeCount, setLikeCount] = useState(0);
+  const [replyCount, setReplyCount] = useState(0);
+  const [replies, setReplies] = useState([]);
+  const [replyText, setReplyText] = useState('');
+  const [showReplyForm, setShowReplyForm] = useState(false);
+
+  // Function to handle the "Like" button click
+  const handleLike = () => {
+    setLikeCount(likeCount + 1);
+  };
+
+  // Function to handle adding a reply
+  const handleAddReply = () => {
+    if (replyText.trim()) {
+      setReplies([...replies, replyText]);
+      setReplyText('');
+      setReplyCount(replyCount + 1);
+      setShowReplyForm(false);
+    }
+  };
+
+  // Function to toggle the reply form visibility
+  const toggleReplyForm = () => {
+    setShowReplyForm(!showReplyForm);
+  };
+
   return (
-    <div className="bg-purple-100 p-4 rounded-lg shadow-md mb-4">
-      <div className="flex justify-between items-center mb-2">
-        <div className="text-gray-700 font-semibold">{username}</div>
-        <div className="text-sm text-gray-500">{time}</div>
+    <div className="bg-purple-100 p-4 rounded-lg shadow-md mb-4 transform transition-transform duration-300 hover:scale-105 relative">
+      <div className="flex items-start mb-2">
+        <img
+          src={avatar}
+          className="w-10 h-10 rounded-full mr-3"
+        />
+        <div className="flex flex-col flex-grow">
+          <div className="text-gray-700 font-semibold">{username}</div>
+          <p className="text-gray-700 mb-4">{text}</p>
+          <div className="flex items-center space-x-4 text-gray-500">
+            {/* Like Button */}
+            <button
+              onClick={handleLike}
+              className="flex items-center space-x-1 hover:text-purple-700"
+            >
+              <img src="/AuctionDetails/like1.png" alt="Like" className="w-5 h-5" />
+              <span>Like</span>
+              <span>({likeCount})</span> {/* Display the number of likes */}
+            </button>
+            {/* Reply Button */}
+            <button
+              onClick={toggleReplyForm}
+              className="flex items-center space-x-1 hover:text-purple-700"
+            >
+              <img src="/AuctionDetails/Reply.png" alt="Reply" className="w-5 h-5" />
+              <span>Reply</span>
+              <span>({replyCount})</span> {/* Display the number of replies */}
+            </button>
+          </div>
+        </div>
       </div>
-      <p className="text-gray-700 mb-4">{text}</p>
-      <div className="flex items-center">
-        <button className="flex items-center mr-4 text-gray-600 hover:text-gray-800">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M14 9l-3 3m0 0l-3-3m3 3V4m0 7l3 3-3-3z"
-            />
-          </svg>
-          Like
-        </button>
-        <button className="flex items-center text-gray-600 hover:text-gray-800">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M17 8h2a2 2 0 012 2v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7a2 2 0 012-2h2m3 5v5m-4-5v5m8 0v5m-4 0v-5m0 0V3a1 1 0 112 0v8"
-            />
-          </svg>
-          Reply
-        </button>
-      </div>
+      {/* Reply Form */}
+      {showReplyForm && (
+        <div className="mt-4">
+          <textarea
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            className="w-full h-20 p-2 border border-gray-300 rounded-lg mb-2"
+            placeholder="Write a reply..."
+          />
+          <div className="flex justify-end">
+            <button
+              onClick={handleAddReply}
+              className="bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-600"
+            >
+              Add Reply
+            </button>
+          </div>
+        </div>
+      )}
+      {/* Display Replies */}
+      {replies.length > 0 && (
+        <div className="mt-4">
+          <h4 className="font-semibold text-gray-700 mb-2">Replies:</h4>
+          <ul className="space-y-2">
+            {replies.map((reply, index) => (
+              <li key={index} className="bg-gray-100 p-2 rounded-md">
+                {reply}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div className="absolute bottom-2 right-4 text-sm text-gray-500">{time}</div>
     </div>
   );
 };
 
-const CommentForm = () => {
-  return (
-    <div className="max-w-2xl mx-auto bg-white p-4 shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4 text-purple-800">Write a Comment</h2>
-      <textarea
-        className="w-full h-24 p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500"
-        placeholder="Write your comment (maximum is 500 words)"
-      />
-      <button className="mt-4 bg-purple-700 text-white px-4 py-2 rounded-md hover:bg-purple-600">
-        Comment
-      </button>
-    </div>
-  );
-};
-
-const CommentsList = () => {
-  // Sample comment data
-  const comments = [
-    { username: 'user name', text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.', time: '2 hours ago' },
-    { username: 'user name', text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ', time: '2 hours ago' },
-    { username: 'user name', text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ', time: '2 hours ago' },
-    { username: 'user name', text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ', time: '2 hours ago' },
-    { username: 'user name', text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ', time: '2 hours ago' },
-
-  ];
-
-  return (
-    <div className="max-w-2xl mx-auto mt-8">
-      <h3 className="text-xl font-bold mb-4 text-gray-700">Comments</h3>
-      {comments.map((comment, index) => (
-        <Comment key={index} {...comment} />
-      ))}
-    </div>
-  );
-};
-
-const App = () => {
-  return (
-    <div className="bg-gray-100 min-h-screen p-6">
-      <CommentForm />
-      <CommentsList />
-    </div>
-  );
-};
-
-export default App;
+export default Comment;

@@ -1,73 +1,94 @@
-import { useTheme } from "@emotion/react";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 
 const LoginBox = ({ handleSubmit }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const theme = useTheme();
-  const backgroundColor =
-    theme.palette.mode === "dark"
-      ? theme.palette.grey[900]
-      : theme.palette.grey[100];
+  
+  // Manage form data using state
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+    stayLoggedIn: false,
+  });
+  
+  // Handle form data change
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
   return (
-    <>
-      <Container component={"main"} maxWidth="xs">
-        <Box
-          sx={{
-            marginTop: 8,
-            padding: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            backgroundColor: backgroundColor,
-          }}
-        >
-          <Typography component={"h1"} variant="h4">
-            Login
-          </Typography>
-          <Box
-            component={"form"}
-            onSubmit={(e) => handleSubmit(e, email, password)}
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              id="email"
-              name="name"
-              autoComplete="email"
-              label="Email"
-              type="email"
-              autoFocus
-              fullWidth
-              value={email}
-              onChange={(e) => setEmail(e.value)}
-              required
-            ></TextField>
-            <TextField
-              required
-              margin="normal"
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.value)}
-            ></TextField>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+    <div className="flex items-center justify-center ">
+      <div className="w-full max-w-md p-10 bg-white rounded-lg shadow-2xl">
+        <h1 className="mb-8 text-4xl font-extrabold text-center text-purple-900">
+          Sign in
+        </h1>
+        <form onSubmit={(e) => handleSubmit(e, formData.username, formData.password, formData.stayLoggedIn)}>
+          {/* User Name Field */}
+          <div className="mb-6">
+            <label
+              htmlFor="username"
+              className="block mb-2 text-xl font-bold text-purple-900"
             >
-              Login
-            </Button>
-          </Box>
-        </Box>
-      </Container>
-    </>
+              User Name
+            </label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Enter user name"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full px-5 py-3 bg-purple-200 border border-purple-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              required
+            />
+          </div>
+          {/* Password Field */}
+          <div className="mb-6">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-xl font-bold text-purple-900"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-5 py-3 bg-purple-200 border border-purple-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
+              required
+            />
+          </div>
+
+          
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full py-4 text-2xl font-bold text-white transition duration-300 bg-purple-900 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-600"
+          >
+            Sign in
+          </button>
+          
+          {/* Sign up link styled as a button */}
+          <div className="mt-4 text-center">
+            <span className="text-gray-600">Haven’t an account?</span>
+            <button
+              type="button"
+              className="ml-2 font-bold text-purple-900 transition duration-300 hover:underline focus:outline-none"
+            >
+              Sign up
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

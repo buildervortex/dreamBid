@@ -5,12 +5,12 @@ const SellCarBenefits = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
       {/* Left Side: Benefits Section */}
       <div className="space-y-4 p-8 bg-gray-50 rounded-lg">
-        <h2 className="text-xl font-semibold mb-4">Why Sell on Car & Bids?</h2>
+        <h2 className="text-xl font-semibold mb-4 text-black">Why Sell on Car & Bids?</h2>
         <ul className="space-y-3">
-          <li className="flex items-center">
+          <li className="flex items-start transform transition-transform duration-200 hover:scale-105">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-700"
+              className="flex-shrink-0 h-8 w-8 text-purple-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -22,12 +22,12 @@ const SellCarBenefits = () => {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span className="ml-2">Live support from listing to post-sale</span>
+            <span className="ml-2 text-black">Live support from listing to post-sale</span>
           </li>
-          <li className="flex items-center">
+          <li className="flex items-start transform transition-transform duration-200 hover:scale-105">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-700"
+              className="flex-shrink-0 h-8 w-8 text-purple-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -39,14 +39,14 @@ const SellCarBenefits = () => {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span className="ml-2">
+            <span className="ml-2 text-black">
               Sell your car faster and go from submission to auction in under a week
             </span>
           </li>
-          <li className="flex items-center">
+          <li className="flex items-start transform transition-transform duration-200 hover:scale-105">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-700"
+              className="flex-shrink-0 h-8 w-8 text-purple-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -58,14 +58,14 @@ const SellCarBenefits = () => {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span className="ml-2">
+            <span className="ml-2 text-black">
               Access our huge audience of engaged enthusiasts
             </span>
           </li>
-          <li className="flex items-center">
+          <li className="flex items-start transform transition-transform duration-200 hover:scale-105">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-gray-700"
+              className="flex-shrink-0 h-8 w-8 text-purple-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -77,7 +77,7 @@ const SellCarBenefits = () => {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span className="ml-2">
+            <span className="ml-2 text-black">
               Sell for free and receive 100% of the sale price
             </span>
           </li>
@@ -85,7 +85,7 @@ const SellCarBenefits = () => {
       </div>
 
       {/* Right Side: Testimonial Section */}
-      <div className="p-6 bg-purple-100 rounded-lg">
+      <div className="p-6 bg-purple-100 rounded-lg transform transition-transform duration-200 hover:scale-105">
         <div className="flex items-center mb-2">
           {/* Star Ratings */}
           <div className="flex space-x-1 text-yellow-500">
@@ -103,8 +103,8 @@ const SellCarBenefits = () => {
           </div>
         </div>
 
-        <p className="text-sm text-gray-600 mb-2">Ken S. Jun 2022</p>
-        <p className="text-md text-gray-800">
+        <p className="text-sm text-black mb-2">Ken S. Jun 2022</p>
+        <p className="text-md text-black">
           The number of views and interested parties was staggering! The staff
           walked me through the entire process to make sure everything went
           smoothly, highly recommended.

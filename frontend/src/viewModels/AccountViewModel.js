@@ -2,6 +2,7 @@ import { Api } from "@mui/icons-material";
 import AccountMapper from "../mappers/AccountMapper";
 import AccountService from "../services/accountService";
 import ErrorMessage from "./ErrorViewModel";
+import { validateUpdateAccountDto } from "../dto/account/updateAccountDto";
 
 
 
@@ -68,20 +69,10 @@ export default class AccountViewModel{
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
-        return response;
-
+      
     }
 
-    static async deleteProfilePicture(){
-        const response = await AccountService.deleteProfilePicture();
-    
-        if ("error" in response){
-            return ErrorMessage.errorMessageFromString(response.error);
-        }
-
-        return response;
-
-    }
+   
 
 
 
