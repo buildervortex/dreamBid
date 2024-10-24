@@ -155,5 +155,5 @@ const AuctionManagementPage = () => {
     </div>
   );
 };
-
+ 
 export default AuctionManagementPage;
