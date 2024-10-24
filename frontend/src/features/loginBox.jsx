@@ -1,8 +1,38 @@
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
+import AuthViewModel from "../viewModels/AuthViewModel";
+import LoginAccountDto from "../dto/auth/loginAccountDto";
+import ErrorMessage from "../viewModels/ErrorViewModel";
 
-const LoginBox = ({ handleSubmit }) => {
+const LoginBox = () => {
   const theme = useTheme();
+
+  let handleSubmit =async(e)=>{
+    e.preventDefault();
+    
+    let loginaccountDto = new LoginAccountDto();
+    loginaccountDto.email = formData.username;
+    loginaccountDto.password = formData.password;
+
+
+    const accountDto =await AuthViewModel.loginAccount(loginaccountDto);
+
+
+    if(accountDto instanceof ErrorMessage){
+      console.log(accountDto.error);
+
+
+
+    }
+
+    else{
+      console.log(accountDto);
+    }
+    
+  }
+
+
+
   
   // Manage form data using state
   const [formData, setFormData] = useState({
@@ -26,7 +56,7 @@ const LoginBox = ({ handleSubmit }) => {
         <h1 className="mb-8 text-4xl font-extrabold text-center text-purple-900">
           Sign in
         </h1>
-        <form onSubmit={(e) => handleSubmit(e, formData.username, formData.password, formData.stayLoggedIn)}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           {/* User Name Field */}
           <div className="mb-6">
             <label
