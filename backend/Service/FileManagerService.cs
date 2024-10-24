@@ -62,15 +62,24 @@ namespace DreamBid.Service
             subFilePath = FileManagementUtil.GetOsDependentPath(subFilePath);
             // get the absolute subFilePath
             var FullPath = Path.Combine(this._baseDirectory, subFilePath);
+            byte[] fileData = null;
             try
             {
                 if (!File.Exists(FullPath)) return null;
-                return await File.ReadAllBytesAsync(FullPath);
+                fileData = await File.ReadAllBytesAsync(FullPath);
             }
             catch (Exception e)
             {
                 return null;
             }
+            return fileData;
+
+        }
+        public async Task<string> GetFileBase64Encoded(string subFilePath)
+        {
+            var fileData = await this.GetFile(subFilePath);
+            if (fileData == null) return null;
+            return Convert.ToBase64String(fileData);
 
         }
 

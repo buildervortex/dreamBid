@@ -1,6 +1,7 @@
 using DreamBid.Data;
 using DreamBid.Interfaces;
 using DreamBid.Models;
+using DreamBid.Repository;
 using DreamBid.Service;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,10 +12,20 @@ namespace DreamBid.Startups.Configuration
         // Add Extension to tthe IServiceCollection
         public static void ConfigureDependencies(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<ITokenService, TokenService>();
+
 
             // register file manager service
             services.AddSingleton<IFileManagerService>(provider => new FileManagerService(configuration["DreamBidBaseDirectory"]));
+
+            // configure the paypal
+            // this._configuration["PayPal:ClientSecret"]
+            services.AddScoped<IPayPalService, PayPayService>(
+                provider =>
+                {
+                    return new PayPayService(configuration["PayPal:Mode"], configuration["PayPal:ClientId"], configuration["PayPal:ClientSecret"], configuration["PayPal:CancelUrl"], configuration["PayPal:ReturnUrl"]);
+                }
+            );
+
 
             // This line registers the authentication services with the ASP.NET Core Dependency Injection (DI) system. It specifies the configuration for the authentication schemes used in the application.
             services.AddIdentity<User, IdentityRole>(options =>
@@ -33,6 +44,13 @@ namespace DreamBid.Startups.Configuration
                 options.User.RequireUniqueEmail = true;                             // set the 
             }).AddEntityFrameworkStores<ApplicationDbContext>();                    // This method specifies that Identity should use ApplicationDbContext for storing user data. 
 
+            // Add the Repositories
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<IAuctionRepository, AuctionRepository>();
+            services.AddScoped<IBidRepository, BidRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
         }
     }
 }
