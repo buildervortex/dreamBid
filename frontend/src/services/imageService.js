@@ -1,35 +1,36 @@
 import API from "./api";
 
-export default class ImageService{
+export default class ImageService {
 
-  static async getProfileImageById(id){
+  static async postProfilePicture(formData) {
 
-    const response = await API.get(`/images/profiles/${id}`);
+    const response = await API.post("/images/profiles/me", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      }
+    });
     return response.data;
   }
 
-  static async getProfileImage(){
+  static async getProfileImage() {
 
     const response = await API.get("/images/profiles/me");
     return response.data;
   }
 
-  static async postProfilePicture(file){
+  static async getProfileImageById(id) {
 
-    // const formData = new FormData();
-    //formData.append('image', file);
-
-    const response = await API.post("/images/profiles/me",file);
+    const response = await API.get(`/images/profiles/${id}`);
     return response.data;
   }
 
-  static async deleteProfilePicture(){
+  static async deleteProfilePicture() {
 
     const response = await API.delete("/images/profiles/me");
     return response.data;
   }
 
-  static async getCarImages(id,IsDecsending=true,pageNumber=1,pageSize=10,WithImageData=true){
+  static async getCarImages(id, IsDecsending = true, pageNumber = 1, pageSize = 10, WithImageData = true,queryParams) {
     // ?IsDecsending=true&pageNumber=1&pageSize=10&WithImageData=true
     const queryString = new URLSearchParams(queryParams).toString();
 
@@ -44,22 +45,22 @@ export default class ImageService{
     })
     return response.data;
   }
-  static async postCarImage(id,file){
+  static async postCarImage(id, file) {
 
-   // const formData = new FormData();
+    // const formData = new FormData();
     //formData.append('image', file);
 
-    const response = await API.post(`/images/cars/${id}`,file);
+    const response = await API.post(`/images/cars/${id}`, file);
     return response.data;
   }
 
-  static async deleteImage(id,imageId){
+  static async deleteImage(id, imageId) {
 
     const response = await API.delete(`/images/cars/${id}/${imageId}`);
     return response.data;
   }
 
-  static async deleteAllImages(id){
+  static async deleteAllImages(id) {
 
     const response = await API.delete(`/images/cars/${id}`);
     return response.data;

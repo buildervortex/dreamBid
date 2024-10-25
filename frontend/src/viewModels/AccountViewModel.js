@@ -3,9 +3,6 @@ import AccountService from "../services/accountService";
 import ErrorMessage from "./ErrorViewModel";
 import { validateUpdateAccountDto } from "../dto/account/updateAccountDto";
 
-
-
-
 export default class AccountViewModel {
 
     static async deleteAccount() {
