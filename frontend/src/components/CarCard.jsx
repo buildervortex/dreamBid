@@ -1,34 +1,17 @@
-import React from 'react'
+import React from 'react';
 
-function CarCard() {
+const CarCard = ({ car }) => {
   return (
-    <div className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-purple-100 p-4">
-    <img
-      className="w-full rounded-lg"
-      src="mycar.jpg"
-      alt="Car"
-    />
-    <div className="pt-4">
-      <div className="flex justify-between items-center mb-2">
-        <div className="bg-gray-800 text-white px-2 py-1 rounded-full text-sm flex items-center">
-          <svg
-            className="h-4 w-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-          
-          </svg>
-          8:24:57
-        </div>
-        <div className="text-lg font-semibold">$99,999</div>
+    <div className="flex-shrink-0 w-64 h-80 bg-white shadow-md rounded-lg overflow-hidden">
+      <img src={car.image} alt={car.model} className="w-full h-48 object-cover" />
+      <div className="p-4">
+        <h3 className="text-lg font-bold">{car.model}</h3>
+        <p className="text-gray-600">{car.location}</p>
+        <p className="text-purple-700 font-semibold">{car.price}</p>
+        <p className="text-sm text-gray-500">{car.time}</p>
       </div>
-      <div className="text-xl font-bold mb-2">2012 Nissan GT-R Premium</div>
-      <p className="text-gray-700 text-base">Springfield, MO 65802</p>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default CarCard
+export default CarCard;

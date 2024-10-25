@@ -1,115 +1,104 @@
-import React from 'react'
-import CarCard from '../components/CarCard'
-import ButtonBar from '../components/ButtonBar'
-import FilterCards from '../components/FilterCars'
-
+import React, { useState } from 'react';
+import CarCard from '../components/CarCard';
+import ButtonBar from '../components/ButtonBar';
+import FilterCards from '../components/FilterCars';
 
 function Auction() {
+  const cars = [
+    { id: 1, image: "car1.jpg", time: "8:24:57", price: "$99,999", model: "2012 Nissan GT-R", location: "Springfield, MO 65802" },
+    { id: 2, image: "car2.jpg", time: "6:34:21", price: "$89,000", model: "2020 Porsche 911 Carrera", location: "Los Angeles, CA 90001" },
+    { id: 3, image: "car3.jpg", time: "4:15:10", price: "$75,000", model: "2019 BMW M4", location: "New York, NY 10001" },
+    { id: 4, image: "car4.jpg", time: "2:05:43", price: "$85,500", model: "2018 Audi R8", location: "Chicago, IL 60601" },
+    { id: 5, image: "car5.jpg", time: "1:45:00", price: "$70,000", model: "2021 Tesla Model S", location: "San Francisco, CA 94101" },
+    { id: 6, image: "car6.jpg", time: "3:25:30", price: "$55,000", model: "2015 Ford Mustang", location: "Austin, TX 73301" },
+  ];
+
+  const vans = [
+    { id: 1, image: "car1.jpg", time: "8:24:57", price: "$99,999", model: "2012 Nissan GT-RS", location: "Springfield, MO 65802" },
+    { id: 2, image: "car2.jpg", time: "6:34:21", price: "$89,000", model: "2020 Porsche 911 Carrera", location: "Los Angeles, CA 90001" },
+    { id: 3, image: "car3.jpg", time: "4:15:10", price: "$75,000", model: "2019 BMW M4", location: "New York, NY 10001" },
+    { id: 4, image: "car4.jpg", time: "2:05:43", price: "$85,500", model: "2018 Audi R8", location: "Chicago, IL 60601" },
+    { id: 5, image: "car5.jpg", time: "1:45:00", price: "$70,000", model: "2021 Tesla Model S", location: "San Francisco, CA 94101" },
+    { id: 6, image: "car6.jpg", time: "3:25:30", price: "$55,000", model: "2015 Ford Mustang", location: "Austin, TX 73301" },
+  ];
+
+  
+
+  const [endingStartingIndex, setEndingStartingIndex] = useState(0);
+  const [featuredStartingIndex, setFeaturedStartingIndex] = useState(0);
+  const cardsToShow = 4; 
+  const maxEndingIndex = cars.length - cardsToShow; 
+  const maxFeaturedIndex = vans.length - cardsToShow; 
+
+  // Handlers for Ending Soon section
+  const handlePreviousEnding = () => {
+    setEndingStartingIndex((prevIndex) => 
+      prevIndex > 0 ? prevIndex - 1 : maxEndingIndex
+    );
+  };
+
+  const handleNextEnding = () => {
+    setEndingStartingIndex((prevIndex) => 
+      prevIndex < maxEndingIndex ? prevIndex + 1 : 0
+    );
+  };
+
+  // Handlers for Featured section
+  const handlePreviousFeatured = () => {
+    setFeaturedStartingIndex((prevIndex) => 
+      prevIndex > 0 ? prevIndex - 1 : maxFeaturedIndex
+    );
+  };
+
+  const handleNextFeatured = () => {
+    setFeaturedStartingIndex((prevIndex) => 
+      prevIndex < maxFeaturedIndex ? prevIndex + 1 : 0
+    );
+  };
+
   return (
-    <>
     <div className="px-4 py-8 max-w-screen-xl mx-auto">
-    <h2 className="text-3xl font-bold  mb-4 text-purple-900">
-        Auctions(40)
-      </h2>
-    <ButtonBar/>
-    <br></br>
-    <FilterCards/>
-    <br></br>
-    
-    <h1>Ending soon</h1>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-    <CarCard/>
-    <CarCard/>
-    <CarCard/>
-    <CarCard />
-    </div>
+      <h2 className="text-3xl font-bold mb-4 text-purple-900">Auctions ({cars.length})</h2>
+      <ButtonBar />
+      <br />
+      <FilterCards />
+      <br />
 
-<br></br>
-    <h1>Featured</h1>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-    <CarCard/>
-    <CarCard/>
-    <CarCard/>
-    <CarCard />
-    </div>
-
-<br></br>
-    <h1>Result(385)</h1>
-
-    <div class="flex space-x-4 mt-4">
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500 selected:border-purple-800 selected:font-bold">Ending soon</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Newly listed</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">No reserved</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Lowest Mileage</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Closest to me</a>
-</div>
-
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-    <CarCard/>
-    <CarCard/>
-    <CarCard/>
-    <CarCard />
-    </div>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-    <CarCard/>
-    <CarCard/>
-    <CarCard/>
-    <CarCard />
-    </div>
-
-
-<br></br>
-<br></br>
-
-
-<div className="flex items-center justify-center">
-      <div className="bg-purple-900 text-white px-4 py-1.5 rounded-full flex items-center">
-        {/* Left Arrow */}
-        <button className="p-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+      {/* Ending Soon Section */}
+      <h1 className='mt-4 mb-4 text-2xl'>Ending Soon</h1>
+      <div className="relative flex items-center justify-center">
+        <button onClick={handlePreviousEnding} className="absolute left-0 bg-purple-700 text-white px-2 py-1 rounded-lg">
+          ◀
         </button>
+        <div className="flex space-x-4">
+          {cars.slice(endingStartingIndex, endingStartingIndex + cardsToShow).map(car => (
+            <CarCard key={car.id} car={car} />
+          ))}
+        </div>
+        <button onClick={handleNextEnding} className="absolute right-0 bg-purple-700 text-white px-2 py-1 rounded-lg">
+          ▶
+        </button>
+      </div>
 
-        {/* Text */}
-        <span className="px-4">1 to 10</span>
+      <br />
 
-        {/* Right Arrow */}
-        <button className="p-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+      {/* Featured Section */}
+      <h1 className='mt-4 mb-4 text-2xl'>Featured</h1>
+      <div className="relative flex items-center justify-center">
+        <button onClick={handlePreviousFeatured} className="absolute left-0 bg-purple-700 text-white px-2 py-1 rounded-lg">
+          ◀
+        </button>
+        <div className="flex space-x-4">
+          {vans.slice(featuredStartingIndex, featuredStartingIndex + cardsToShow).map(van => (
+            <CarCard key={van.id} car={van} />
+          ))}
+        </div>
+        <button onClick={handleNextFeatured} className="absolute right-0 bg-purple-700 text-white px-2 py-1 rounded-lg">
+          ▶
         </button>
       </div>
     </div>
-    </div>
-
-    </>
-  )
+  );
 }
 
 export default Auction;
