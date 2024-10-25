@@ -8,6 +8,7 @@ const TestPage = () => {
     passed: [],
     failed: [],
   });
+  const [buttonState, disableButton] = useState(false);
 
   const success = (content) => {
     addPass(results, content, setResults);
@@ -17,25 +18,30 @@ const TestPage = () => {
   const TestApi = async () => {
     let x = { passed: [], failed: [] };
     setResults(x);
-    await TestMain(success, failed);
+    disableButton(true);
+    await TestMain(success, failed, disableButton);
   };
 
   return (
     <>
-      <TestResults runTests={TestApi} results={results}></TestResults>
+      <TestResults
+        runTests={TestApi}
+        results={results}
+        buttonState={buttonState}
+      ></TestResults>
     </>
   );
 };
 
 function addPass(testResult, content, setState) {
-  let passOb = { id: Test.getRandomNumber(0, 10000), name: content };
+  let passOb = { id: Math.random(), name: content };
   let resultObject = { ...testResult };
   resultObject.passed.push(passOb);
   setState(resultObject);
 }
 
 function addFail(testResult, content, setState) {
-  let failOb = { id: Test.getRandomNumber(0, 10000), name: content };
+  let failOb = { id: Math.random(), name: content };
   let resultObject = { ...testResult };
   resultObject.failed.push(failOb);
   setState(resultObject);

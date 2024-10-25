@@ -1,9 +1,8 @@
-
-class ImageDto{
+class ImageDto {
 
     id = "";
     fileName = "";
-    length = "";
+    length = 0;
     image = "";
 }
 

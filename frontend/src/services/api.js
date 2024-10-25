@@ -19,7 +19,7 @@ API.interceptors.response.use(
         }
         return response;
     },
-    (error) => {
+    (error) => { 
         return Promise.reject(error);
     }
 )

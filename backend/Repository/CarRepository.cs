@@ -75,26 +75,9 @@ namespace DreamBid.Repository
 
         }
 
-        public async Task<List<Image>> GetAllImages(GetAllImagesQueryObject getAllImagesQueryObject, int carId)
-        {
-            var images = _context.Images.Where(i => i.CarId == carId).AsQueryable();
-
-            images = getAllImagesQueryObject.IsDecsending ? images.OrderByDescending(i => i.Id) : images.OrderBy(i => i.Id);
-
-            var skipNumber = (getAllImagesQueryObject.PageNumber - 1) * getAllImagesQueryObject.PageSize;
-            return await images.Skip(skipNumber).Take(getAllImagesQueryObject.PageSize).ToListAsync();
-        }
-
         public async Task<Car?> GetCarByIdAsync(int id, string userId)
         {
             return await _context.Cars.FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
-        }
-
-        public async Task<Image?> SaveImage(Image image)
-        {
-            await this._context.Images.AddAsync(image);
-            await this._context.SaveChangesAsync();
-            return image;
         }
 
         public async Task<Car?> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId)
@@ -104,19 +87,10 @@ namespace DreamBid.Repository
             if (existingCar == null) return null;
 
             // Only update the starting and reservePrices if there is no remaining auctions
-            if (updateCarDto.ReservePrice != existingCar.ReservePrice)
+            if (existingCar.Auctions.Count == 0)
             {
-                if (existingCar.Auctions.Count != 0)
-                {
-                    updateCarDto.ReservePrice = existingCar.ReservePrice;
-                }
-            }
-            if (updateCarDto.StartingPrice != existingCar.StartingPrice)
-            {
-                if (existingCar.Auctions.Count != 0)
-                {
-                    updateCarDto.StartingPrice = existingCar.StartingPrice;
-                }
+                updateCarDto.ReservePrice = existingCar.ReservePrice;
+                updateCarDto.StartingPrice = existingCar.StartingPrice;
             }
 
             updateCarDto.ToCarFromUpdateCarDto(existingCar);
