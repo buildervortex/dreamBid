@@ -11,15 +11,18 @@ const TestPage = () => {
 
   const success = (content) => {
     let passOb = { id: Math.random(), name: content };
-    let resultObject = { ...results };
-    resultObject.passed.push(passOb);
-    setResults(resultObject);
+    setResults((prevResults) => ({
+      ...prevResults,
+      passed: [...prevResults.passed, passOb],
+    }));
   };
+
   const failed = (content) => {
     let failOb = { id: Math.random(), name: content };
-    let resultObject = { ...results };
-    resultObject.failed.push(failOb);
-    setResults(resultObject);
+    setResults((prevResults) => ({
+      ...prevResults,
+      failed: [...prevResults.failed, failOb],
+    }));
   };
 
   const TestApi = async () => {
