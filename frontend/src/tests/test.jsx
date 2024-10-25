@@ -1,6 +1,5 @@
 import TestResults from "./components/display";
 import { TestMain } from "./Main";
-import Test from "./utils/testUtils";
 import { useState } from "react";
 
 const TestPage = () => {
@@ -11,15 +10,31 @@ const TestPage = () => {
   const [buttonState, disableButton] = useState(false);
 
   const success = (content) => {
-    addPass(results, content, setResults);
+    let passOb = { id: Math.random(), name: content };
+    setResults((prevResults) => ({
+      ...prevResults,
+      passed: [...prevResults.passed, passOb],
+    }));
   };
-  const failed = (content) => addFail(results, content, setResults);
+
+  const failed = (content) => {
+    let failOb = { id: Math.random(), name: content };
+    setResults((prevResults) => ({
+      ...prevResults,
+      failed: [...prevResults.failed, failOb],
+    }));
+  };
 
   const TestApi = async () => {
-    let x = { passed: [], failed: [] };
-    setResults(x);
+    console.log(`Before set the state ${results}`);
+    console.log(results);
+    setResults({ passed: [], failed: [] });
+    console.log(`After set te state ${results}`);
+    console.log(results);
     disableButton(true);
     await TestMain(success, failed, disableButton);
+    console.log(`After run all the tests`);
+    console.log(results);
   };
 
   return (
@@ -32,18 +47,4 @@ const TestPage = () => {
     </>
   );
 };
-
-function addPass(testResult, content, setState) {
-  let passOb = { id: Math.random(), name: content };
-  let resultObject = { ...testResult };
-  resultObject.passed.push(passOb);
-  setState(resultObject);
-}
-
-function addFail(testResult, content, setState) {
-  let failOb = { id: Math.random(), name: content };
-  let resultObject = { ...testResult };
-  resultObject.failed.push(failOb);
-  setState(resultObject);
-}
 export default TestPage;

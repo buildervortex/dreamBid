@@ -33,15 +33,14 @@ export default class CarViewModel {
     }
 
     // Can Be Sort By "Id","StartingPrice","ReservePrice","Mileage","Year"
-    static async getAllCars(PageNumber = 1, PageSize = 5, SortBy = "StartingPrice", isDecsending = true) {
-
+    static async getAllCars({ PageNumber = 1, PageSize = 5, SortBy = "StartingPrice", isDecsending = true } = {}) {
         let queryObject = {
             SortBy,
             isDecsending,
             PageNumber,
             PageSize
         }
-        
+
         const response = await CarService.getAllCars(queryObject);
 
         if ("error" in response) {
