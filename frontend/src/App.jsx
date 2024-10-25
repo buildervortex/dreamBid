@@ -25,11 +25,11 @@ const navLinks = [
   { path: "/", name: "Home" },
   { path: "/login", name: "Login" },
   { path: "/register", name: "Register" },
-  { path: "/auctionManagement", name: "Auction Management"},
-  { path: "/wishlist", name: "Wishlist"},
-  { path: "/sellerdashbord", name: "Seller Dashbord"},
-  { path: "/helpcenter", name: "Helpcenter"},
-  { path: "/auction", name: "Auction"},
+  { path: "/auctionManagement", name: "Auction Management" },
+  { path: "/wishlist", name: "Wishlist" },
+  { path: "/sellerdashbord", name: "Seller Dashbord" },
+  { path: "/helpcenter", name: "Helpcenter" },
+  { path: "/auction", name: "Auction" },
 ]
 
 function App() {
@@ -51,7 +51,7 @@ function App() {
   return (
     <>
       {/* Wrap everything inside the ThemeProvider */}
-   
+
       <ThemeProvider theme={theme.theme}>
         <Layout onThemeChange={handleThemeChange} navLinks={navLinks}>
           <CssBaseline />
@@ -65,9 +65,9 @@ function App() {
             <Route path="/auctionManagement" element={<AuctionManagementPage />} />
             <Route path="/wishlist" element={<WishListPage />} />
             <Route path="/sellerdashbord" element={<SellerDashbordPage />} />
-            <Route path="/test" element={<TestPage/> } />
-            <Route path="/helpcenter" element={<Helpcenter/> } />
-            <Route path="/auction" element={<Auction/> } />
+            <Route path="/test" element={<TestPage />} />
+            <Route path="/helpcenter" element={<Helpcenter />} />
+            <Route path="/auction" element={<Auction />} />
           </Routes>
         </Layout>
       </ThemeProvider>
