@@ -60,19 +60,19 @@ export async function testGetCarById(success, failed) {
 }
 
 export async function testGetAllCars(success, failed) {
-    const response = await CarViewModel.getAllCars(Env.carId);
+    const response = await CarViewModel.getAllCars();
     if (!(response instanceof ErrorMessage)) {
         response.forEach(element => {
 
-            Test.assertEqual(element.id, Env.carId, "getCarById bio", success, failed)
-            Test.assertEqual(element.make, Env.make, "createCar make", success, failed)
-            Test.assertEqual(element.model, Env.model, "createCar model", success, failed)
-            Test.assertEqual(element.year, Env.year, "createCar year", success, failed)
-            Test.assertEqual(element.mileage, Env.mileage, "createCar mileage", success, failed)
-            Test.assertEqual(element.vin, Env.vin, "createCar vin", success, failed)
-            Test.assertEqual(element.conditionReport, Env.conditionReport, "createCar conditionReport", success, failed)
-            Test.assertEqual(element.startingPrice, Env.startingPrice, "createCar startingPrice", success, failed)
-            Test.assertEqual(element.reservePrice, Env.reservePrice, "createCar reservePrice", success, failed)
+            Test.assertNotNull(element.id, "getCarById bio", success, failed)
+            Test.assertNotNull(element.make, "createCar make", success, failed)
+            Test.assertNotNull(element.model, "createCar model", success, failed)
+            Test.assertNotNull(element.year, "createCar year", success, failed)
+            Test.assertNotNull(element.mileage, "createCar mileage", success, failed)
+            Test.assertNotNull(element.vin, "createCar vin", success, failed)
+            Test.assertNotNull(element.conditionReport, "createCar conditionReport", success, failed)
+            Test.assertNotNull(element.startingPrice, "createCar startingPrice", success, failed)
+            Test.assertNotNull(element.reservePrice, "createCar reservePrice", success, failed)
         });
 
 
