@@ -1,5 +1,5 @@
 import { testLoginAccount, testRegisterAccount } from "./viewModels/TestAuthViewModel";
-import { testDeleteAccount, testGetAccount, testUpdateAccount, testUpdateProfilePicture } from "./viewModels/TestAccountViewModel";
+import { testDeleteAccount, testGetAccount, testUpdateAccount } from "./viewModels/TestAccountViewModel";
 import { resetEnvToDefault } from "./env";
 import { testGetOwnProfileImage, testGetProfileImage, testSetProfilePicture } from "./viewModels/TestImageViewModel";
 import { testCreateCar, testGetAllCars, testGetCarById } from "./viewModels/TestCarViewModel";
