@@ -1,4 +1,3 @@
-import { Api } from "@mui/icons-material";
 import AccountMapper from "../mappers/AccountMapper";
 import AccountService from "../services/accountService";
 import ErrorMessage from "./ErrorViewModel";
@@ -49,31 +48,4 @@ export default class AccountViewModel {
         return AccountMapper.ToAccountDto(response);
 
     }
-
-    static async getProfilePicture() {
-
-        const response = await AccountService.getProfilePicture();
-        if ("error" in response) {
-            return ErrorMessage.errorMessageFromString(response.error);
-        }
-
-        return response;
-
-    }
-
-    static async updateProfilePicture(file) {
-
-        const response = await AccountService.updateProfilePicture(file);
-
-        if ("error" in response) {
-            return ErrorMessage.errorMessageFromString(response.error);
-        }
-
-
-    }
-
-
-
-
-
 }

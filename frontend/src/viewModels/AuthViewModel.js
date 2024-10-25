@@ -18,18 +18,29 @@ export default class AuthViewModel {
 
         return AccountMapper.ToAccountDto(response);
     }
-     
-    static async loginAccount(loginAccountDto){
-        const {error} = validateLoginAccountDto(loginAccountDto);
+
+    static async loginAccount(loginAccountDto) {
+        const { error } = validateLoginAccountDto(loginAccountDto);
         if (error)
             return ErrorMessage.errorMessageFromJoiError(error);
 
-        const response =await AuthService.loginAccount(loginAccountDto);
-        if("error"in response)
-        {
+        const response = await AuthService.loginAccount(loginAccountDto);
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return AccountMapper.ToAccountDto(response);
+    }
 
+    static isLoggedIn() {
+        const token = localStorage.getItem("jwtToken");
+        if (!token) {
+            return false;
+        }
+        return true;
+    }
+
+    static logOut() {
+        localStorage.removeItem("jwtToken");
+        window.location.href = "/";
     }
 }
