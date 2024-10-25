@@ -1,19 +1,44 @@
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
+import RegisterAccountDto from "../dto/auth/registerAccountDto";
+import AuthViewModel from "../viewModels/AuthViewModel";
+import ErrorMessage from "../viewModels/ErrorViewModel";
 
-const RegisterBox = ({ handleSubmit }) => {
+const RegisterBox = () => {
   const theme = useTheme();
+
+const handleSubmit = async() =>{
+
+  var registerAccountDto = new RegisterAccountDto();
+  registerAccountDto.username = formData.username;
+  registerAccountDto.password = formData.password;
+  registerAccountDto.fullName = formData.fullname;
+  registerAccountDto.DOB = formData.dob;
+  registerAccountDto.email = formData.email;
+
+  const accountDto = await AuthViewModel.registerAccount(registerAccountDto);
+
+  if(accountDto instanceof ErrorMessage){
+    console.log(accountDto.error);
   
+  }
+  else{
+    console.log(accountDto);
+  }
+
+}
+
+
   // Manage form data using state
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    fullname:'',
+    fullname: '',
     email: '',
     dob: '',
     stayLoggedIn: false,
   });
-  
+
   // Handle form data change
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -30,8 +55,8 @@ const RegisterBox = ({ handleSubmit }) => {
           Sign up
         </h1>
         <form onSubmit={(e) => handleSubmit(e, formData.username, formData.password, formData.stayLoggedIn)}>
-            {/* Full Name Field */}
-        <div className="mb-6">
+          {/* Full Name Field */}
+          <div className="mb-6">
             <label
               htmlFor="fullname"
               className="block mb-2 text-xl font-bold text-purple-900"
@@ -49,7 +74,7 @@ const RegisterBox = ({ handleSubmit }) => {
               required
             />
           </div>
-            {/* Email Field */}
+          {/* Email Field */}
           <div className="mb-6">
             <label
               htmlFor="email"
@@ -59,7 +84,7 @@ const RegisterBox = ({ handleSubmit }) => {
             </label>
             <input
               id="email"
-              name="emial"
+              name="email"
               type="email"
               placeholder="Enter your email"
               value={formData.email}
@@ -106,8 +131,8 @@ const RegisterBox = ({ handleSubmit }) => {
               required
             />
           </div>
-            {/* Date of birth Field */}
-           <div className="mb-6">
+          {/* Date of birth Field */}
+          <div className="mb-6">
             <label
               htmlFor="dob"
               className="block mb-2 text-xl font-bold text-purple-900"
@@ -125,7 +150,7 @@ const RegisterBox = ({ handleSubmit }) => {
               required
             />
           </div>
-          
+
 
           {/* Submit Button */}
           <button
@@ -134,7 +159,7 @@ const RegisterBox = ({ handleSubmit }) => {
           >
             Sign up
           </button>
-          
+
           {/* Sign up link styled as a button */}
           <div className="mt-4 text-center">
             <span className="text-gray-600">Haven’t an account?</span>
