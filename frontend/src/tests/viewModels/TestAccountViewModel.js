@@ -41,8 +41,6 @@ export async function testGetAccount(success, failed) {
     else {
         Test.assertHasOwnProperty(response, "error", `getAccount error happend. ${response.error}`, success, failed, "red");
     }
-
-
 }
 
 export async function testUpdateAccount(success, failed) {

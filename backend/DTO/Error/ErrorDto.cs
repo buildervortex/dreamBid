@@ -5,6 +5,14 @@ namespace DreamBid.Dtos.Error
 {
     public class ErrorMessage
     {
+
+        public static readonly ErrorMessage UserNotFound = new ErrorMessage("User Not Found");
+        public static readonly ErrorMessage CarNotFound = new ErrorMessage("Car Not Found");
+        public static readonly ErrorMessage AuctionNotFound = new ErrorMessage("Auction Not Found");
+        public static readonly ErrorMessage BidNotFound = new ErrorMessage("Bid Not Found");
+        public static readonly ErrorMessage TransactionNotFound = new ErrorMessage("Transaction Not Found");
+        public static readonly ErrorMessage ImageNotFound = new ErrorMessage("Image Not Found");
+        public static readonly ErrorMessage UserIdIncorrect = new ErrorMessage("User Id Incorrect");
         public string Error { get; set; }
 
         private ErrorMessage(string message)

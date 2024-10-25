@@ -15,9 +15,5 @@ namespace DreamBid.Interfaces
         Task<Car?> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId);
 
         Task<Car?> DeleteCar(int carId, string userId);
-
-        Task<Image?> SaveImage(Image image);
-
-        Task<List<Image>> GetAllImages(GetAllImagesQueryObject getAllImagesQueryObject, int carId);
     }
 }
