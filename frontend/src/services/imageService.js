@@ -30,31 +30,27 @@ export default class ImageService {
     return response.data;
   }
 
-  static async getCarImages(id, IsDecsending = true, pageNumber = 1, pageSize = 10, WithImageData = true,queryParams) {
-    // ?IsDecsending=true&pageNumber=1&pageSize=10&WithImageData=true
-    const queryString = new URLSearchParams(queryParams).toString();
+  static async postCarImage(id, formData) {
 
-    const response = await API.get(`/images/cars/${id}`, {
-      params: {
-        IsDecsending,
-        pageNumber,
-        pageSize,
-        WithImageData,
 
+    const response = await API.post(`/images/cars/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
       }
+    });
+    console.log(response);
+    return response.data;
+  }
+
+  static async getCarImages(id, queryParams) {
+    const response = await API.get(`/images/cars/${id}`, {
+      params: queryParams
     })
     return response.data;
   }
-  static async postCarImage(id, file) {
 
-    // const formData = new FormData();
-    //formData.append('image', file);
 
-    const response = await API.post(`/images/cars/${id}`, file);
-    return response.data;
-  }
-
-  static async deleteImage(id, imageId) {
+  static async deleteCarImage(id, imageId) {
 
     const response = await API.delete(`/images/cars/${id}/${imageId}`);
     return response.data;

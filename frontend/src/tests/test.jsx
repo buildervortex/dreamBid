@@ -26,15 +26,9 @@ const TestPage = () => {
   };
 
   const TestApi = async () => {
-    console.log(`Before set the state ${results}`);
-    console.log(results);
     setResults({ passed: [], failed: [] });
-    console.log(`After set te state ${results}`);
-    console.log(results);
     disableButton(true);
     await TestMain(success, failed, disableButton);
-    console.log(`After run all the tests`);
-    console.log(results);
   };
 
   return (

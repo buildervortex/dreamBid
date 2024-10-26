@@ -50,12 +50,12 @@ export default class CarViewModel {
 
     }
 
-    static async updateCar(id, updateCarDto) {
+    static async updateCar(carId, updateCarDto) {
 
         const { error } = validateUpdateCarDto(updateCarDto);
         if (error)
             return ErrorMessage.errorMessageFromJoiError(error);
-        const response = await CarService.updateCar(id, updateCarDto);
+        const response = await CarService.updateCar(carId, updateCarDto);
 
         if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
@@ -74,4 +74,3 @@ export default class CarViewModel {
     }
 
 }
-

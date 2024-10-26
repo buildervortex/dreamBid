@@ -46,27 +46,35 @@ export default class ImageViewModel {
         return ImageMapper.ToImageDto(response);
     }
 
-    static async getCarImages(id, IsDecsending = true, pageNumber = 1, pageSize = 10, WithImageData = true) {
+    static async uploadCarImage(id, imageBlob) {
+        const formData = new FormData();
+        formData.append("image", imageBlob, "carImage.jpg")
+        const response = await ImageService.postCarImage(id, formData);
 
-        const response = await ImageService.getCarImages(id, IsDecsending, pageNumber, pageSize, WithImageData);
         if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);
 
     }
+    static async getAllCarImages(id, { IsDecsending = true, pageNumber = 1, pageSize = 10, WithImageData = true } = {}) {
+        let queryObject = {
+            IsDecsending,
+            pageNumber,
+            pageSize,
+            WithImageData
+        }
 
-    static async postCarImage(id, file) {
-        const response = await ImageService.postCarImage(id, file);
+        const response = await ImageService.getCarImages(id, queryObject);
         if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
-        return ImageMapper.ToImageDto(response);
+        return response.map(image => ImageMapper.ToImageDto(image));
 
     }
 
-    static async deleteImage(id, imageId) {
-        const response = await ImageService.deleteImage(id, imageId);
+    static async deleteCarImage(id, imageId) {
+        const response = await ImageService.deleteCarImage(id, imageId);
         if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }

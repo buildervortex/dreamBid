@@ -13,11 +13,13 @@ namespace DreamBid.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IFileManagerService _fileManagerService;
+        private readonly ILogger<CarRepository> _logger;
 
-        public CarRepository(ApplicationDbContext context, IFileManagerService fileManagerService)
+        public CarRepository(ApplicationDbContext context, IFileManagerService fileManagerService, ILogger<CarRepository> logger)
         {
             this._context = context;
             this._fileManagerService = fileManagerService;
+            this._logger = logger;
         }
         public async Task<Car> AddCarAsync(Car car)
         {
@@ -87,7 +89,7 @@ namespace DreamBid.Repository
             if (existingCar == null) return null;
 
             // Only update the starting and reservePrices if there is no remaining auctions
-            if (existingCar.Auctions.Count == 0)
+            if (existingCar.Auctions.Count != 0)
             {
                 updateCarDto.ReservePrice = existingCar.ReservePrice;
                 updateCarDto.StartingPrice = existingCar.StartingPrice;

@@ -95,3 +95,65 @@ export async function testDeleteProfileImage(success, failed) {
         Test.assertHasOwnProperty(response, "error", `deleteProfilePicture error happend ${response.error}`, success, failed, "red");
     }
 }
+
+export async function testUploadCarImage(success, failed) {
+    const response = await axios.get("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU9rsF4ZPqqvq0XOQ5aGG1vbz4bkdM_6fKHg&s", {
+        responseType: 'blob',
+    })
+
+    if (response.status !== 200) throw new Error("Error fetching the iamge");
+    let imageBlob = response.data;
+
+    let responseData = await ImageViewModel.uploadCarImage(Env.carId, imageBlob);
+
+    if (!(responseData instanceof ErrorMessage)) {
+
+        Test.assertNotNull(responseData.id, "uploadCarImage id", success, failed)
+        Test.assertNotNull(responseData.fileName, "uploadCarImage fileName", success, failed)
+        Test.assertNotNull(responseData.length, "uploadCarImage length", success, failed)
+        Test.assertNull(responseData.image, "uploadCarImage image", success, failed)
+
+        Env.carImageId = responseData.id;
+        Env.carImageFileName = responseData.fileName;
+        Env.carImageLength = responseData.length;
+    }
+
+    else {
+        Test.assertHasOwnProperty(responseData, "error", `uploadCarImage error happend ${responseData.error}`, success, failed, "red");
+    }
+}
+
+
+export async function testGetAllCarImages(success, failed) {
+    let response = await ImageViewModel.getAllCarImages(Env.carId);
+
+    if (!(response instanceof ErrorMessage)) {
+
+        response.forEach(element => {
+            Test.assertEqual(element.id, Env.carImageId, "getAllCarImages id", success, failed)
+            Test.assertEqual(element.fileName, Env.carImageFileName, "getAllCarImages fileName", success, failed)
+            Test.assertEqual(element.length, Env.carImageLength, "getAllCarImages length", success, failed)
+            Test.assertNotNull(element.image, "getAllCarImages image", success, failed)
+        });
+    }
+
+    else {
+        Test.assertHasOwnProperty(response, "error", `getAllCarImages error happend ${response.error}`, success, failed, "red");
+    }
+}
+
+export async function testDeleteCarImage(success, failed) {
+    let responseData = await ImageViewModel.deleteCarImage(Env.carId, Env.carImageId);
+
+    if (!(responseData instanceof ErrorMessage)) {
+
+        Test.assertEqual(responseData.id, Env.carImageId, "deleteCarImage id", success, failed)
+        Test.assertEqual(responseData.fileName, Env.carImageFileName, "deleteCarImage fileName", success, failed)
+        Test.assertEqual(responseData.length, Env.carImageLength, "deleteCarImage length", success, failed)
+        Test.assertNull(responseData.image, "deleteCarImage image", success, failed)
+    }
+
+    else {
+        Test.assertHasOwnProperty(responseData, "error", `deleteCarImage error happend ${responseData.error}`, success, failed, "red");
+    }
+}
