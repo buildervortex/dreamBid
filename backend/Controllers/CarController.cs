@@ -28,22 +28,19 @@ namespace DreamBid.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateCar([FromBody] AddCarDto addCarDto)
+        public async Task<IActionResult> AddCar([FromBody] AddCarDto addCarDto)
         {
             if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return Unauthorized(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var dbResult = await _carRepository.AddCarAsync(addCarDto.ToCarFromAddCarDto(), userId);
 
-            var car = addCarDto.ToCarFromAddCarDto();
-            car.UserId = userId;
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
+            if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to add car"));
 
-            await _carRepository.AddCarAsync(car);
-
-            return Ok(car.ToCarDto());
+            return Ok(dbResult.Data.ToCarDto());
         }
 
         [HttpGet("{id:int}")]
@@ -54,16 +51,13 @@ namespace DreamBid.Controllers
                 return BadRequest(ErrorMessage.ErrorMessageFromString("Hello world"));
 
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return Unauthorized(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var dbResult = await _carRepository.GetCarByIdAsync(id, userId);
 
-            var car = await _carRepository.GetCarByIdAsync(id, userId);
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
 
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
-
-            return Ok(car.ToCarDto());
+            return Ok(dbResult.Data.ToCarDto());
         }
 
         [HttpGet]
@@ -71,16 +65,16 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> GetAllCars([FromQuery] GetAllCarQueryObject getAllCarQueryObject)
         {
             if (!ModelState.IsValid)
-                return NotFound(ErrorMessage.ErrorMessageFromModelState(ModelState));
+                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return Unauthorized(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var dbResult = await _carRepository.GetAllAsync(getAllCarQueryObject, userId);
 
-            var cars = await _carRepository.GetAllAsync(getAllCarQueryObject, userId);
-            var carDtos = cars.Select(c => c.ToCarDto()).ToList();
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
+
+            var carDtos = dbResult.Data.Select(c => c.ToCarDto()).ToList();
 
             return Ok(carDtos);
         }
@@ -91,18 +85,16 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> UpdateCar([FromBody] UpdateCarDto updateCarDto, [FromRoute] int id)
         {
             if (!ModelState.IsValid)
-                return NotFound(ErrorMessage.ErrorMessageFromModelState(ModelState));
+                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) Unauthorized(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var dbResult = await _carRepository.UpdateCarAsync(updateCarDto, id, userId);
 
-            var car = await _carRepository.UpdateCarAsync(updateCarDto, id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
 
-            return Ok(car.ToCarDto());
+            return Ok(dbResult.Data.ToCarDto());
         }
 
         [HttpDelete("{id:int}")]
@@ -110,15 +102,12 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> DeleteCar([FromRoute] int id)
         {
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var dBResult = await this._carRepository.DeleteCarAsync(id, userId);
+            if (dBResult.Error != null) return BadRequest(dBResult.Error);
 
-            var car = await this._carRepository.DeleteCar(id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
-
-            return Ok(car.ToCarDto());
+            return Ok(dBResult.Data.ToCarDto());
         }
     }
 }

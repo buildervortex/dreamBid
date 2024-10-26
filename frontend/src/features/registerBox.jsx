@@ -7,35 +7,13 @@ import ErrorMessage from "../viewModels/ErrorViewModel";
 const RegisterBox = () => {
   const theme = useTheme();
 
-const handleSubmit = async() =>{
-
-  var registerAccountDto = new RegisterAccountDto();
-  registerAccountDto.username = formData.username;
-  registerAccountDto.password = formData.password;
-  registerAccountDto.fullName = formData.fullname;
-  registerAccountDto.DOB = formData.dob;
-  registerAccountDto.email = formData.email;
-
-  const accountDto = await AuthViewModel.registerAccount(registerAccountDto);
-
-  if(accountDto instanceof ErrorMessage){
-    console.log(accountDto.error);
-  
-  }
-  else{
-    console.log(accountDto);
-  }
-
-}
-
-
   // Manage form data using state
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    fullname: '',
-    email: '',
-    dob: '',
+    username: "",
+    password: "",
+    fullname: "",
+    email: "",
+    dob: "",
     stayLoggedIn: false,
   });
 
@@ -54,7 +32,16 @@ const handleSubmit = async() =>{
         <h1 className="mb-8 text-4xl font-extrabold text-center text-purple-900">
           Sign up
         </h1>
-        <form onSubmit={(e) => handleSubmit(e, formData.username, formData.password, formData.stayLoggedIn)}>
+        <form
+          onSubmit={(e) =>
+            handleSubmit(
+              e,
+              formData.username,
+              formData.password,
+              formData.stayLoggedIn
+            )
+          }
+        >
           {/* Full Name Field */}
           <div className="mb-6">
             <label
@@ -150,7 +137,6 @@ const handleSubmit = async() =>{
               required
             />
           </div>
-
 
           {/* Submit Button */}
           <button
