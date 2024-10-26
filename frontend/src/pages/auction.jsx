@@ -22,6 +22,9 @@ function Auction() {
     <CarCard/>
     <CarCard/>
     <CarCard />
+    <CarCard />
+    <CarCard />
+    <CarCard />
     </div>
 
 <br></br>

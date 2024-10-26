@@ -14,13 +14,16 @@ const RegisterBox = ({ handleSubmit }) => {
     stayLoggedIn: false,
   });
   
+
+
+
   // Handle form data change
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    // setFormData({
+    //   ...formData,
+    //   [name]: type === "checkbox" ? checked : value,
+    // });
   };
 
   return (
@@ -59,7 +62,7 @@ const RegisterBox = ({ handleSubmit }) => {
             </label>
             <input
               id="email"
-              name="emial"
+              name="email"
               type="email"
               placeholder="Enter your email"
               value={formData.email}
