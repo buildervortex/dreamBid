@@ -33,7 +33,7 @@ export default function UserManagement() {
             <div className='w-1/5 bg-yellow-200 h-full sticky top-0'>
                 <p className='p-4'>SideBar</p>
             </div>
-            
+
             {/* Dynamic Scrollable Content */}
             <div className='w-4/5 h-full overflow-y-scroll flex flex-col items-center'>
                 <div className='flex items-center justify-center w-full mt-4 mb-4'>
@@ -49,6 +49,16 @@ export default function UserManagement() {
                         timestamp={comment.timestamp}
                     />
                 ))}
+
+                {/* Button for expanding/collapsing comments */}
+                <div className='flex justify-end w-full mt-4'>
+                    <button
+                        onClick={toggleComments}
+                        className='py-4 px-6 text-2xl bg-white text-black rounded-lg font-semibold border-solid border-7 border-blue-500 hover:bg-purple-500  mr-32'
+                    >
+                        {isExpanded ? 'Cancel' : 'See More'}
+                    </button>
+                </div>
 
             </div>
 
