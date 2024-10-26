@@ -3,7 +3,7 @@ using DreamBid.Models;
 
 namespace DreamBid.Interfaces
 {
-    public interface IAuctionRepository
+    public interface IAuctionRepository : IRepository
     {
         Task<Auction> AddAuctionAsync(Auction auction);
 

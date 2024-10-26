@@ -44,5 +44,10 @@ namespace DreamBid.Models
             return ValidationResult.Success;
         }
 
+        public override string ToString()
+        {
+            return $"Auction Model Object detials. ( Id: {Id} ), ( auctionStartTime: {auctionStartTime} ), ( auctionEndTime: {auctionEndTime} ), ( WinnerId: {WinnderId} ), ( highestBidAmount: {highestBidAmount} ), ( isActive: {IsActive} ), ( cardId: {CarId})";
+        }
+
     }
 }

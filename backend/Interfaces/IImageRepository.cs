@@ -3,7 +3,7 @@ using DreamBid.Models;
 
 namespace DreamBid.Interfaces
 {
-    public interface IImageRepository
+    public interface IImageRepository:IRepository
     {
         Task<Image> GetProfileImage(string userId);
 
