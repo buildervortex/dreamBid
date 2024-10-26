@@ -58,32 +58,11 @@ function Auction() {
 
   return (
     <div className="px-4 py-8 max-w-screen-xl mx-auto">
-<<<<<<< HEAD
-    <h2 className="text-3xl font-bold  mb-4 text-purple-900">
-        Auctions(40)
-      </h2>
-    <ButtonBar/>
-    <br></br>
-    <FilterCards/>
-    <br></br>
-    
-    <h1>Ending soon</h1>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-    <CarCard/>
-    <CarCard/>
-    <CarCard/>
-    <CarCard />
-    <CarCard />
-    <CarCard />
-    <CarCard />
-    </div>
-=======
       <h2 className="text-3xl font-bold mb-4 text-purple-900">Auctions ({cars.length})</h2>
       <ButtonBar />
       <br />
       <FilterCards />
       <br />
->>>>>>> 89d5008f7abc03895df1e627ad081ca1ed8e92a1
 
       {/* Ending Soon Section */}
       <h1 className='mt-4 mb-4 text-2xl'>Ending Soon</h1>

@@ -16,12 +16,6 @@ const RegisterBox = () => {
     dob: "",
     stayLoggedIn: false,
   });
-<<<<<<< HEAD
-  
-
-
-=======
->>>>>>> 89d5008f7abc03895df1e627ad081ca1ed8e92a1
 
   // Handle form data change
   const handleChange = (event) => {
