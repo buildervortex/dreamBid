@@ -29,29 +29,29 @@ namespace DreamBid.Controllers
             this._logger = logger;
         }
 
-        [HttpPost("{id:int}")]
-        [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateAuction([FromBody] AddAuctionDto addAuctionDto, [FromRoute] int id)
-        {
-            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+        // [HttpPost("{id:int}")]
+        // [Authorize(Roles = "User")]
+        // public async Task<IActionResult> CreateAuction([FromBody] AddAuctionDto addAuctionDto, [FromRoute] int id)
+        // {
+        //     if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
-            var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+        //     var userId = User.GetUserId();
+        //     if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+        //     var user = await _userManager.FindByIdAsync(userId);
+        //     if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
-            var car = await _carRepository.GetCarByIdAsync(id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+        //     var car = await _carRepository.GetCarByIdAsync(id, userId);
+        //     if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
 
-            var auction = addAuctionDto.ToAuctionFromAddAuctionDto();
-            auction.CarId = car.Id;
+        //     var auction = addAuctionDto.ToAuctionFromAddAuctionDto();
+        //     auction.CarId = car.Id;
 
-            auction = await this._auctionRepository.AddAuctionAsync(auction);
-            if (auction == null) return BadRequest(ErrorMessage.ErrorMessageFromString("Auction add failed. Check whether there is existing active auction for this car"));
+        //     auction = await this._auctionRepository.AddAuctionAsync(auction);
+        //     if (auction == null) return BadRequest(ErrorMessage.ErrorMessageFromString("Auction add failed. Check whether there is existing active auction for this car"));
 
-            return Ok(auction.ToAuctionDto());
-        }
+        //     return Ok(auction.ToAuctionDto());
+        // }
 
 
         [HttpGet("{id:int}")]

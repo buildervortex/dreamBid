@@ -3,7 +3,7 @@ using DreamBid.Models;
 
 namespace DreamBid.Interfaces
 {
-    public interface ITransactionRepository
+    public interface ITransactionRepository:IRepository
     {
         Task<Transaction> CreateTransaction(double amount, int bidId);
 

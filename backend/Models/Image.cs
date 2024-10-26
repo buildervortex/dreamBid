@@ -19,5 +19,10 @@ namespace DreamBid.Models
 
         public string? UserId { get; set; }
         public User User { get; set; }
+
+        public override string ToString()
+        {
+            return $"The Image Model Object Details. ( Id: {Id} ), ( FileName: {FileName} ), ( FilePath: {FilePath} ), ( Length: {Length} ), ( CarId: {CarId} ), ( UserId: {UserId} )";
+        }
     }
 }

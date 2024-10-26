@@ -1,21 +1,27 @@
 import { useState } from "react";
 import { useTheme } from "@mui/material/styles";
+import RegisterAccountDto from "../dto/auth/registerAccountDto";
+import AuthViewModel from "../viewModels/AuthViewModel";
+import ErrorMessage from "../viewModels/ErrorViewModel";
 
-const RegisterBox = ({ handleSubmit }) => {
+const RegisterBox = () => {
   const theme = useTheme();
-  
+
   // Manage form data using state
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    fullname:'',
-    email: '',
-    dob: '',
+    username: "",
+    password: "",
+    fullname: "",
+    email: "",
+    dob: "",
     stayLoggedIn: false,
   });
+<<<<<<< HEAD
   
 
 
+=======
+>>>>>>> 89d5008f7abc03895df1e627ad081ca1ed8e92a1
 
   // Handle form data change
   const handleChange = (event) => {
@@ -32,9 +38,18 @@ const RegisterBox = ({ handleSubmit }) => {
         <h1 className="mb-8 text-4xl font-extrabold text-center text-purple-900">
           Sign up
         </h1>
-        <form onSubmit={(e) => handleSubmit(e, formData.username, formData.password, formData.stayLoggedIn)}>
-            {/* Full Name Field */}
-        <div className="mb-6">
+        <form
+          onSubmit={(e) =>
+            handleSubmit(
+              e,
+              formData.username,
+              formData.password,
+              formData.stayLoggedIn
+            )
+          }
+        >
+          {/* Full Name Field */}
+          <div className="mb-6">
             <label
               htmlFor="fullname"
               className="block mb-2 text-xl font-bold text-purple-900"
@@ -52,7 +67,7 @@ const RegisterBox = ({ handleSubmit }) => {
               required
             />
           </div>
-            {/* Email Field */}
+          {/* Email Field */}
           <div className="mb-6">
             <label
               htmlFor="email"
@@ -109,8 +124,8 @@ const RegisterBox = ({ handleSubmit }) => {
               required
             />
           </div>
-            {/* Date of birth Field */}
-           <div className="mb-6">
+          {/* Date of birth Field */}
+          <div className="mb-6">
             <label
               htmlFor="dob"
               className="block mb-2 text-xl font-bold text-purple-900"
@@ -128,7 +143,6 @@ const RegisterBox = ({ handleSubmit }) => {
               required
             />
           </div>
-          
 
           {/* Submit Button */}
           <button
@@ -137,7 +151,7 @@ const RegisterBox = ({ handleSubmit }) => {
           >
             Sign up
           </button>
-          
+
           {/* Sign up link styled as a button */}
           <div className="mt-4 text-center">
             <span className="text-gray-600">Haven’t an account?</span>

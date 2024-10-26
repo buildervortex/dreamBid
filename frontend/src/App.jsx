@@ -52,7 +52,7 @@ function App() {
   return (
     <>
       {/* Wrap everything inside the ThemeProvider */}
-   
+
       <ThemeProvider theme={theme.theme}>
         <Layout onThemeChange={handleThemeChange} navLinks={navLinks}>
           <CssBaseline />
@@ -66,9 +66,9 @@ function App() {
             <Route path="/auctionManagement" element={<AuctionManagementPage />} />
             <Route path="/wishlist" element={<WishListPage />} />
             <Route path="/sellerdashbord" element={<SellerDashbordPage />} />
-            <Route path="/test" element={<TestPage/> } />
-            <Route path="/helpcenter" element={<Helpcenter/> } />
-            <Route path="/auction" element={<Auction/> } />
+            <Route path="/test" element={<TestPage />} />
+            <Route path="/helpcenter" element={<Helpcenter />} />
+            <Route path="/auction" element={<Auction />} />
           </Routes>
         </Layout>
       </ThemeProvider>

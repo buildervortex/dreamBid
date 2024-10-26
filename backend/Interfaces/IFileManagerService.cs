@@ -1,6 +1,6 @@
 namespace DreamBid.Interfaces
 {
-    public interface IFileManagerService
+    public interface IFileManagerService:IRepository
     {
         public Task<string> StoreFile(IFormFile file, string subFilePath, Boolean overWrite = false);
         public Task<byte[]> GetFile(string subFilePath);

@@ -1,33 +1,25 @@
 import API from "./api";
 
-export default class BidService{
+export default class BidService {
 
-    static async placeBid(auctionId,addBidDto){
+    static async placeBid(auctionId, addBidDto) {
 
-        const response = await API.post(`/bids/${auctionId}`,addBidDto);
+        const response = await API.post(`/bids/${auctionId}`, addBidDto);
+        console.log(response);
         return response.data;
-    
+
     }
 
-    static async getBid(bidId){
+    static async getBid(bidId) {
 
         const response = await API.get(`/bids/${bidId}`);
         return response.data;
     }
 
-    static async getBids(auctionId,PageNumber=1,PageSize=20,IsDecsending=true){
-        // ?PageNumber=1&PageSize=20&IsDecsending=true
+    static async getBids(auctionId, queryParams) {
 
-        const queryString = new URLSearchParams(queryParams).toString();
-        
-        const response = API.get(`/bids/auction/${auctionId}`,{
-       params: {
-        PageNumber,
-        PageSize,
-        IsDecsending,
-
-       }
-
+        const response = API.get(`/bids/auction/${auctionId}`, {
+            params: queryParams
         });
 
         return response.data;

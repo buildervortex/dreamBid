@@ -16,5 +16,10 @@ namespace DreamBid.Models
         // The Navigation property to the related images
         public Image Image { get; set; }
         public int? ImageId { get; set; } = null;
+
+        public override string ToString()
+        {
+            return $"The User Model Object Details. ( Id: {Id} ), ( userName: {UserName} ), ( passwordHash: {PasswordHash} ), ( email: {Email} ), ( fullName: {FullName} ), ( DOB: {DOB} ), ( Bio: {Bio} ), ( ImageId: {ImageId} )";
+        }
     }
 }
