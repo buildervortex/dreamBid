@@ -6,8 +6,6 @@ import ErrorMessage from "../viewModels/ErrorViewModel";
 
 const RegisterBox = () => {
   const theme = useTheme();
-
-  // Manage form data using state
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -16,20 +14,29 @@ const RegisterBox = () => {
     dob: "",
     stayLoggedIn: false,
   });
-<<<<<<< HEAD
-  
+  const [error, setError] = useState("");
 
-
-=======
->>>>>>> 89d5008f7abc03895df1e627ad081ca1ed8e92a1
-
-  // Handle form data change
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
-    // setFormData({
-    //   ...formData,
-    //   [name]: type === "checkbox" ? checked : value,
-    // });
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add logic to handle form submission
+    console.log("Form data submitted:", formData);
+    // Reset form on successful submission
+    setFormData({
+      username: "",
+      password: "",
+      fullname: "",
+      email: "",
+      dob: "",
+      stayLoggedIn: false,
+    });
   };
 
   return (
@@ -38,22 +45,11 @@ const RegisterBox = () => {
         <h1 className="mb-8 text-4xl font-extrabold text-center text-purple-900">
           Sign up
         </h1>
-        <form
-          onSubmit={(e) =>
-            handleSubmit(
-              e,
-              formData.username,
-              formData.password,
-              formData.stayLoggedIn
-            )
-          }
-        >
+        {error && <div className="mb-4 text-red-600">{error}</div>}
+        <form onSubmit={handleSubmit}>
           {/* Full Name Field */}
           <div className="mb-6">
-            <label
-              htmlFor="fullname"
-              className="block mb-2 text-xl font-bold text-purple-900"
-            >
+            <label htmlFor="fullname" className="block mb-2 text-xl font-bold text-purple-900">
               Full Name
             </label>
             <input
@@ -69,10 +65,7 @@ const RegisterBox = () => {
           </div>
           {/* Email Field */}
           <div className="mb-6">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-xl font-bold text-purple-900"
-            >
+            <label htmlFor="email" className="block mb-2 text-xl font-bold text-purple-900">
               Email
             </label>
             <input
@@ -88,10 +81,7 @@ const RegisterBox = () => {
           </div>
           {/* User Name Field */}
           <div className="mb-6">
-            <label
-              htmlFor="username"
-              className="block mb-2 text-xl font-bold text-purple-900"
-            >
+            <label htmlFor="username" className="block mb-2 text-xl font-bold text-purple-900">
               User Name
             </label>
             <input
@@ -107,10 +97,7 @@ const RegisterBox = () => {
           </div>
           {/* Password Field */}
           <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block mb-2 text-xl font-bold text-purple-900"
-            >
+            <label htmlFor="password" className="block mb-2 text-xl font-bold text-purple-900">
               Password
             </label>
             <input
@@ -126,10 +113,7 @@ const RegisterBox = () => {
           </div>
           {/* Date of birth Field */}
           <div className="mb-6">
-            <label
-              htmlFor="dob"
-              className="block mb-2 text-xl font-bold text-purple-900"
-            >
+            <label htmlFor="dob" className="block mb-2 text-xl font-bold text-purple-900">
               Date Of Birth
             </label>
             <input
@@ -143,7 +127,20 @@ const RegisterBox = () => {
               required
             />
           </div>
-
+          {/* Stay logged in Checkbox */}
+          <div className="mb-6 flex items-center">
+            <input
+              id="stayLoggedIn"
+              name="stayLoggedIn"
+              type="checkbox"
+              checked={formData.stayLoggedIn}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            <label htmlFor="stayLoggedIn" className="text-xl font-bold text-purple-900">
+              Stay logged in
+            </label>
+          </div>
           {/* Submit Button */}
           <button
             type="submit"
@@ -151,7 +148,6 @@ const RegisterBox = () => {
           >
             Sign up
           </button>
-
           {/* Sign up link styled as a button */}
           <div className="mt-4 text-center">
             <span className="text-gray-600">Haven’t an account?</span>
