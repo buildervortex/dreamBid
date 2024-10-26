@@ -33,6 +33,15 @@ export default function UserManagement() {
             <div className='w-1/5 bg-yellow-200 h-full sticky top-0'>
                 <p className='p-4'>SideBar</p>
             </div>
+            {/* Dynamic Scrollable Content */}
+            <div className='w-4/5 h-full overflow-y-scroll flex flex-col items-center'>
+                <div className='flex items-center justify-center w-full mt-4 mb-4'>
+                    <h1 className='text-4xl mt-4'>Comments</h1>
+                </div>
+
+
+            </div>
+
         </div>
     );
 }
