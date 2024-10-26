@@ -54,6 +54,7 @@ namespace DreamBid.Repository
             user.Cars.Remove(car);
 
             await _context.SaveChangesAsync();
+            await car.CleanUpCar(this._fileManagerService, this._context);
             this._logger.LogInformation($"The car deleted for user id ( {userId} ), with car ( {car} )");
 
             return new DBResult<Car>(car);

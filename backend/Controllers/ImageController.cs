@@ -1,3 +1,5 @@
+using System.Data.Common;
+using DreamBid.Data;
 using DreamBid.Dtos.Error;
 using DreamBid.Dtos.Image;
 using DreamBid.Extensions;
@@ -20,17 +22,19 @@ namespace DreamBid.Controllers
     {
         private readonly IFileManagerService _fileManagerService;
         private readonly ICarRepository _carRepository;
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<DreamBid.Models.User> _userManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IImageRepository _imageRepository;
         private readonly string _profilePicturePath = FileManagementUtil.GetOsDependentPath("users/profilePictures/");
-        public ImageController(IFileManagerService fileManagerService, ICarRepository carRepository, UserManager<DreamBid.Models.User> userManager, ILogger<AccountController> logger, IImageRepository imageRepository)
+        public ImageController(IFileManagerService fileManagerService, ICarRepository carRepository, UserManager<DreamBid.Models.User> userManager, ILogger<AccountController> logger, IImageRepository imageRepository, ApplicationDbContext context)
         {
             this._fileManagerService = fileManagerService;
             this._carRepository = carRepository;
             this._userManager = userManager;
             this._logger = logger;
             this._imageRepository = imageRepository;
+            this._context = context;
         }
 
 
@@ -38,7 +42,7 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> GetProfileImageById([FromRoute] string id)
         {
             var user = await _userManager.Users.Include(u => u.Image).SingleOrDefaultAsync(u => u.Id == id);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            if (user == null) return NotFound(ErrorMessage.UserNotFound);
 
             if (user.Image == null || user.Image.FilePath == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
 
@@ -54,16 +58,17 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> GetProfileImage()
         {
             var userId = User.GetUserId();
-            var user = await _userManager.Users.Include(u => u.Image).SingleOrDefaultAsync(u => u.Id == userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            if (user.Image == null || user.Image.FilePath == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
+            var dbResult = await this._imageRepository.GetProfileImage(userId);
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
+            if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to get profile image"));
 
-            var base64EncodedString = await this._fileManagerService.GetFileBase64Encoded(user.Image.FilePath);
+            var base64EncodedString = await this._fileManagerService.GetFileBase64Encoded(dbResult.Data.FilePath);
 
             if (base64EncodedString == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
 
-            return Ok(user.Image.ToImageDto(base64EncodedString));
+            return Ok(dbResult.Data.ToImageDto(base64EncodedString));
         }
 
         [HttpPost("profiles/me")]
@@ -71,8 +76,10 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> PostProfilePicture(IFormFile profilePicture)
         {
             var userId = User.GetUserId();
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
+
             var user = await _userManager.Users.Include(u => u.Image).SingleOrDefaultAsync(u => u.Id == userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            if (user == null) return NotFound(ErrorMessage.UserNotFound);
 
             if (profilePicture == null || profilePicture.Length <= 0) return BadRequest(ErrorMessage.ErrorMessageFromString("Invalid image for the profile picture"));
 
@@ -106,7 +113,7 @@ namespace DreamBid.Controllers
         {
             var userId = User.GetUserId();
             var user = await _userManager.Users.Include(u => u.Image).SingleOrDefaultAsync(u => u.Id == userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            if (user == null) return NotFound(ErrorMessage.UserNotFound);
 
             if (user.Image == null || user.Image.FilePath == null) return NotFound(ErrorMessage.ErrorMessageFromString("The Profile picture not found"));
 
@@ -124,22 +131,18 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> GetCarImages([FromRoute] int id, [FromQuery] GetAllImagesQueryObject getAllImagesQueryObject)
         {
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var dbResult = await this._imageRepository.GetCarImages(userId, id, getAllImagesQueryObject);
 
-            var car = await _carRepository.GetCarByIdAsync(id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
+            if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to get all car images"));
 
-            var images = await this._imageRepository.GetCarImages(id, getAllImagesQueryObject);
-            if (images == null) return Ok();
-
-            if (!getAllImagesQueryObject.WithImageData) return Ok(images.Select(i => i.ToImageDto()));
+            if (!getAllImagesQueryObject.WithImageData) return Ok(dbResult.Data.Select(i => i.ToImageDto()));
 
             var imageDtoList = new List<ImageDto>();
 
-            foreach (var image in images)
+            foreach (var image in dbResult.Data)
             {
                 if (image.FilePath == null) continue;
                 var base64EncodedImage = await this._fileManagerService.GetFileBase64Encoded(image.FilePath);
@@ -155,13 +158,13 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> PostCarImage(IFormFile image, [FromRoute] int id)
         {
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var user = await this._context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Images).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
+            if (user == null) return BadRequest(ErrorMessage.UserNotFound);
 
-            var car = await _carRepository.GetCarByIdAsync(id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+            var car = user.Cars.FirstOrDefault(c => c.Id == id);
+            if (car == null) return BadRequest(ErrorMessage.CarNotFound);
 
             if (image == null || image.Length <= 0) return BadRequest(ErrorMessage.ErrorMessageFromString("Invalid image"));
 
@@ -190,13 +193,15 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> DeleteImage([FromRoute] int id, [FromRoute] int imageId)
         {
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var user = await this._context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Images).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
+            if (user == null) return BadRequest(ErrorMessage.UserNotFound);
 
-            var car = await _carRepository.GetCarByIdAsync(id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+            var car = user.Cars.FirstOrDefault(c => c.Id == id);
+            if (car == null) return BadRequest(ErrorMessage.CarNotFound);
+
+            if (car.Auctions.Count != 0) return BadRequest(ErrorMessage.ErrorMessageFromString("The car images cannot delete while the car is in an auction"));
 
             var image = await _imageRepository.DeleteImage(imageId);
 
@@ -210,24 +215,25 @@ namespace DreamBid.Controllers
         public async Task<IActionResult> DeleteAllImages([FromRoute] int id)
         {
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var user = await this._context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Images).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
+            if (user == null) return BadRequest(ErrorMessage.UserNotFound);
 
-            var car = await _carRepository.GetCarByIdAsync(id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+            var car = user.Cars.FirstOrDefault(c => c.Id == id);
+            if (car == null) return BadRequest(ErrorMessage.CarNotFound);
 
-            var images = await _imageRepository.GetCarImages(id);
+            if (car.Auctions.Count != 0) return BadRequest(ErrorMessage.ErrorMessageFromString("The car images cannot delete while the car is in an auction"));
 
-            foreach (var image in images)
+            foreach (var image in car.Images.ToList())
             {
                 await _imageRepository.DeleteImage(image.Id);
-                this._fileManagerService.RemoveFile(image.FilePath);
             }
 
-            return Ok(images.Select(i => i.ToImageDto()));
-        }
+            string carImagePath = FileManagementUtil.GetOsDependentPath($"cars/{id}/");
+            this._fileManagerService.RemoveDirectoryRecursivly(carImagePath);
 
+            return Ok(car.Images.Select(i => i.ToImageDto()));
+        }
     }
 }

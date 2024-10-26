@@ -33,6 +33,23 @@ namespace DreamBid.Utils
             return true;
         }
 
+        public static Boolean DeleteDirectoryRecursivly(string absDirectoryPath)
+        {
+            if (absDirectoryPath == null) return false;
+
+            try
+            {
+                if (!Directory.Exists(absDirectoryPath)) return false;
+                Directory.Delete(absDirectoryPath, recursive: true);
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Delete list of files
         /// </summary>
