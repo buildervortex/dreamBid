@@ -29,7 +29,10 @@ export default function UserManagement() {
 
     return (
         <div className='flex h-screen'>
-           
+            {/* Static Sidebar */}
+            <div className='w-1/5 bg-yellow-200 h-full sticky top-0'>
+                <p className='p-4'>SideBar</p>
+            </div>
         </div>
     );
 }
