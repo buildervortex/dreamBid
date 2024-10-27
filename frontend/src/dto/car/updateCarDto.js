@@ -21,7 +21,7 @@ export function validateUpdateCarDto(updateCarDto){
    
         make: Joi.string().max(50),
         model: Joi.string().max(50),
-        year: Joi.number().integer().min(1886).max(new Date().getFullYear()).allow(null),
+        year: Joi.number().integer().min(1886).max(new Date().getFullYear()),
         mileage: Joi.number().min(0).max(1000000),
         vin: Joi.string().max(20),
         conditionReport: Joi.string(),

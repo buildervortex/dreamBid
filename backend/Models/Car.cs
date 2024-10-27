@@ -52,5 +52,10 @@ namespace DreamBid.Models
 
         public ICollection<Auction> Auctions { get; set; } = new List<Auction>();
 
+        public override string ToString()
+        {
+            return $"The Car Model Details. ( Id: {Id} ), ( Make: {Make} ), ( Model: {Model} ), ( Year: {Year} ), ( Mileage: {Mileage} ), ( VIN: {VIN} ), ( ConditionReport: {ConditionReport} ), ( StartingPrice: {StartingPrice}, ( ReservePrice: {ReservePrice}, ( UserId: {UserId} )";
+        }
+
     }
 }

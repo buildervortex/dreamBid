@@ -1,16 +1,17 @@
+using DreamBid.Helpers;
 using DreamBid.Helpers.Auction;
 using DreamBid.Models;
 
 namespace DreamBid.Interfaces
 {
-    public interface IAuctionRepository
+    public interface IAuctionRepository : IRepository
     {
-        Task<Auction> AddAuctionAsync(Auction auction);
+        Task<DBResult<Auction>> AddAuctionAsync(Auction auction, string userId, int carId);
 
-        Task<Auction?> GetAuction(int id);
+        Task<DBResult<Auction>> GetAuctionAsync(int id);
 
-        Task<List<Auction>> GetAllAuctions(GetAllAuctionQueryObject getAllAuctionQueryObject);
+        Task<DBResult<List<Auction>>> GetAllAuctionsAsync(GetAllAuctionQueryObject getAllAuctionQueryObject);
 
-        Task<Auction> DeleteAuction(int id);
+        Task<DBResult<Auction>> DeleteAuctionAsync(string userId, int auctionId);
     }
 }

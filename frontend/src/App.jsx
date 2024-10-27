@@ -25,11 +25,12 @@ const navLinks = [
   { path: "/", name: "Home" },
   { path: "/login", name: "Login" },
   { path: "/register", name: "Register" },
-  { path: "/auctionManagement", name: "Auction Management" },
-  { path: "/wishlist", name: "Wishlist" },
-  { path: "/sellerdashbord", name: "Seller Dashbord" },
-  { path: "/helpcenter", name: "Helpcenter" },
-  { path: "/auction", name: "Auction" },
+  { path: "/auctionManagement", name: "Auction Management"},
+  { path: "/wishlist", name: "Wishlist"},
+  { path: "/sellerdashbord", name: "Seller Dashbord"},
+  { path: "/helpcenter", name: "Helpcenter"},
+  { path: "/auction", name: "Auction"},
+  {path: "/AuctionDetails",name:"AuctionDetails"}
 ]
 
 function App() {

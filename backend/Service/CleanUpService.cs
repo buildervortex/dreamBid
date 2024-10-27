@@ -1,6 +1,7 @@
 using DreamBid.Data;
 using DreamBid.Interfaces;
 using DreamBid.Models;
+using DreamBid.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,7 @@ namespace DreamBid.Extensions
             {
                 fileManagerService.RemoveFile(image.FilePath);
             }
+            fileManagerService.RemoveDirectoryRecursivly(FileManagementUtil.GetOsDependentPath($"cars/{car.Id}/"));
         }
     }
 }

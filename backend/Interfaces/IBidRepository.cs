@@ -3,7 +3,7 @@ using DreamBid.Models;
 
 namespace DreamBid.Interfaces
 {
-    public interface IBidRepository
+    public interface IBidRepository:IRepository
     {
         Task<Bid> AddBid(Bid bid);
 

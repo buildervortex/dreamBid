@@ -1,6 +1,8 @@
 using DreamBid.Data;
 using DreamBid.Dtos.Car;
+using DreamBid.Dtos.Error;
 using DreamBid.Extensions;
+using DreamBid.Helpers;
 using DreamBid.Helpers.Car;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
@@ -13,39 +15,58 @@ namespace DreamBid.Repository
     {
         private readonly ApplicationDbContext _context;
         private readonly IFileManagerService _fileManagerService;
+        private readonly ILogger<CarRepository> _logger;
 
-        public CarRepository(ApplicationDbContext context, IFileManagerService fileManagerService)
+        public CarRepository(ApplicationDbContext context, IFileManagerService fileManagerService, ILogger<CarRepository> logger)
         {
             this._context = context;
             this._fileManagerService = fileManagerService;
+            this._logger = logger;
         }
-        public async Task<Car> AddCarAsync(Car car)
+        public async Task<DBResult<Car>> AddCarAsync(Car car, string userId)
         {
-            await _context.Cars.AddAsync(car);
-            await _context.SaveChangesAsync();
+            car.UserId = userId;
 
-            return car;
-        }
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Cars).FirstOrDefaultAsync();
 
-        public async Task<Car?> DeleteCar(int carId, string userId)
-        {
-            var existingCar = await _context.Cars.FirstOrDefaultAsync(c => c.Id == carId && c.UserId == userId);
+            if (user == null) return new DBResult<Car>(null, ErrorMessage.UserNotFound);
 
-            if (existingCar == null) return null;
-
-            await existingCar.CleanUpCar(this._fileManagerService, this._context);
-
-            _context.Cars.Remove(existingCar);
+            user.Cars.Add(car);
 
             await _context.SaveChangesAsync();
 
+            this._logger.LogInformation($"The car added by user ( {userId} ), with car ( {car} )");
 
-            return existingCar;
+            return new DBResult<Car>(car);
         }
 
-        public async Task<List<Car>> GetAllAsync(GetAllCarQueryObject queryObject, string userId)
+        public async Task<DBResult<Car>> DeleteCarAsync(int carId, string userId)
         {
-            var cars = _context.Cars.Where(car => car.UserId == userId).AsQueryable();
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
+
+            if (user == null) return new DBResult<Car>(null, ErrorMessage.UserNotFound);
+
+            var car = user.Cars.FirstOrDefault(c => c.Id == carId);
+
+            if (car == null) return new DBResult<Car>(null, ErrorMessage.CarNotFound);
+            if (car.Auctions.Any(a => a.IsActive)) return new DBResult<Car>(null, ErrorMessage.AlreadyInActiveAcution);
+
+            user.Cars.Remove(car);
+
+            await _context.SaveChangesAsync();
+            await car.CleanUpCar(this._fileManagerService, this._context);
+            this._logger.LogInformation($"The car deleted for user id ( {userId} ), with car ( {car} )");
+
+            return new DBResult<Car>(car);
+        }
+
+        public async Task<DBResult<List<Car>>> GetAllAsync(GetAllCarQueryObject queryObject, string userId)
+        {
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Cars).FirstOrDefaultAsync();
+
+            if (user == null) return new DBResult<List<Car>>(null, ErrorMessage.UserNotFound);
+
+            var cars = user.Cars.AsQueryable();
 
             // queryObject.SortBy.Equals("StartingPrice", StringComparison.OrdinalIgnoreCase)
             if (queryObject.SortBy.Equals("StartingPrice", StringComparison.OrdinalIgnoreCase))
@@ -68,36 +89,56 @@ namespace DreamBid.Repository
             {
                 cars = queryObject.IsDecsending ? cars.OrderByDescending(c => c.Id) : cars.OrderBy(c => c.Id);
             }
-
             var skipNumber = (queryObject.PageNumber - 1) * queryObject.PageSize;
 
-            return await cars.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
+            var carResult = cars.Skip(skipNumber).Take(queryObject.PageSize).ToList();
 
+            this._logger.LogInformation($"The all cars queried by user ( {userId} ), with cars ( {carResult} )");
+
+            return new DBResult<List<Car>>(carResult);
         }
 
-        public async Task<Car?> GetCarByIdAsync(int id, string userId)
+        public async Task<DBResult<Car>> GetCarByIdAsync(int carId, string userId)
         {
-            return await _context.Cars.FirstOrDefaultAsync(i => i.Id == id && i.UserId == userId);
+
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Cars).FirstOrDefaultAsync();
+
+            if (user == null) return new DBResult<Car>(null, ErrorMessage.UserNotFound);
+
+            var car = user.Cars.FirstOrDefault(c => c.Id == carId);
+
+            if (car == null) return new DBResult<Car>(null, ErrorMessage.CarNotFound);
+
+            this._logger.LogInformation($"The car get for user id ( {userId} ), with car ( {car} )");
+
+            return new DBResult<Car>(car);
         }
 
-        public async Task<Car?> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId)
+        public async Task<DBResult<Car>> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId)
         {
-            var existingCar = await _context.Cars.Include(c => c.Auctions).FirstOrDefaultAsync(c => c.Id == carId && c.UserId == userId);
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
 
-            if (existingCar == null) return null;
+            if (user == null) return new DBResult<Car>(null, ErrorMessage.UserNotFound);
 
-            // Only update the starting and reservePrices if there is no remaining auctions
-            if (existingCar.Auctions.Count == 0)
+            var car = user.Cars.FirstOrDefault(c => c.Id == carId);
+
+            if (car == null) return new DBResult<Car>(null, ErrorMessage.CarNotFound);
+
+            if (car.Auctions.Any(a => a.IsActive)) return new DBResult<Car>(null, ErrorMessage.AlreadyInActiveAcution);
+
+            if (car.Auctions.Count != 0)
             {
-                updateCarDto.ReservePrice = existingCar.ReservePrice;
-                updateCarDto.StartingPrice = existingCar.StartingPrice;
+                updateCarDto.ReservePrice = car.ReservePrice;
+                updateCarDto.StartingPrice = car.StartingPrice;
             }
 
-            updateCarDto.ToCarFromUpdateCarDto(existingCar);
+            updateCarDto.ToCarFromUpdateCarDto(car);
 
             await _context.SaveChangesAsync();
 
-            return existingCar;
+            this._logger.LogInformation($"The car update for user id ( {userId} ), with car ( {car} )");
+
+            return new DBResult<Car>(car);
         }
     }
 }

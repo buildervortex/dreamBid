@@ -1,5 +1,7 @@
+using DreamBid.Dtos.Error;
 using DreamBid.Middlewares;
 using DreamBid.Startups;
+using DreamBid.Startups.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,17 +10,8 @@ builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-// add the middlwares
+// Configure all the middlewares
+app.ConfigureMiddlewares();
 
-app.UseCors("AllowAllOrigins");
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
 app.MapControllers();
 app.Run();

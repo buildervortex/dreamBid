@@ -5,50 +5,54 @@ import ErrorMessage from "./ErrorViewModel";
 
 
 
-export default class AuctionViewModel{
+export default class AuctionViewModel {
 
-  static async createAuction(addAuctionDto,id){
-    const {error} = validateAddAuctionDto(addAuctionDto);
-    if(error)
-        return ErrorMessage.errorMessageFromJoiError(error);
-    const response = await AuctionService.createAuction(addAuctionDto,id);
+    static async addAuction(addAuctionDto, carId) {
+        const { error } = validateAddAuctionDto(addAuctionDto);
+        if (error)
+            return ErrorMessage.errorMessageFromJoiError(error);
+        const response = await AuctionService.createAuction(addAuctionDto, carId);
 
-    if (error in response){
-        return ErrorMessage.errorMessageFromString(response.error);
+        if ("error" in response) {
+            return ErrorMessage.errorMessageFromString(response.error);
+        }
+        return AuctionMapper.ToAuctionDto(response);
     }
-    return AuctionMapper.ToAuctionDto(response);
-    }
-    
-    static async getAuction(id){
+
+    static async getAuction(id) {
 
         const response = await AuctionService.getAuction(id);
 
-        if (error in response){
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return AuctionMapper.ToAuctionDto(response);
 
     }
 
-    static async getAllAuctions(active=false,OrderBy=StartTime,IsDecsending=true,PageNumber=4,PageSize=2){
+    static async getAllAuctions(active = false, OrderBy = "StartTime", IsDecsending = true, PageNumber = 4, PageSize = 2) {
+        let queryObject = {
+            OrderBy,
+            active,
+            PageNumber,
+            PageSize,
+            IsDecsending
+        }
 
-        const response = await AuctionService.getAllAuctions(active,OrderBy,IsDecsending,PageNumber,PageSize);
-        if(error in response){
+        const response = await AuctionService.getAllAuctions(queryObject);
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
-        return AuctionMapper.ToAuctionDto(response);
+        return response.map(auction => AuctionMapper.ToAuctionDto(auction));
     }
 
-    static async  deleteAuction(id){
+    static async deleteAuction(id) {
         const response = await AuctionService.deleteAuction(id);
-        if(error in response){
+        if ("error" in response) {
             return ErrorMessage.errorMessageFromString(response.error);
 
         }
         return AuctionMapper.ToAuctionDto(response);
     }
 
-  }
-
-
-
+}
