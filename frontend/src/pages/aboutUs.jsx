@@ -108,7 +108,57 @@ export default function AboutUs() {
                 </div>
             </div>
 
-       
+            {/* Steps Section */}
+            <div className="bg-purple-200 py-10 mt-10">
+                <h2 className="text-3xl font-semibold text-center mb-4">How To Bid on Cars in 3 Steps</h2>
+                <p className="text-center text-gray-700 mb-10">Follow these simple steps to start bidding on your dream car today!</p>
+
+                <div className="flex justify-center space-x-32">
+                    {/* Step 1 */}
+                    <div className="text-center flex flex-col items-center justify-center">
+                        <div className="flex items-center justify-center w-20 h-20 rounded-full bg-white border-4 border-black mb-4 text-xl font-semibold">
+                            1
+                        </div>
+                        <h3 className="text-xl font-bold">Find Your Car</h3>
+                        <p className="text-gray-700 mt-2">Browse through a wide selection of vehicles<br /> and find the one that suits your needs.</p>
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className="text-center flex flex-col items-center justify-center">
+                        <div className="flex items-center justify-center w-20 h-20 rounded-full bg-white border-4 border-black mb-4 text-xl font-semibold">
+                            2
+                        </div>
+                        <h3 className="text-xl font-bold">Place Your Bid</h3>
+                        <p className="text-gray-700 mt-2">Enter your bid amount and compete with other buyers.<br /> Stay updated on the auction progress.</p>
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className="text-center flex flex-col items-center justify-center">
+                        <div className="flex items-center justify-center text-white w-20 h-20 rounded-full bg-purple-800 border-4 border-black mb-4 text-xl font-semibold">
+                            3
+                        </div>
+                        <h3 className="text-xl font-bold">Win Your Car!</h3>
+                        <p className="text-gray-700 mt-2">If you have the highest bid, congratulations!<br /> You'll soon be the proud owner of your new car.</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Testimonials Section */}
+            <div className="py-10">
+                <h2 className="text-3xl font-semibold text-center mb-4">What Our Customers Say</h2>
+                <p className="text-center text-gray-700 mb-10">Join thousands of satisfied customers!</p>
+
+                <div className="flex flex-wrap justify-center space-x-4"> {/* Ensure cards display side by side */}
+                    {testimonials.map((testimonial, index) => (
+                        <div key={index} className="max-w-xs w-full sm:w-1/3 p-4 border rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                            <img src={testimonial.image} alt={testimonial.name} className="w-12 h-12 rounded-full mx-auto mb-2" />
+                            <p className="text-gray-600 italic">"{testimonial.quote}"</p>
+                            <p className="text-right font-bold">{testimonial.name}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
         </div >
     );
 }
