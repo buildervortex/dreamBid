@@ -65,6 +65,25 @@ export default function AboutUs() {
     return (
         <div>
 
+            {/* Image and Text Section */}
+            <div className='relative h-[50vh] mb-10'> {/* Set height to half screen */}
+                <img
+                    src={AboutUsImg}
+                    alt='A scenic image representing our mission'
+                    className='absolute top-0 left-0 w-full h-full object-cover z-0 opacity-80'
+                />
+                <div className='absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center flex-col text-center z-10'>
+                    <h1 className='text-6xl text-white font-extrabold drop-shadow-lg'>About Us!</h1>
+                    <h3 className='text-lg text-white mt-4 drop-shadow-md'>
+                        We drive your journey forward by connecting buyers and sellers with the perfect vehicle,<br />
+                        making the car shopping experience smoother, smarter, and more accessible for everyone.
+                    </h3>
+                    <button className='bg-white text-black py-2 px-4 mt-4 rounded-lg shadow-lg hover:bg-gray-200 transition duration-300'>
+                        Read More
+                    </button>
+                </div>
+            </div>
+
         </div>
     );
 }
