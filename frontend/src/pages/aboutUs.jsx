@@ -159,6 +159,18 @@ export default function AboutUs() {
                 </div>
             </div>
 
+            {/* Contact Form Section */}
+            <div className="bg-purple-200 py-10 px-6">
+                <h2 className="text-3xl font-semibold text-center mb-6">Get In Touch With Us</h2>
+                <p className="text-center text-gray-600 mb-8">If you have any questions or need assistance with the car bidding process, feel free to reach out.</p>
+
+                <div className="flex items-center justify-center">
+                    <div className="max-w-lg w-full">
+                        <ContactForm />
+                    </div>
+                </div>
+            </div>
+
         </div >
     );
 }
