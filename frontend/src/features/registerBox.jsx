@@ -6,35 +6,6 @@ import ErrorMessage from "../viewModels/ErrorViewModel";
 
 const RegisterBox = () => {
   const theme = useTheme();
-<<<<<<< HEAD
-
-const handleSubmit = async() =>{
-
-  var registerAccountDto = new RegisterAccountDto();
-  registerAccountDto.username = formData.username;
-  registerAccountDto.password = formData.password;
-  registerAccountDto.fullName = formData.fullname;
-  registerAccountDto.DOB = formData.dob;
-  registerAccountDto.email = formData.email;
-
-  const accountDto = await AuthViewModel.registerAccount(registerAccountDto);
-
-  if(accountDto instanceof ErrorMessage){
-    console.log(accountDto.error);
-  
-  }
-  else{
-    console.log(accountDto);
-  }
-  console.log("hello world");
-  console.log(accountDto);
-
-}
-
-
-  // Manage form data using state
-=======
->>>>>>> 3330d731d979180b6f25305759a6b02666160571
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -43,13 +14,8 @@ const handleSubmit = async() =>{
     dob: "",
     stayLoggedIn: false,
   });
-<<<<<<< HEAD
-
-  // Handle form data change
-=======
   const [error, setError] = useState("");
 
->>>>>>> 606a43986a08da3f710fb7c129444e4acdf36443
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     setFormData({

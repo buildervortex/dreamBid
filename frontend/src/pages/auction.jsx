@@ -34,7 +34,7 @@ function Auction() {
   const vehicles = [
     { id: 1, image: "vehicle1.jpg", time: "10:00:00", price: "$105,000", model: "2023 Ford Bronco", location: "Salt Lake City, UT 84101" },
     { id: 2, image: "vehicle2.jpg", time: "12:15:00", price: "$110,000", model: "2022 Toyota Land Cruiser", location: "San Diego, CA 92101" },
-    { id: 3, image: "vehicle3.jpg", time: "9:30:00", price: "$95,000", model: "2021 Mercedes-Benz ", location: "Nashville, TN 37201" },
+    { id: 3, image: "vehicle3.jpg", time: "9:30:00", price: "$95,000", model: "2021 Mercedes-Benz", location: "Nashville, TN 37201" },
     { id: 4, image: "vehicle4.jpg", time: "8:50:20", price: "$120,000", model: "2023 Cadillac Escalade", location: "Seattle, WA 98101" },
     { id: 5, image: "vehicle5.jpg", time: "7:45:10", price: "$78,500", model: "2022 Lexus LX", location: "Dallas, TX 75201" },
     { id: 6, image: "vehicle6.jpg", time: "6:30:50", price: "$80,000", model: "2021 Land Rover Defender", location: "Philadelphia, PA 19019" },
@@ -63,14 +63,11 @@ function Auction() {
 
   return (
     <div className="px-4 py-8 max-w-screen-xl mx-auto">
-<<<<<<< HEAD
-      <h2 className="text-3xl font-bold mb-4 text-purple-900">Auctions ({cars.length})</h2>
+      <h1 className="text-2xl font-bold text-purple-900 mb-4">Auctions (40)</h1>
+
       <ButtonBar />
-      <br />
+      <br></br>
       <FilterCards />
-      <br />
-=======
->>>>>>> 606a43986a08da3f710fb7c129444e4acdf36443
 
       {/* Ending Soon Section */}
       <h1 className="mt-4 mb-4 text-2xl">Ending Soon</h1>
@@ -98,15 +95,6 @@ function Auction() {
 
       {/* Result Section */}
       <h1 className="mt-4 mb-4 text-2xl">Result</h1>
-
-      <div class="flex space-x-4 mt-4">
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500 selected:border-purple-800 selected:font-bold">Ending soon</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Newly listed</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">No reserved</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Lowest Mileage</a>
-  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Closest to me</a>
-</div>
-
       <div className="relative flex items-center justify-center">
         <button onClick={handlePreviousResult} className="absolute left-0 bg-purple-700 text-white px-2 py-1 rounded-lg">◀</button>
         <div className="flex space-x-4">
@@ -118,7 +106,17 @@ function Auction() {
       </div>
 
       {/* Vehicle Section */}
-      <h1 className="mt-4 mb-4 text-2xl"></h1>
+      <h1 className="mt-4 mb-4 text-2xl">Vehicles</h1>
+
+      <div class="flex space-x-4 mt-4">
+  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500 selected:border-purple-800 selected:font-bold">Ending soon</a>
+  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Newly listed</a>
+  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">No reserved</a>
+  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Lowest Mileage</a>
+  <a href="#" class="text-black hover:underline pb-1 border-b-2 border-transparent hover:border-gray-500">Closest to me</a>
+</div>
+<br></br>
+
       <div className="relative flex items-center justify-center">
         <button onClick={handlePreviousVehicle} className="absolute left-0 bg-purple-700 text-white px-2 py-1 rounded-lg">◀</button>
         <div className="flex space-x-4">
