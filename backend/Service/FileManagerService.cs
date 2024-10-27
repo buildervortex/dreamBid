@@ -9,7 +9,6 @@ namespace DreamBid.Service
         public FileManagerService(string baseDriectory)
         {
             this._baseDirectory = Path.GetFullPath(FileManagementUtil.GetOsDependentPath(baseDriectory));
-
         }
 
         /*
@@ -97,6 +96,13 @@ namespace DreamBid.Service
                 return FileManagementUtil.DeleteFile(FullPath);
             }
             return false;
+        }
+
+        public bool RemoveDirectoryRecursivly(string subFilePath)
+        {
+            subFilePath = FileManagementUtil.GetOsDependentPath(subFilePath);
+            var FullPath = Path.Combine(this._baseDirectory, subFilePath);
+            return FileManagementUtil.DeleteDirectoryRecursivly(FullPath);
         }
 
         public Boolean RemoveFileWithAnyExtension(string subFilePath)

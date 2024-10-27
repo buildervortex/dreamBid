@@ -49,11 +49,12 @@ namespace DreamBid.Repository
             var car = user.Cars.FirstOrDefault(c => c.Id == carId);
 
             if (car == null) return new DBResult<Car>(null, ErrorMessage.CarNotFound);
-            if (car.Auctions.Count != 0) return new DBResult<Car>(null, ErrorMessage.ErrorMessageFromString("Cannot delete the car. It has auctions already"));
+            if (car.Auctions.Any(a => a.IsActive)) return new DBResult<Car>(null, ErrorMessage.AlreadyInActiveAcution);
 
             user.Cars.Remove(car);
 
             await _context.SaveChangesAsync();
+            await car.CleanUpCar(this._fileManagerService, this._context);
             this._logger.LogInformation($"The car deleted for user id ( {userId} ), with car ( {car} )");
 
             return new DBResult<Car>(car);
@@ -122,6 +123,8 @@ namespace DreamBid.Repository
             var car = user.Cars.FirstOrDefault(c => c.Id == carId);
 
             if (car == null) return new DBResult<Car>(null, ErrorMessage.CarNotFound);
+
+            if (car.Auctions.Any(a => a.IsActive)) return new DBResult<Car>(null, ErrorMessage.AlreadyInActiveAcution);
 
             if (car.Auctions.Count != 0)
             {

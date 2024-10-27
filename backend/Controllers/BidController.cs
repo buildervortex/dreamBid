@@ -40,7 +40,7 @@ namespace DreamBid.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
-            var auction = await this._auctionRepository.GetAuction(auctionId);
+            var auction = await this._auctionRepository.GetAuctionAsync(auctionId);
             if (auction == null) return NotFound(ErrorMessage.ErrorMessageFromString("The auction doesn't exists"));
 
             var bid = addBidDto.ToBidFromAddBidDto();

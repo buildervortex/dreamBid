@@ -1,3 +1,4 @@
+using System.Data.Common;
 using DreamBid.Dtos.Car;
 using DreamBid.Dtos.Error;
 using DreamBid.Extensions;
@@ -56,6 +57,7 @@ namespace DreamBid.Controllers
             var dbResult = await _carRepository.GetCarByIdAsync(id, userId);
 
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
+            if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to get car"));
 
             return Ok(dbResult.Data.ToCarDto());
         }
@@ -73,6 +75,7 @@ namespace DreamBid.Controllers
             var dbResult = await _carRepository.GetAllAsync(getAllCarQueryObject, userId);
 
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
+            if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to add cars"));
 
             var carDtos = dbResult.Data.Select(c => c.ToCarDto()).ToList();
 
@@ -93,6 +96,7 @@ namespace DreamBid.Controllers
             var dbResult = await _carRepository.UpdateCarAsync(updateCarDto, id, userId);
 
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
+            if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to update car"));
 
             return Ok(dbResult.Data.ToCarDto());
         }
@@ -101,11 +105,14 @@ namespace DreamBid.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteCar([FromRoute] int id)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+            
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
             var dBResult = await this._carRepository.DeleteCarAsync(id, userId);
             if (dBResult.Error != null) return BadRequest(dBResult.Error);
+            if (dBResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to delete car"));
 
             return Ok(dBResult.Data.ToCarDto());
         }
