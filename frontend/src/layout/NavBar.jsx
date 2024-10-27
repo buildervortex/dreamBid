@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 const NavBar = ({ onThemeChange,navLinks }) => {
     const navigate = useNavigate();
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+        <Box sx={{ flexGrow: 1 }}  >
+            <AppBar position="static" sx={{ backgroundColor: "purple" }}> 
                 <Toolbar>
                     <IconButton
                         onClick={()=>navigate("/")}

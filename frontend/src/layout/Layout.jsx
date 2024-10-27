@@ -15,6 +15,7 @@ const Layout = ({ children, ...rest }) => {
   
         <Container
           component="main"
+          maxWidth="2xl"
           sx={{
             flexGrow: 1,
             py: 4,
