@@ -1,4 +1,6 @@
 using DreamBid.Data;
+using DreamBid.Dtos.Error;
+using DreamBid.Helpers;
 using DreamBid.Helpers.Auction;
 using DreamBid.Interfaces;
 using DreamBid.Models;
@@ -13,29 +15,42 @@ namespace DreamBid.Repository
         {
             this._context = context;
         }
-        public async Task<Auction> AddAuctionAsync(Auction auction)
+        public async Task<DBResult<Auction>> AddAuctionAsync(Auction auction, string userId, int carId)
         {
-            
-            await _context.Auction.AddAsync(auction);
+            var user = await this._context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
+            if (user == null) return new DBResult<Auction>(null, ErrorMessage.UserNotFound);
+            var car = user.Cars.FirstOrDefault(c => c.Id == carId);
+            if (car == null) return new DBResult<Auction>(null, ErrorMessage.CarNotFound);
+            if (car.Auctions.Any(a => a.IsActive)) return new DBResult<Auction>(null, ErrorMessage.AlreadyInActiveAcution);
+
+            auction.CarId = carId;
+
+            car.Auctions.Add(auction);
             await _context.SaveChangesAsync();
 
-            return auction;
+            return new DBResult<Auction>(auction);
         }
 
-        public async Task<Auction> DeleteAuction(int id)
+        public async Task<DBResult<Auction>> DeleteAuctionAsync(string userId, int auctionId)
         {
-            var existingAuction = await _context.Auction.FirstOrDefaultAsync(a => a.Id == id);
+            var user = await this._context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
+            if (user == null) return new DBResult<Auction>(null, ErrorMessage.UserNotFound);
 
-            if (existingAuction == null) return null;
+            var car = user.Cars.FirstOrDefault(car => car.Auctions.Any(a => a.Id == auctionId));
+            if (car == null) return new DBResult<Auction>(null, ErrorMessage.AuctionNotFound);
 
-            _context.Auction.Remove(existingAuction);
+            var auction = car.Auctions.FirstOrDefault(a => a.Id == auctionId);
+            if (auction == null) return new DBResult<Auction>(null, ErrorMessage.AuctionNotFound);
+            if (auction.IsActive) return new DBResult<Auction>(null, ErrorMessage.ErrorMessageFromString("The auction is in active stage"));
+
+            car.Auctions.Remove(auction);
 
             await _context.SaveChangesAsync();
 
-            return existingAuction;
+            return new DBResult<Auction>(auction);
         }
 
-        public async Task<List<Auction>> GetAllAuctions(GetAllAuctionQueryObject queryObject)
+        public async Task<DBResult<List<Auction>>> GetAllAuctionsAsync(GetAllAuctionQueryObject queryObject)
         {
             var auctions = _context.Auction.AsQueryable().Where(a => a.IsActive == queryObject.Active);
 
@@ -63,12 +78,15 @@ namespace DreamBid.Repository
 
             var skipNumber = (queryObject.PageNumber - 1) * queryObject.PageSize;
 
-            return await auctions.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
+            var auctionsList = await auctions.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
+            return new DBResult<List<Auction>>(auctionsList);
         }
 
-        public async Task<Auction?> GetAuction(int id)
+        public async Task<DBResult<Auction>> GetAuctionAsync(int id)
         {
-            return await _context.Auction.FirstOrDefaultAsync(a => a.Id == id);
+            var auction = await _context.Auction.FirstOrDefaultAsync(a => a.Id == id);
+            if (auction == null) return new DBResult<Auction>(null, ErrorMessage.AuctionNotFound);
+            return new DBResult<Auction>(auction);
         }
     }
 }

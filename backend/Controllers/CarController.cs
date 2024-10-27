@@ -105,6 +105,8 @@ namespace DreamBid.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteCar([FromRoute] int id)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+            
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 

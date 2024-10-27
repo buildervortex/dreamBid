@@ -17,17 +17,18 @@ namespace DreamBid.Repository
             this._context = context;
         }
 
-        public async Task<Image> DeleteImage(int imageId)
+        public async Task<DBResult<Image>> DeleteImage(int imageId)
         {
             var image = await _context.Images.FirstOrDefaultAsync(i => i.Id == imageId);
 
-            if (image == null) return null;
+            if (image == null) return new DBResult<Image>(null, ErrorMessage.ImageNotFound);
+            if (image.FilePath == null) return new DBResult<Image>(null, ErrorMessage.ErrorMessageFromString("Internal Server error while loading the image"));
 
             _context.Images.Remove(image);
 
             await _context.SaveChangesAsync();
 
-            return image;
+            return new DBResult<Image>(image);
         }
 
         public async Task<DBResult<List<Image>>> GetCarImages(string userId, int carId, GetAllImagesQueryObject? getAllImagesQueryObject = null)

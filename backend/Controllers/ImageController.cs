@@ -41,6 +41,7 @@ namespace DreamBid.Controllers
         [HttpGet("profiles/{id}")]
         public async Task<IActionResult> GetProfileImageById([FromRoute] string id)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
             var user = await _userManager.Users.Include(u => u.Image).SingleOrDefaultAsync(u => u.Id == id);
             if (user == null) return NotFound(ErrorMessage.UserNotFound);
 
@@ -75,6 +76,7 @@ namespace DreamBid.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> PostProfilePicture(IFormFile profilePicture)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
@@ -130,6 +132,7 @@ namespace DreamBid.Controllers
         [HttpGet("cars/{id:int}")]
         public async Task<IActionResult> GetCarImages([FromRoute] int id, [FromQuery] GetAllImagesQueryObject getAllImagesQueryObject)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
@@ -157,6 +160,7 @@ namespace DreamBid.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> PostCarImage(IFormFile image, [FromRoute] int id)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
@@ -192,6 +196,7 @@ namespace DreamBid.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteImage([FromRoute] int id, [FromRoute] int imageId)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
@@ -201,19 +206,21 @@ namespace DreamBid.Controllers
             var car = user.Cars.FirstOrDefault(c => c.Id == id);
             if (car == null) return BadRequest(ErrorMessage.CarNotFound);
 
-            if (car.Auctions.Count != 0) return BadRequest(ErrorMessage.ErrorMessageFromString("The car images cannot delete while the car is in an auction"));
+            if (car.Auctions.Any(a => a.IsActive)) return BadRequest(ErrorMessage.AlreadyInActiveAcution);
 
-            var image = await _imageRepository.DeleteImage(imageId);
+            var dBResult = await _imageRepository.DeleteImage(imageId);
+            if (dBResult.Error != null) return BadRequest(dBResult.Error);
 
-            this._fileManagerService.RemoveFile(image.FilePath);
+            this._fileManagerService.RemoveFile(dBResult.Data.FilePath);
 
-            return Ok(image.ToImageDto());
+            return Ok(dBResult.Data.ToImageDto());
         }
 
         [HttpDelete("cars/{id:int}")]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> DeleteAllImages([FromRoute] int id)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
@@ -223,17 +230,20 @@ namespace DreamBid.Controllers
             var car = user.Cars.FirstOrDefault(c => c.Id == id);
             if (car == null) return BadRequest(ErrorMessage.CarNotFound);
 
-            if (car.Auctions.Count != 0) return BadRequest(ErrorMessage.ErrorMessageFromString("The car images cannot delete while the car is in an auction"));
+            if (car.Auctions.Any(a => a.IsActive)) return BadRequest(ErrorMessage.AlreadyInActiveAcution);
+
+            var images = car.Images.ToList();
 
             foreach (var image in car.Images.ToList())
             {
+                if (image.FilePath == null) continue;
                 await _imageRepository.DeleteImage(image.Id);
             }
 
             string carImagePath = FileManagementUtil.GetOsDependentPath($"cars/{id}/");
             this._fileManagerService.RemoveDirectoryRecursivly(carImagePath);
 
-            return Ok(car.Images.Select(i => i.ToImageDto()));
+            return Ok(images.Select(i => i.ToImageDto()));
         }
     }
 }
