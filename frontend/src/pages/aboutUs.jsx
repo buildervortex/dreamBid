@@ -84,6 +84,31 @@ export default function AboutUs() {
                 </div>
             </div>
 
-        </div>
+            {/* Mission and Counter Cards Section */}
+            <div className='flex flex-row w-full p-6'>
+                <div className='flex flex-col w-6/12 justify-center items-center'>
+                    <h1 className='text-2xl font-bold'>Our Mission</h1>
+                    <p className='mt-4 ml-8 mr-8 text-center'>
+                        Our mission is to revolutionize the car auction process by providing a transparent, secure, and efficient platform.
+                        We aim to connect car buyers and sellers seamlessly, offering a variety of vehicles at competitive prices through an
+                        easy-to-use bidding system. Whether you're looking to buy or sell, our goal is to ensure a smooth and rewarding experience for all.
+                    </p>
+                </div>
+                <div className='w-6/12'>
+                    <div className='flex flex-row flex-wrap justify-between'>
+                        {cardData.map((data, index) => (
+                            <CounterCard
+                                key={index}
+                                title={data.title}
+                                count={data.count}
+                                svg={data.svg}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+       
+        </div >
     );
 }
