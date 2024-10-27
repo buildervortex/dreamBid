@@ -12,6 +12,6 @@ namespace DreamBid.Interfaces
 
         Task<Image> StoreImage(Image image);
         
-        Task<Image> DeleteImage(int imageId);
+        Task<DBResult<Image>> DeleteImage(int imageId);
     }
 }
