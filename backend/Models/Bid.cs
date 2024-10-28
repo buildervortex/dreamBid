@@ -23,5 +23,10 @@ namespace DreamBid.Models
 
         public int TransactionId { get; set; }
         public Transaction Transaction { get; set; }
+
+        public override string ToString()
+        {
+            return $"The Car Model Details. ( Id: {Id} ), ( BidDateTime: {BidDateTime} ), ( BidAmount: {BidAmount} ), ( AuctionId: {AuctionId} ), ( UserId: {UserId} ), ( TransactionId: {TransactionId} )";
+        }
     }
 }

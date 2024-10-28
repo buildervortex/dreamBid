@@ -1,10 +1,8 @@
 import React from "react";
-import CarBidCard from "../components/ActiveBidsCard";
-import CarWonCard from "../components/WonAuctionsCard";
-import CarCancelCard from "../components/CancelCard";
+import CarBidCard from "../components/ActiveBidsCard"; // Adjust the import according to your file structure
 
 // Sample Car Data for Active Bids
-const activeBidsCars = [
+const carsActive = [
   {
     name: "Ford Mustang",
     details: "5.0L V8, Performance Exhaust, Weekend Cruiser with Low Mileage",
@@ -15,95 +13,97 @@ const activeBidsCars = [
   },
   {
     name: "Chevrolet Camaro",
-    details: "6.2L Supercharged V8, Track-Ready Mods, One Owner with Service Records",
+    details: "V6, Sporty Design, Perfect for Summer Drives",
     image: "AuctionManagementCars/car2.jpg",
-    currentBid: "$99,999",
-    startBid: "$99,999",
-    timeRemaining: "10:24:27",
+    currentBid: "$45,000",
+    startBid: "$40,000",
+    timeRemaining: "1:45:30",
   },
   {
-    name: "Audi Q5",
-    details: "2.0L Turbocharged Engine, Premium Package, Well-Maintained Family SUV",
+    name: "Dodge Challenger",
+    details: "Hemi V8, Classic Muscle Car, Impressive Power",
     image: "AuctionManagementCars/car3.jpg",
-    currentBid: "$99,999",
-    startBid: "$99,999",
-    timeRemaining: "12:20:57",
+    currentBid: "$55,000",
+    startBid: "$50,000",
+    timeRemaining: "2:10:00",
   },
-  
 ];
 
 // Sample Car Data for Won Auctions
-const wonAuctionCars = [
+const carsWon = [
   {
     name: "Tesla Model S",
     details: "Dual Motor All-Wheel Drive, Autopilot, Full Self-Driving, Long Range",
     image: "AuctionManagementCars/car4.jpg",
-    finalBid: "$120,000",
+    currentBid: "$120,000",
     startBid: "$110,000",
     timeRemaining: "Auction Won",
   },
   {
-    name: "BMW M3",
-    details: "3.0L Inline-6, Twin-Turbo, Competition Package, Recent Maintenance",
+    name: "BMW i8",
+    details: "Hybrid Sports Car, Innovative Design, Eco-Friendly Performance",
     image: "AuctionManagementCars/car5.jpg",
-    finalBid: "$95,000",
-    startBid: "$90,000",
+    currentBid: "$150,000",
+    startBid: "$140,000",
     timeRemaining: "Auction Won",
   },
   {
-    name: "BMW M3",
-    details: "3.0L Inline-6, Twin-Turbo, Competition Package, Recent Maintenance",
+    name: "Porsche 911",
+    details: "Iconic Sports Car, Exceptional Handling, Timeless Style",
     image: "AuctionManagementCars/car6.jpg",
-    finalBid: "$95,000",
-    startBid: "$90,000",
+    currentBid: "$200,000",
+    startBid: "$180,000",
     timeRemaining: "Auction Won",
   },
 ];
 
 // Sample Car Data for Canceled Auctions
-const cancelBidsCars = [
+const carsCanceled = [
   {
-    name: "Ford Mustang",
-    details: "5.0L V8, Performance Exhaust, Weekend Cruiser with Low Mileage",
+    name: "Nissan GT-R",
+    details: "High-Performance Sports Car, Track Ready",
     image: "AuctionManagementCars/car7.jpg",
-    startBid: "$99,999",
-    timeRemaining: "Canceled Auction",
+    currentBid: "$80,000",
+    startBid: "$85,000",
+    timeRemaining: "Auction Canceled",
   },
   {
-    name: "Chevrolet Camaro",
-    details: "6.2L Supercharged V8, Track-Ready Mods, One Owner with Service Records",
+    name: "Audi R8",
+    details: "Luxury Supercar, Sleek Design, Powerful V10 Engine",
     image: "AuctionManagementCars/car8.jpg",
-    startBid: "$99,999",
-    timeRemaining: "Canceled Auction",
+    currentBid: "$150,000",
+    startBid: "$160,000",
+    timeRemaining: "Auction Canceled",
   },
   {
-    name: "Audi Q5",
-    details: "2.0L Turbocharged Engine, Premium Package, Well-Maintained Family SUV",
+    name: "Lamborghini Huracan",
+    details: "Exotic Sports Car, All-Wheel Drive, Eye-Catching Style",
     image: "AuctionManagementCars/car9.jpg",
-    startBid: "$99,999",
-    timeRemaining: "Canceled Auction",
+    currentBid: "$250,000",
+    startBid: "$260,000",
+    timeRemaining: "Auction Canceled",
   },
 ];
 
 // AuctionManagement Component
 const AuctionManagementPage = () => {
   return (
-    <div className="flex min-w-full">
+    <div className="flex h-screen">
       {/* Side Panel */}
-      <div className="fixed top-0 left-0 w-1/5 h-full p-4 mt-20 text-white ">
+      <div className="w-1/5 h-full p-4 bg-purple-900 text-white overflow-y-auto">
         <ul>
           <li className="mb-6">
-            <button className="w-full py-3 bg-purple-900 rounded hover:bg-purple-800">
+            <button className="w-full py-3 bg-purple-800 rounded hover:bg-purple-700">
               Dashboard
             </button>
           </li>
           <li className="mb-6">
-            <button className="w-full py-3 bg-purple-900 rounded hover:bg-purple-800">
+            <button className="w-full py-3 bg-purple-800 rounded hover:bg-purple-700">
               Auctions
             </button>
           </li>
           <li>
-            <button className="w-full py-3 bg-purple-900 rounded hover:bg-purple-800">
+            <button className="w-full py-3 bg-purple-800 rounded hover:bg-purple-700">
               Comments
             </button>
           </li>
@@ -111,7 +111,7 @@ const AuctionManagementPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-grow p-8 ml-1/6">
+      <div className="flex-grow p-8 overflow-y-auto ml-20">
         {/* Profile Section */}
         <div className="flex items-center justify-end mb-8">
           <img
@@ -125,9 +125,11 @@ const AuctionManagementPage = () => {
         {/* Recently Active Bids Section */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-black">Recently Active Bids</h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            {activeBidsCars.map((car) => (
-              <CarBidCard key={car.name} car={car} />
+          <div className="flex flex-wrap -mx-2">
+            {carsActive.map((car) => (
+              <div className="w-1/3 p-2" key={car.name}>
+                <CarBidCard car={car} />
+              </div>
             ))}
           </div>
         </section>
@@ -135,9 +137,11 @@ const AuctionManagementPage = () => {
         {/* Won Auctions Section */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-black">Won Auctions</h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            {wonAuctionCars.map((car) => (
-              <CarWonCard key={car.name} car={car} />
+          <div className="flex flex-wrap -mx-2">
+            {carsWon.map((car) => (
+              <div className="w-1/3 p-2" key={car.name}>
+                <CarBidCard car={car} />
+              </div>
             ))}
           </div>
         </section>
@@ -145,9 +149,11 @@ const AuctionManagementPage = () => {
         {/* Canceled Auctions Section */}
         <section className="mb-12">
           <h2 className="mb-6 text-3xl font-bold text-black">Canceled Auctions</h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-            {cancelBidsCars.map((car) => (
-              <CarCancelCard key={car.name} car={car} />
+          <div className="flex flex-wrap -mx-2">
+            {carsCanceled.map((car) => (
+              <div className="w-1/3 p-2" key={car.name}>
+                <CarBidCard car={car} />
+              </div>
             ))}
           </div>
         </section>
@@ -155,5 +161,5 @@ const AuctionManagementPage = () => {
     </div>
   );
 };
- 
+
 export default AuctionManagementPage;

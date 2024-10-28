@@ -2,7 +2,7 @@ import Joi from "joi";
 
 class AddBidDto{
 
-    bidAmount = "";
+    bidAmount = 0;
 }
 
 export function validateAddBidDto(addBidDto){

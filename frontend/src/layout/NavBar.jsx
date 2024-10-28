@@ -1,16 +1,25 @@
 import { DarkMode, Home, LightMode } from "@mui/icons-material";
-import { AppBar, Box, Button, IconButton, ToggleButton, ToggleButtonGroup, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, IconButton, ToggleButton, ToggleButtonGroup, Toolbar, Typography, Avatar, Menu, MenuItem } from "@mui/material";
 import Themes from "../utils/theme";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const NavBar = ({ onThemeChange,navLinks }) => {
+const NavBar = ({ onThemeChange, navLinks, profilePictureUrl }) => {
     const navigate = useNavigate();
+    const [loggedIn, setLoggedIn] = useState(false); // Manage logged-in state
+    const [anchorEl, setAnchorEl] = useState(null); // For managing the dropdown menu
+
+    // Toggle login status for demonstration 
+    const handleLogin = () => setLoggedIn(true);
+    const handleMenuClick = (event) => setAnchorEl(event.currentTarget); // Open dropdown
+    const handleMenuClose = () => setAnchorEl(null); // Close dropdown
+
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+            <AppBar position="static" sx={{ backgroundColor: "purple" }}> 
                 <Toolbar>
                     <IconButton
-                        onClick={()=>navigate("/")}
+                        onClick={() => navigate("/")}
                         size="large"
                         edge="start"
                         color="inherit"
@@ -22,19 +31,57 @@ const NavBar = ({ onThemeChange,navLinks }) => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         DreamBid
                     </Typography>
-                    {navLinks.map(navLink=><Button color="inherit" key={navLink.name} sx={{textTransform:"capitalize"}} onClick={()=>navigate(navLink.path)}>{navLink.name}</Button>)}
-                    <ToggleButtonGroup exclusive onChange={onThemeChange} sx={{ml:2}}>
+                    {navLinks.map(navLink => (
+                        <Button
+                            color="inherit"
+                            key={navLink.name}
+                            sx={{ textTransform: "capitalize" }}
+                            onClick={() => navigate(navLink.path)}
+                        >
+                            {navLink.name}
+                        </Button>
+                    ))}
+                    <ToggleButtonGroup exclusive onChange={onThemeChange} sx={{ ml: 2 }}>
                         <ToggleButton value={Themes[0].name}>
-                            <LightMode></LightMode>
+                            <LightMode />
                         </ToggleButton>
                         <ToggleButton value={Themes[1].name}>
-                            <DarkMode></DarkMode>
+                            <DarkMode />
                         </ToggleButton>
                     </ToggleButtonGroup>
+                    {loggedIn ? (
+                        <>
+                            <Avatar
+                                alt="Profile Picture"
+                                src={profilePictureUrl}
+                                sx={{ ml: 2, cursor: "pointer" }}
+                                onClick={handleMenuClick} // Open menu on click
+                            />
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                            >
+                                <MenuItem onClick={() => { navigate("/sellerDashboard"); handleMenuClose(); }}>Seller Dashboard</MenuItem>
+                                <MenuItem onClick={() => { navigate("/profile"); handleMenuClose(); }}>Profile</MenuItem>
+                                <MenuItem onClick={() => { navigate("/wishlist"); handleMenuClose(); }}>Wishlist</MenuItem>
+                                <MenuItem onClick={() => { handleMenuClose(); }}>Logout</MenuItem>
+                            </Menu>
+                        </>
+                    ) : (
+                        <>
+                            <Button color="inherit" onClick={() => navigate("/register")} sx={{ ml: 2 }}>
+                                Register
+                            </Button>
+                            <Button color="inherit" onClick={handleLogin} sx={{ ml: 1 }}>
+                                Login
+                            </Button>
+                        </>
+                    )}
                 </Toolbar>
             </AppBar>
         </Box>
     );
-}
+};
 
 export default NavBar;

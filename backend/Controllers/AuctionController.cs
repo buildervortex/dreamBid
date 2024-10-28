@@ -36,53 +36,46 @@ namespace DreamBid.Controllers
             if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            var dbResult = await this._auctionRepository.AddAuctionAsync(addAuctionDto.ToAuctionFromAddAuctionDto(), userId, id);
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
+            if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal server error occoured while adding the auction"));
 
-            var car = await _carRepository.GetCarByIdAsync(id, userId);
-            if (car == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
-
-            var auction = addAuctionDto.ToAuctionFromAddAuctionDto();
-            auction.CarId = car.Id;
-
-            auction = await this._auctionRepository.AddAuctionAsync(auction);
-            if (auction == null) return BadRequest(ErrorMessage.ErrorMessageFromString("Auction add failed. Check whether there is existing active auction for this car"));
-
-            return Ok(auction.ToAuctionDto());
+            return Ok(dbResult.Data.ToAuctionDto());
         }
 
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAuction([FromRoute] int id)
         {
-            var auction = await this._auctionRepository.GetAuction(id);
-            if (auction == null) return NotFound(ErrorMessage.ErrorMessageFromString("Auction Not Found"));
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+            var dbResult = await this._auctionRepository.GetAuctionAsync(id);
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
 
-            return Ok(auction.ToAuctionDto());
+            return Ok(dbResult.Data.ToAuctionDto());
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAuctions([FromQuery] GetAllAuctionQueryObject getAllAuctionQueryObject)
         {
-            var auctions = await _auctionRepository.GetAllAuctions(getAllAuctionQueryObject);
-            var auctionDtos = auctions.Select(a => a.ToAuctionDto()).ToList();
-
-            return Ok(auctionDtos);
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+            var dbResult = await _auctionRepository.GetAllAuctionsAsync(getAllAuctionQueryObject);
+            return Ok(dbResult.Data.Select(a => a.ToAuctionDto()).ToList());
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteAuction([FromRoute] int id)
         {
+            if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+
             var userId = User.GetUserId();
-            if (userId == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user id is wrong"));
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var auction = await this._auctionRepository.DeleteAuction(id);
-            if (auction == null) return NotFound(ErrorMessage.ErrorMessageFromString("Car Not Found"));
+            var dbresult = await this._auctionRepository.DeleteAuctionAsync(userId, id);
+            if (dbresult.Error != null) return BadRequest(dbresult.Error);
 
-            return Ok(auction.ToAuctionDto());
-
+            return Ok(dbresult.Data.ToAuctionDto());
         }
     }
 }

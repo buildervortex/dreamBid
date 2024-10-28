@@ -1,5 +1,16 @@
 import React from 'react';
 
+// Sample data array
+const tableData = [
+  { label1: 'Engine', value1: '5.5L V8', label2: 'Make', value2: 'Chevrolet' },
+  { label1: 'Drivetrain', value1: 'Rear-wheel drive', label2: 'Model', value2: 'C8 Corvette' },
+  { label1: 'Transmission', value1: 'Automatic (8-Speed)', label2: 'Mileage', value2: '1,900Km' },
+  { label1: 'Body Style', value1: 'Convertible', label2: 'VIN', value2: '1G1YE3D30P5602574' },
+  { label1: 'Exterior Color', value1: 'Arctic White/Carbon Flash', label2: 'Title Status', value2: 'Clean (FL)' },
+  { label1: 'Interior Color', value1: 'Adrenaline Red', label2: 'Location', value2: 'Fort Pierce, FL 34982' },
+  { label1: 'Seller Type', value1: 'Dealer', label2: 'Sub Location', value2: 'mymigo555' },
+];
+
 function Table() {
   return (
     <div className="overflow-x-auto">
@@ -7,49 +18,14 @@ function Table() {
         <div className="overflow-hidden">
           <table className="min-w-full text-left text-sm">
             <tbody>
-              {/** Table rows with alternating background colors */}
-              <tr className="bg-purple-50">
-                <td className="px-6 py-4 font-medium text-gray-800">Engine</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">5.5L V8</td>
-                <td className="px-6 py-4 font-medium text-gray-800">Make</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Chevrolet</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium text-gray-800">Drivetrain</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Rear-wheel drive</td>
-                <td className="px-6 py-4 font-medium text-gray-800">Model</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">C8 Corvette</td>
-              </tr>
-              <tr className="bg-purple-50">
-                <td className="px-6 py-4 font-medium text-gray-800">Transmission</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Automatic (8-Speed)</td>
-                <td className="px-6 py-4 font-medium text-gray-800">Mileage</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">1,900Km</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium text-gray-800">Body Style</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Convertible</td>
-                <td className="px-6 py-4 font-medium text-gray-800">VIN</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">1G1YE3D30P5602574</td>
-              </tr>
-              <tr className="bg-purple-50">
-                <td className="px-6 py-4 font-medium text-gray-800">Exterior Color</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Arctic White/Carbon Flash</td>
-                <td className="px-6 py-4 font-medium text-gray-800">Title Status</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Clean (FL)</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 font-medium text-gray-800">Interior Color</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Adrenaline Red</td>
-                <td className="px-6 py-4 font-medium text-gray-800">Location</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Fort Pierce, FL 34982</td>
-              </tr>
-              <tr className="bg-purple-50">
-                <td className="px-6 py-4 font-medium text-gray-800">Seller Type</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">Dealer</td>
-                <td className="px-6 py-4 font-medium text-gray-800">Sub Location</td>
-                <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">mymigo555</td>
-              </tr>
+              {tableData.map((row, index) => (
+                <tr key={index} className={index % 2 === 0 ? 'bg-purple-50' : ''}>
+                  <td className="px-6 py-4 font-medium text-gray-800">{row.label1}</td>
+                  <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">{row.value1}</td>
+                  <td className="px-6 py-4 font-medium text-gray-800">{row.label2}</td>
+                  <td className="px-6 py-4 text-gray-700 hover:scale-105 transition-transform">{row.value2}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -1,7 +1,7 @@
-class AuctionDto{
+class AuctionDto {
     id = "";
-    auctionStartTime = "";
-    auctionEndTime = "";
+    auctionStartTime = new Date();
+    auctionEndTime = new Date();
     winnerId = "";
     highestBidAmount = "";
     isActive = "";

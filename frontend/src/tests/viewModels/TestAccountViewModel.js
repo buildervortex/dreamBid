@@ -6,24 +6,6 @@ import Test from "../utils/testUtils";
 
 
 
-export async function testDeleteAccount(success, failed) {
-
-    const response = await AccountViewModel.deleteAccount();
-
-    if (!(response instanceof ErrorMessage)) {
-
-        Test.assertEqual(response.id, Env.AccountId, "deleteAccount id", success, failed);
-        Test.assertEqual(response.bio, Env.bio, "deleteAccount bio", success, failed)
-        Test.assertEqual(response.DOB.toISOString(), Env.DOB.toISOString(), "deleteAccount DOB", success, failed)
-        Test.assertEqual(response.fullName, Env.fullName, "deleteAccount fullName", success, failed)
-        Test.assertEqual(response.email, Env.email, "deleteAccount email", success, failed)
-        Test.assertEqual(response.userName, Env.username, "deleteAccount userName", success, failed)
-    }
-    else {
-        Test.assertHasOwnProperty(response, "error", `deleteAccount error happend. ${response.error}`, success, failed, "red");
-    }
-
-}
 
 export async function testGetAccount(success, failed) {
 
@@ -41,8 +23,6 @@ export async function testGetAccount(success, failed) {
     else {
         Test.assertHasOwnProperty(response, "error", `getAccount error happend. ${response.error}`, success, failed, "red");
     }
-
-
 }
 
 export async function testUpdateAccount(success, failed) {
@@ -77,28 +57,21 @@ export async function testUpdateAccount(success, failed) {
 }
 
 
+export async function testDeleteAccount(success, failed) {
 
-export async function testUpdateProfilePicture(success, failed) {
+    const response = await AccountViewModel.deleteAccount();
 
-    let newProfilePicture = "https://example.com/new-profile-picture.jpg";
+    if (!(response instanceof ErrorMessage)) {
 
-
-    const response = await AccountViewModel.updateProfilePicture(newProfilePicture);
-
-    if (response && !(response instanceof ErrorMessage)) {
-
-        Test.assertNotNull(response.id, "updateProfilePicture id", success, failed);
-        Test.assertNotNull(response.profilePicture, "updateProfilePicture profilePicture", success, failed);
-        Test.assertEqual(response.profilePicture, newProfilePicture, "updateProfilePicture profilePicture URL", success, failed);
-
-    } else if (response) {
-        Test.assertHasOwnProperty(response, "error", `updateProfilePicture error happened. ${response.error}`, success, failed, "red");
-    } else {
-        Test.fail("No response from updateProfilePicture API", success, failed);
+        Test.assertEqual(response.id, Env.AccountId, "deleteAccount id", success, failed);
+        Test.assertEqual(response.bio, Env.bio, "deleteAccount bio", success, failed)
+        Test.assertEqual(response.DOB.toISOString(), Env.DOB.toISOString(), "deleteAccount DOB", success, failed)
+        Test.assertEqual(response.fullName, Env.fullName, "deleteAccount fullName", success, failed)
+        Test.assertEqual(response.email, Env.email, "deleteAccount email", success, failed)
+        Test.assertEqual(response.userName, Env.username, "deleteAccount userName", success, failed)
+    }
+    else {
+        Test.assertHasOwnProperty(response, "error", `deleteAccount error happend. ${response.error}`, success, failed, "red");
     }
 
 }
-
-
-
-

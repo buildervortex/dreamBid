@@ -1,23 +1,20 @@
 using DreamBid.Dtos.Car;
+using DreamBid.Helpers;
 using DreamBid.Helpers.Car;
 using DreamBid.Models;
 
 namespace DreamBid.Interfaces
 {
-    public interface ICarRepository
+    public interface ICarRepository : IRepository
     {
-        Task<Car> AddCarAsync(Car car);
+        Task<DBResult<Car>> AddCarAsync(Car car, string userId);
 
-        Task<Car?> GetCarByIdAsync(int id, string userId);
+        Task<DBResult<Car>> GetCarByIdAsync(int id, string userId);
 
-        Task<List<Car>> GetAllAsync(GetAllCarQueryObject queryObject, string userId);
+        Task<DBResult<List<Car>>> GetAllAsync(GetAllCarQueryObject queryObject, string userId);
 
-        Task<Car?> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId);
+        Task<DBResult<Car>> UpdateCarAsync(UpdateCarDto updateCarDto, int carId, string userId);
 
-        Task<Car?> DeleteCar(int carId, string userId);
-
-        Task<Image?> SaveImage(Image image);
-
-        Task<List<Image>> GetAllImages(GetAllImagesQueryObject getAllImagesQueryObject, int carId);
+        Task<DBResult<Car>> DeleteCarAsync(int carId, string userId);
     }
 }

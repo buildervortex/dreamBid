@@ -21,8 +21,8 @@ const Footer = () => {
         py: 3,
         px: 2,
         mt: "auto",
-        backgroundColor: backgroundColor,
-        color: theme.palette.text.primary,
+        backgroundColor: "purple",
+        color: "white",
       }}
     >
       <Container maxWidth="lg">

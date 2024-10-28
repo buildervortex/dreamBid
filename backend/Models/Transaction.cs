@@ -20,5 +20,10 @@ namespace DreamBid.Models
 
         public int BidId { get; set; }
         public Bid Bid { get; set; }
+
+        public override string ToString()
+        {
+            return $"The Transaction Model Object Details. ( Id: {Id} ), ( PaypalTransactionId: {PaypalTransactionId} ), ( Amount: {Amount} ), ( TransactionDate: {TransactionDate} ), ( Status: {Status} ), ( BidId: {BidId} )";
+        }
     }
 }
