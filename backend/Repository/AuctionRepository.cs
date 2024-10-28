@@ -93,7 +93,7 @@ namespace DreamBid.Repository
             return new DBResult<Auction>(auction);
         }
 
-        private async void LoadTheDetails(Auction auction, AuctionDetails auctionDetails)
+        private void LoadTheDetails(Auction auction, AuctionDetails auctionDetails)
         {
             if (auctionDetails.WithCar && !this._context.Entry(auction).Reference(a => a.Car).IsLoaded)
             {
@@ -104,8 +104,6 @@ namespace DreamBid.Repository
             {
                 this._context.Entry(auction).Collection(a => a.Bids).Load();
             }
-
-
         }
     }
 }
