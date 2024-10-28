@@ -10,7 +10,7 @@ namespace DreamBid.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string PaypalTransactionId { get; set; }
+        public string? PaypalTransactionId { get; set; } = null;
 
         public double Amount { get; set; }
 
@@ -18,8 +18,11 @@ namespace DreamBid.Models
 
         public string Status { get; set; }
 
-        public int BidId { get; set; }
-        public Bid Bid { get; set; }
+        public int? BidId { get; set; }
+        public Bid? Bid { get; set; }
+
+        public string UserId { get; set; }
+        public User User { get; set; }
 
         public override string ToString()
         {

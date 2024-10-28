@@ -1,6 +1,9 @@
 using DreamBid.Data;
+using DreamBid.Dtos.Error;
+using DreamBid.Helpers;
 using DreamBid.Interfaces;
 using DreamBid.Models;
+using PayPal;
 using PayPal.Api;
 
 namespace DreamBid.Service
@@ -10,19 +13,16 @@ namespace DreamBid.Service
         private readonly string _mode;
         private readonly string _clientId;
         private readonly string _clientSecret;
-        private readonly string _cancleUrl;
-        private readonly string _returnUrl;
-        public PayPayService(string mode, string clientId, string clientSecret, string cancleUrl, string returnUrl)
+        public PayPayService(string mode, string clientId, string clientSecret)
         {
             this._mode = mode;
             this._clientId = clientId;
             this._clientSecret = clientSecret;
-            this._cancleUrl = cancleUrl;
-            this._returnUrl = returnUrl;
         }
 
         private APIContext GetAPIContext()
         {
+            string accessToken;
             var config = new Dictionary<string, string>
             {
                 {"mode",this._mode},
@@ -30,14 +30,22 @@ namespace DreamBid.Service
                 {"clientSecret",this._clientSecret}
             };
 
-            var accessToken = new OAuthTokenCredential(this._clientId, this._clientSecret).GetAccessToken();
-
+            try
+            {
+                accessToken = new OAuthTokenCredential(this._clientId, this._clientSecret).GetAccessToken();
+                if (accessToken == null) return null;
+            }
+            catch (PayPalException ex)
+            {
+                return null;
+            }
             return new APIContext(accessToken) { Config = config };
         }
 
-        public Payment CreatePayment(double amount, string transactionId, string description = "Payment for car auction bid")
+        public DBResult<Payment> CreatePayment(double amount, string retureUrl, string cancleUrl, string customData = "",  string description = "Payment for car auction bid")
         {
             var APIContext = GetAPIContext();
+            if (APIContext == null) return new DBResult<Payment>(null, ErrorMessage.ErrorMessageFromString("InternalServer Error. Unable to authenticate payment API"));
 
             var payment = new Payment
             {
@@ -52,30 +60,46 @@ namespace DreamBid.Service
                             currency = "USD",
                             total =amount.ToString("F2")
                         },
-                        custom = transactionId
+                        custom = customData
                     }
                 },
                 redirect_urls = new RedirectUrls
                 {
-                    cancel_url = this._cancleUrl,
-                    return_url = this._returnUrl
+                    cancel_url = cancleUrl,
+                    return_url = retureUrl
                 }
             };
-
-            var createdPayment = payment.Create(APIContext);
-            return createdPayment;
+            try
+            {
+                var createdPayment = payment.Create(APIContext);
+                if (createdPayment == null) return new DBResult<Payment>(null, ErrorMessage.ErrorMessageFromString("Internal Server Error occoured when creating the payment"));
+                return new DBResult<Payment>(createdPayment);
+            }
+            catch (PayPalException ex)
+            {
+                return new DBResult<Payment>(null, ErrorMessage.ErrorMessageFromString("Internal Server Error. Unable to create the payment"));
+            }
         }
 
-        public async Task<Payment> ExecutePayment(string paymentId, string payerId)
+        public DBResult<Payment> ExecutePayment(string paymentId, string payerId)
         {
             var APIContext = GetAPIContext();
             var paymentExecution = new PaymentExecution { payer_id = payerId };
             var payment = new Payment { id = paymentId };
 
-            var executedPayment = payment.Execute(APIContext, paymentExecution);
+            try
+            {
+                var executedPayment = payment.Execute(APIContext, paymentExecution);
+                if (executedPayment == null) return new DBResult<Payment>(null, ErrorMessage.ErrorMessageFromString("Internal Server Error occoured when executing the pyament"));
+                return new DBResult<Payment>(executedPayment);
+            }
+            catch (PayPalException e)
+            {
+                return new DBResult<Payment>(null, ErrorMessage.ErrorMessageFromString("Internal Server Error. Unable execute the payment"));
+            }
 
-            return executedPayment;
         }
+
     }
 
 }

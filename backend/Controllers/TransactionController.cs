@@ -1,8 +1,12 @@
-using DreamBid.Data;
+using DreamBid.Dtos.Error;
+using DreamBid.Extensions;
+using DreamBid.Helpers;
 using DreamBid.Interfaces;
-using DreamBid.Service;
-using Microsoft.AspNetCore.Identity;
+using DreamBid.Mappers;
+using DreamBid.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace DreamBid.Controllers
 {
@@ -19,24 +23,19 @@ namespace DreamBid.Controllers
             this._logger = logger;
         }
 
-        [HttpGet("executePayment")]
-        public async Task<IActionResult> Success([FromQuery] string token, [FromQuery] string PayerId, [FromQuery] string paymentId)
+        [HttpGet("")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetAllUserTransactions()
         {
-            var payment = await this._payPayService.ExecutePayment(paymentId, PayerId);
-            var transactionId = int.Parse(payment.transactions[0].custom);
-            var payPalTransactionId = payment.transactions[0].related_resources[0].sale.id;
+            var userId = User.GetUserId();
+            if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            if (payment.state == "approved")
-            {
-                var transaction = await this._transactionRepository.SetPayment(transactionId, "Success", payPalTransactionId);
-                return Ok();
-            }
-            else
-            {
-                this._logger.LogCritical("The payment was unsuccessful");
-                var transaction = await this._transactionRepository.SetPayment(transactionId, "Failed", payPalTransactionId);
-            }
-            return Ok();
+            var dbResult = await this._transactionRepository.GetTransactions(userId);
+            if (dbResult.Error != null) return BadRequest(dbResult.Error);
+
+            return Ok(dbResult.Data.Select(t => t.ToTransactionDto()));
         }
     }
 }
+
+

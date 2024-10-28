@@ -11,7 +11,7 @@ namespace DreamBid.Mappers
             {
                 auctionStartTime = (DateTime)addAuctionDto.AuctionStartTime,
                 auctionEndTime = (DateTime)addAuctionDto.AuctionEndTime,
-                IsActive = false,
+                IsActive = true,
             };
         }
 

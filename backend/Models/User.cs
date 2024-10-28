@@ -17,6 +17,8 @@ namespace DreamBid.Models
         public Image Image { get; set; }
         public int? ImageId { get; set; } = null;
 
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
         public override string ToString()
         {
             return $"The User Model Object Details. ( Id: {Id} ), ( userName: {UserName} ), ( passwordHash: {PasswordHash} ), ( email: {Email} ), ( fullName: {FullName} ), ( DOB: {DOB} ), ( Bio: {Bio} ), ( ImageId: {ImageId} )";

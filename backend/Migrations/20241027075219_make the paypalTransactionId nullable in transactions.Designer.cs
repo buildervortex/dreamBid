@@ -4,6 +4,7 @@ using DreamBid.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027075219_make the paypalTransactionId nullable in transactions")]
+    partial class makethepaypalTransactionIdnullableintransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,7 +187,7 @@ namespace backend.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("double");
 
-                    b.Property<int?>("BidId")
+                    b.Property<int>("BidId")
                         .HasColumnType("int");
 
                     b.Property<string>("PaypalTransactionId")
@@ -197,16 +200,10 @@ namespace backend.Migrations
                     b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("BidId")
                         .IsUnique();
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Transaction");
                 });
@@ -316,13 +313,13 @@ namespace backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b2793df4-122c-400e-bc12-4e1aae2cddf1",
+                            Id = "ebdfdbee-d793-4aa0-8fe2-ac5741964fe2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "08709fcb-b416-4f39-b976-9900ab4bf4af",
+                            Id = "500224bc-1805-494a-a3e9-c4b8c38192c4",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -497,17 +494,10 @@ namespace backend.Migrations
                     b.HasOne("DreamBid.Models.Bid", "Bid")
                         .WithOne("Transaction")
                         .HasForeignKey("DreamBid.Models.Transaction", "BidId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("DreamBid.Models.User", "User")
-                        .WithMany("Transactions")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Bid");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -585,8 +575,6 @@ namespace backend.Migrations
 
                     b.Navigation("Image")
                         .IsRequired();
-
-                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

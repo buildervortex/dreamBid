@@ -21,8 +21,20 @@ namespace DreamBid.Mappers
                 Id = bid.Id,
                 AuctionId = bid.AuctionId,
                 BidAmount = bid.BidAmount,
-                BidDateTime = DateTime.SpecifyKind(bid.BidDateTime,DateTimeKind.Utc),
+                BidDateTime = DateTime.SpecifyKind(bid.BidDateTime, DateTimeKind.Utc),
                 UserId = bid.UserId
+            };
+        }
+
+        public static Transaction ToTransactionFromAddBidDto(this Bid bid, double price, string payPalTransactionId = "")
+        {
+            return new Transaction()
+            {
+                Amount = price,
+                Status = "Success",
+                TransactionDate = DateTime.UtcNow,
+                PaypalTransactionId = payPalTransactionId,
+                UserId = bid.UserId,
             };
         }
     }

@@ -4,7 +4,6 @@ using DreamBid.Extensions;
 using DreamBid.Helpers.Auction;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
-using DreamBid.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
