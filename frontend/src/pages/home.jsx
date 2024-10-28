@@ -363,7 +363,7 @@ export default function Home() {
                 <HeroSection />
             </div>
             
-            <div className='mx-4 md:mx-10'>
+             <div className='mx-4 md:mx-10'>
             {/* Top Model Brand Section */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
