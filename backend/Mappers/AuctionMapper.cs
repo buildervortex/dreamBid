@@ -25,7 +25,9 @@ namespace DreamBid.Mappers
                 highestBidAmount = auction.highestBidAmount,
                 id = auction.Id,
                 isActive = auction.IsActive,
-                winnerId = auction.WinnderId
+                winnerId = auction.WinnderId,
+                Bids = auction.Bids.Select(b => b.ToBidDto()).ToList(),
+                Car = auction.Car != null ? auction.Car.ToCarDto() : null
             };
         }
     }

@@ -1,3 +1,6 @@
+using DreamBid.Dtos.Bid;
+using DreamBid.Dtos.Car;
+
 namespace DreamBid.Dtos.Auction
 {
     public class AuctionDto
@@ -16,5 +19,8 @@ namespace DreamBid.Dtos.Auction
 
         public int carId { get; set; }
 
+        public CarDto Car { get; set; } = null;
+
+        public ICollection<BidDto> Bids { get; set; } = new List<BidDto>();
     }
 }

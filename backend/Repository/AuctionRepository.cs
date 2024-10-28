@@ -15,7 +15,7 @@ namespace DreamBid.Repository
         {
             this._context = context;
         }
-        public async Task<DBResult<Auction>> AddAuctionAsync(Auction auction, string userId, int carId)
+        public async Task<DBResult<Auction>> AddAuctionAsync(Auction auction, string userId, int carId, AuctionDetails auctionDetails)
         {
             var user = await this._context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
             if (user == null) return new DBResult<Auction>(null, ErrorMessage.UserNotFound);
@@ -24,14 +24,15 @@ namespace DreamBid.Repository
             if (car.Auctions.Any(a => a.IsActive)) return new DBResult<Auction>(null, ErrorMessage.AlreadyInActiveAcution);
 
             auction.CarId = carId;
-
             car.Auctions.Add(auction);
             await _context.SaveChangesAsync();
+
+            this.LoadTheDetails(auction, auctionDetails);
 
             return new DBResult<Auction>(auction);
         }
 
-        public async Task<DBResult<Auction>> DeleteAuctionAsync(string userId, int auctionId)
+        public async Task<DBResult<Auction>> DeleteAuctionAsync(string userId, int auctionId, AuctionDetails auctionDetails)
         {
             var user = await this._context.Users.Where(u => u.Id == userId).Include(u => u.Cars).ThenInclude(c => c.Auctions).FirstOrDefaultAsync();
             if (user == null) return new DBResult<Auction>(null, ErrorMessage.UserNotFound);
@@ -46,6 +47,7 @@ namespace DreamBid.Repository
             car.Auctions.Remove(auction);
 
             await _context.SaveChangesAsync();
+            this.LoadTheDetails(auction, auctionDetails);
 
             return new DBResult<Auction>(auction);
         }
@@ -79,14 +81,31 @@ namespace DreamBid.Repository
             var skipNumber = (queryObject.PageNumber - 1) * queryObject.PageSize;
 
             var auctionsList = await auctions.Skip(skipNumber).Take(queryObject.PageSize).ToListAsync();
+            auctionsList.ForEach(a => this.LoadTheDetails(a, queryObject));
             return new DBResult<List<Auction>>(auctionsList);
         }
 
-        public async Task<DBResult<Auction>> GetAuctionAsync(int id)
+        public async Task<DBResult<Auction>> GetAuctionAsync(int id, AuctionDetails auctionDetails)
         {
             var auction = await _context.Auction.FirstOrDefaultAsync(a => a.Id == id);
             if (auction == null) return new DBResult<Auction>(null, ErrorMessage.AuctionNotFound);
+            this.LoadTheDetails(auction,auctionDetails);
             return new DBResult<Auction>(auction);
+        }
+
+        private async void LoadTheDetails(Auction auction, AuctionDetails auctionDetails)
+        {
+            if (auctionDetails.WithCar && !this._context.Entry(auction).Reference(a => a.Car).IsLoaded)
+            {
+                this._context.Entry(auction).Reference(a => a.Car).Load();
+            }
+
+            if (auctionDetails.WithBids && !this._context.Entry(auction).Collection(a => a.Bids).IsLoaded)
+            {
+                this._context.Entry(auction).Collection(a => a.Bids).Load();
+            }
+
+
         }
     }
 }
