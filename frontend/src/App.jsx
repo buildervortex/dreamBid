@@ -30,6 +30,8 @@ const navLinks = [
   { path: "/sellerdashbord", name: "Seller Dashbord"},
   { path: "/helpcenter", name: "Helpcenter"},
   { path: "/auction", name: "Auction"},
+  { path: "/AuctionDetails", name: "Auction Details"},
+  { path: "/Dashboard" , name: "User Management Dashboard"}
 ]
 
 function App() {
