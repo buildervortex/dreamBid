@@ -17,7 +17,9 @@ namespace DreamBid.Mappers
                 ReservePrice = carModel.ReservePrice,
                 StartingPrice = carModel.StartingPrice,
                 VIN = carModel.VIN,
-                Year = carModel.Year
+                Year = carModel.Year,
+                Auctions = carModel.Auctions.Select(a => a.ToAuctionDto()).ToList(),
+                Images = carModel.Images.Select(i => i.ToImageDto()).ToList()
             };
         }
 

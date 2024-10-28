@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DreamBid.Helpers.Auction
 {
-    public class GetAllAuctionQueryObject
+    public class GetAllAuctionQueryObject : AuctionDetails
     {
         [AllowedValues(new[] { "Year", "Mileage", "StartingPrice", "EndTime", "StartTime" })]
         public string OrderBy { get; set; } = "StartingTime";

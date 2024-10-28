@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DreamBid.Helpers.Car
 {
-    public class GetAllCarQueryObject
+    public class GetAllCarQueryObject:CarDetails
     {
         [AllowedValues(new []{"Id","StartingPrice","ReservePrice","Mileage","Year"})]
         public string SortBy { get; set; } = "Id";

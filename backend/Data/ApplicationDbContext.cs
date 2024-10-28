@@ -64,6 +64,14 @@ namespace DreamBid.Data
                 .HasOne(b => b.Transaction)
                 .WithOne(t => t.Bid)
                 .HasForeignKey<Transaction>(t => t.BidId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Specify Relationship between user and transaction
+            builder.Entity<User>()
+                .HasMany(u => u.Transactions)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             List<IdentityRole> roles = new List<IdentityRole>   // Creates a list of IdentityRole objects to represent predefined roles in the application.

@@ -22,7 +22,7 @@ namespace DreamBid.Startups.Configuration
             services.AddScoped<IPayPalService, PayPayService>(
                 provider =>
                 {
-                    return new PayPayService(configuration["PayPal:Mode"], configuration["PayPal:ClientId"], configuration["PayPal:ClientSecret"], configuration["PayPal:CancelUrl"], configuration["PayPal:ReturnUrl"]);
+                    return new PayPayService(configuration["PayPal:Mode"], configuration["PayPal:ClientId"], configuration["PayPal:ClientSecret"]);
                 }
             );
 

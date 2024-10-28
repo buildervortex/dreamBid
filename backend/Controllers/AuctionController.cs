@@ -4,7 +4,6 @@ using DreamBid.Extensions;
 using DreamBid.Helpers.Auction;
 using DreamBid.Interfaces;
 using DreamBid.Mappers;
-using DreamBid.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +16,7 @@ namespace DreamBid.Controllers
 
         private readonly UserManager<DreamBid.Models.User> _userManager;
         private readonly ICarRepository _carRepository;
-
         private readonly IAuctionRepository _auctionRepository;
-
         private readonly ILogger<AuctionController> _logger;
         public AuctionController(UserManager<DreamBid.Models.User> userManager, ICarRepository carRepository, IAuctionRepository auctionRepository, ILogger<AuctionController> logger)
         {
@@ -31,14 +28,14 @@ namespace DreamBid.Controllers
 
         [HttpPost("{id:int}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> CreateAuction([FromBody] AddAuctionDto addAuctionDto, [FromRoute] int id)
+        public async Task<IActionResult> CreateAuction([FromBody] AddAuctionDto addAuctionDto, [FromRoute] int id, [FromQuery] AuctionDetails auctionDetails)
         {
             if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var dbResult = await this._auctionRepository.AddAuctionAsync(addAuctionDto.ToAuctionFromAddAuctionDto(), userId, id);
+            var dbResult = await this._auctionRepository.AddAuctionAsync(addAuctionDto.ToAuctionFromAddAuctionDto(), userId, id, auctionDetails);
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
             if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal server error occoured while adding the auction"));
 
@@ -47,10 +44,10 @@ namespace DreamBid.Controllers
 
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetAuction([FromRoute] int id)
+        public async Task<IActionResult> GetAuction([FromRoute] int id, [FromQuery] AuctionDetails auctionDetails)
         {
             if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
-            var dbResult = await this._auctionRepository.GetAuctionAsync(id);
+            var dbResult = await this._auctionRepository.GetAuctionAsync(id, auctionDetails);
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
 
             return Ok(dbResult.Data.ToAuctionDto());
@@ -65,14 +62,14 @@ namespace DreamBid.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteAuction([FromRoute] int id)
+        public async Task<IActionResult> DeleteAuction([FromRoute] int id, [FromQuery] AuctionDetails auctionDetails)
         {
             if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
             var userId = User.GetUserId();
             if (userId == null) return BadRequest(ErrorMessage.UserIdIncorrect);
 
-            var dbresult = await this._auctionRepository.DeleteAuctionAsync(userId, id);
+            var dbresult = await this._auctionRepository.DeleteAuctionAsync(userId, id, auctionDetails);
             if (dbresult.Error != null) return BadRequest(dbresult.Error);
 
             return Ok(dbresult.Data.ToAuctionDto());
