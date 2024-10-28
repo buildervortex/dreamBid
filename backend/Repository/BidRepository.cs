@@ -35,6 +35,7 @@ namespace DreamBid.Repository
             if (bid.BidAmount <= auction.highestBidAmount) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString($"The bid should be greater than the current current highest bid {auction.highestBidAmount}"));
 
             auction.Bids.Add(bid);
+            auction.highestBidAmount = bid.BidAmount;
             await _context.SaveChangesAsync();
 
             return new DBResult<Bid>(bid);
