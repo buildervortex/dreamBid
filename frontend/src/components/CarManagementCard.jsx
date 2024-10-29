@@ -21,7 +21,13 @@ const CarManagementCard = ({ car }) => {
                 <h3 className="text-lg font-bold">{car.name}</h3>
                 <p className="text-sm text-gray-700">{car.details}</p>
             </div>
-
+           
+      {/* Buttons */}
+      <div className="flex mt-4 space-x-4">
+        <button className="px-4 py-1 text-white transition-colors duration-300 ease-in-out bg-gray-800 rounded-lg hover:bg-gray-700">Edit</button>
+        <button className="px-4 py-1 text-white transition-colors duration-300 ease-in-out bg-gray-800 rounded-lg hover:bg-gray-700">Delete</button>
+      </div>
+   
           
         </div>
     );
