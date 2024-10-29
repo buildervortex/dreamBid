@@ -18,7 +18,8 @@ import Helpcenter from './pages/helpcenter';
 import Auction from './pages/auction';
 import TransactionTable from './pages/TransactionTable';
 import CarManagementPage from './pages/CarManagement';
-import ProfileDetailsOverlay from './pages/profileDetails';
+import AccountViewModel from './viewModels/AccountViewModel';
+import AuthViewModel from './viewModels/AuthViewModel';
 
 
 
@@ -29,20 +30,26 @@ const navLinks = [
   { path: "/", name: "Home" },
   { path: "/login", name: "Login" },
   { path: "/register", name: "Register" },
-  { path: "/auctionManagement", name: "Auction Management"},
-  { path: "/wishlist", name: "Wishlist"},
-  { path: "/sellerdashbord", name: "Seller Dashbord"},
-  { path: "/helpcenter", name: "Helpcenter"},
-  { path: "/auction", name: "Auction"},
-  {path: "/AuctionDetails",name:"AuctionDetails"},
-  {path: "/TransactionTable",name:"TransactionTable"},
-  {path: "/CarManagementPage",name:"CarManagementPage"},
-  {path:"/ ProfileDetailsOverlay",name:" ProfileDetailsOverlay"}
+  { path: "/auctionManagement", name: "Auction Management" },
+  { path: "/wishlist", name: "Wishlist" },
+  { path: "/sellerdashbord", name: "Seller Dashbord" },
+  { path: "/helpcenter", name: "Helpcenter" },
+  { path: "/auction", name: "Auction" },
+  { path: "/AuctionDetails", name: "AuctionDetails" },
+  { path: "/TransactionTable", name: "TransactionTable" },
+  { path: "/CarManagementPage", name: "CarManagementPage" }
 ]
 
 function App() {
   // Manage theme state
   const [theme, setTheme] = useState(getCurrentTheme());
+
+  const [loggedIn, setLoggedIn] = useState(false);
+  
+  useEffect(() =>{
+    setLoggedIn(AuthViewModel.isLoggedIn());
+    
+  } ,[] );
 
   // Log the current theme when the app renders
   useEffect(() => {
@@ -61,7 +68,7 @@ function App() {
       {/* Wrap everything inside the ThemeProvider */}
 
       <ThemeProvider theme={theme.theme}>
-        <Layout onThemeChange={handleThemeChange} navLinks={navLinks}>
+        <Layout onThemeChange={handleThemeChange} navLinks={navLinks} onLog = {setLoggedIn} log = {loggedIn}>
           <CssBaseline />
           {/* Define the routes for the app */}
           <Routes>
@@ -77,11 +84,6 @@ function App() {
             <Route path="/helpcenter" element={<Helpcenter />} />
             <Route path="/auction" element={<Auction />} />
             <Route path="/CarManagementPage" element={<CarManagementPage />} />
-            <Route path="/ProfileDetailsOverlay" element={<ProfileDetailsOverlay />} />
-            
-
-            
-            
           </Routes>
         </Layout>
       </ThemeProvider>

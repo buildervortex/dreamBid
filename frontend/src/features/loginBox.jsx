@@ -3,9 +3,12 @@ import { useTheme } from "@mui/material/styles";
 import AuthViewModel from "../viewModels/AuthViewModel";
 import LoginAccountDto from "../dto/auth/loginAccountDto";
 import ErrorMessage from "../viewModels/ErrorViewModel";
+import { useNavigate } from "react-router-dom";
 
 const LoginBox = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  if(AuthViewModel.isLoggedIn()) navigate("/sellerdashbord")
 
   let handleSubmit =async(e)=>{
     e.preventDefault();
@@ -28,6 +31,8 @@ const LoginBox = () => {
     else{
       console.log(accountDto);
     }
+
+    navigate("/sellerdashbord")
 
 
     

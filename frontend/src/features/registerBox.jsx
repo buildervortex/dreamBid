@@ -3,31 +3,41 @@ import { useTheme } from "@mui/material/styles";
 import RegisterAccountDto from "../dto/auth/registerAccountDto";
 import AuthViewModel from "../viewModels/AuthViewModel";
 import ErrorMessage from "../viewModels/ErrorViewModel";
+import { useNavigate } from "react-router-dom";
 
 const RegisterBox = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  if(AuthViewModel.isLoggedIn()) navigate("/sellerdashbord")
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     fullname: "",
     email: "",
     dob: "",
-    stayLoggedIn: false,
   });
   const [error, setError] = useState("");
 
   const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
+    const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add logic to handle form submission
-    console.log("Form data submitted:", formData);
+    let registerAccountDto = new RegisterAccountDto();
+    registerAccountDto.username = formData.username;
+    registerAccountDto.password = formData.password;
+    registerAccountDto.fullName = formData.fullname;
+    registerAccountDto.email = formData.email;
+    registerAccountDto.DOB = formData.dob;
+
+    let response = await AuthViewModel.registerAccount(registerAccountDto);
+
+    console.log("Form data submitted:", response);
     // Reset form on successful submission
     setFormData({
       username: "",
@@ -35,8 +45,8 @@ const RegisterBox = () => {
       fullname: "",
       email: "",
       dob: "",
-      stayLoggedIn: false,
     });
+    navigate("/sellerdashbord")
   };
 
   return (
