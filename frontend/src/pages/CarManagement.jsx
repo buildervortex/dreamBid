@@ -1,5 +1,6 @@
 import React from "react";
-import CarBidCard from "../components/ActiveBidsCard"; // Adjust the import according to your file structure
+import CarManagementCard from "../components/CarManagementCard"; // Adjust the import according to your file structure
+
 
 // Sample Car Data for Active Bids
 const carsActive = [
@@ -110,7 +111,7 @@ const CarManagementPage = () => {
           <div className="flex flex-wrap -mx-2">
             {carsActive.map((car) => (
               <div className="w-1/3 p-2" key={car.name}>
-                <CarBidCard car={car} />
+                <CarManagementCard car={car} />
               </div>
             ))}
           </div>
@@ -122,7 +123,7 @@ const CarManagementPage = () => {
           <div className="flex flex-wrap -mx-2">
             {carsWon.map((car) => (
               <div className="w-1/3 p-2" key={car.name}>
-                <CarBidCard car={car} />
+                <CarManagementCard car={car} />
               </div>
             ))}
           </div>
@@ -134,7 +135,7 @@ const CarManagementPage = () => {
           <div className="flex flex-wrap -mx-2">
             {carsCanceled.map((car) => (
               <div className="w-1/3 p-2" key={car.name}>
-                <CarBidCard car={car} />
+                <CarManagementCard car={car} />
               </div>
             ))}
           </div>
