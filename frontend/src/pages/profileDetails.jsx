@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 
 const ProfileDetailsOverlay = ({ onClose }) => {
   const [profileImage, setProfileImage] = useState(null);
+  const [fullName, setFullName] = useState('');
+  const [dob, setDob] = useState('');
+  const [bio, setBio] = useState('');
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -15,7 +18,19 @@ const ProfileDetailsOverlay = ({ onClose }) => {
   };
 
   const handleButtonClick = () => {
-    document.getElementById("fileInput").click();
+    document.getElementById('fileInput').click();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = {
+      fullName,
+      dob,
+      bio,
+      profileImage,
+    };
+    console.log('Form submitted:', formData);
+    // Additional form processing logic can go here
   };
 
   return (
@@ -25,6 +40,7 @@ const ProfileDetailsOverlay = ({ onClose }) => {
         <button 
           onClick={onClose} 
           className="absolute top-2 right-2 text-xl text-gray-600"
+          aria-label="Close"
         >
           &times;
         </button>
@@ -54,19 +70,23 @@ const ProfileDetailsOverlay = ({ onClose }) => {
           <button 
             onClick={handleButtonClick} 
             className="bg-purple-500 text-white py-1 px-4 rounded mb-6"
+            aria-label="Choose Profile Picture"
           >
             Choose Profile Picture
           </button>
         </div>
 
         {/* Form Fields */}
-        <div className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
             <input 
               type="text" 
               placeholder="Enter your name" 
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
+              required
             />
           </div>
 
@@ -74,7 +94,10 @@ const ProfileDetailsOverlay = ({ onClose }) => {
             <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
             <input 
               type="date" 
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
+              required
             />
           </div>
 
@@ -83,15 +106,21 @@ const ProfileDetailsOverlay = ({ onClose }) => {
             <input 
               type="text" 
               placeholder="Enter your bio" 
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
+              required
             />
           </div>
-        </div>
 
-        {/* Update Button */}
-        <button className="bg-purple-500 text-white w-full py-2 mt-6 rounded">
-          Update Profile
-        </button>
+          {/* Submit Button */}
+          <button 
+            type="submit" 
+            className="bg-purple-500 text-white w-full py-2 mt-6 rounded"
+          >
+            Update Profile
+          </button>
+        </form>
       </div>
     </div>
   );
