@@ -362,50 +362,50 @@ export default function Home() {
             <div>
                 <HeroSection />
             </div>
-            
-             <div className='mx-4 md:mx-10'>
-            {/* Top Model Brand Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true, amount: 0.5 }}
-            >
-                <div className='flex items-center justify-center w-full mt-4 mb-4'>
-                    <h1 className='text-4xl'>Top Model Brand</h1>
-                </div>
 
-                <div className='flex flex-row flex-wrap justify-center'>
-                    <BrandCard brandName="BMW" brandImages={Bmw} />
-                    <BrandCard brandName="HONDA" brandImages={Honda} />
-                    <BrandCard brandName="BENZ" brandImages={Benz} />
-                    <BrandCard brandName="SUSUKI" brandImages={Suzuki} />
-                    <BrandCard brandName="TOYOTA" brandImages={Toyota} />
-                    <BrandCard brandName="NISSAN" brandImages={Nissan} />
-                </div>
-            </motion.div>
+            <div className='mx-4 md:mx-10'>
+                {/* Top Model Brand Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    viewport={{ once: true, amount: 0.5 }}
+                >
+                    <div className='flex items-center justify-center w-full mt-4 mb-4'>
+                        <h1 className='text-4xl'>Top Model Brand</h1>
+                    </div>
 
-            {/* Body Styles Section */}
-            <motion.div
-                initial={{ opacity: 0, x: -100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true, amount: 0.5 }}
-            >
-                <div className='flex items-center justify-center w-full mt-4 mb-4'>
-                    <h1 className='text-4xl'>Body Styles</h1>
-                </div>
+                    <div className='flex flex-row flex-wrap justify-center'>
+                        <BrandCard brandName="BMW" brandImages={Bmw} />
+                        <BrandCard brandName="HONDA" brandImages={Honda} />
+                        <BrandCard brandName="BENZ" brandImages={Benz} />
+                        <BrandCard brandName="SUSUKI" brandImages={Suzuki} />
+                        <BrandCard brandName="TOYOTA" brandImages={Toyota} />
+                        <BrandCard brandName="NISSAN" brandImages={Nissan} />
+                    </div>
+                </motion.div>
 
-                <div className='flex flex-row flex-wrap justify-center pb-6'>
-                    <BrandCard brandName="SUV" brandImages={Suv} />
-                    <BrandCard brandName="SALOON" brandImages={Saloon} />
-                    <BrandCard brandName="HATCHBACK" brandImages={Hatchback} />
-                    <BrandCard brandName="CONVERTIBLE" brandImages={Convertible} />
-                    <BrandCard brandName="COUPE" brandImages={Coupe} />
-                    <BrandCard brandName="ESTATE" brandImages={Estate} />
-                </div>
-            </motion.div>
-        </div>
+                {/* Body Styles Section */}
+                <motion.div
+                    initial={{ opacity: 0, x: -100 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5 }}
+                    viewport={{ once: true, amount: 0.5 }}
+                >
+                    <div className='flex items-center justify-center w-full mt-4 mb-4'>
+                        <h1 className='text-4xl'>Body Styles</h1>
+                    </div>
+
+                    <div className='flex flex-row flex-wrap justify-center pb-6'>
+                        <BrandCard brandName="SUV" brandImages={Suv} />
+                        <BrandCard brandName="SALOON" brandImages={Saloon} />
+                        <BrandCard brandName="HATCHBACK" brandImages={Hatchback} />
+                        <BrandCard brandName="CONVERTIBLE" brandImages={Convertible} />
+                        <BrandCard brandName="COUPE" brandImages={Coupe} />
+                        <BrandCard brandName="ESTATE" brandImages={Estate} />
+                    </div>
+                </motion.div>
+            </div>
 
             {/* Live Auctions Section */}
             <motion.div

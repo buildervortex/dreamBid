@@ -3,20 +3,30 @@ import { AppBar, Box, Button, IconButton, ToggleButton, ToggleButtonGroup, Toolb
 import Themes from "../utils/theme";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import AuthViewModel from "../viewModels/AuthViewModel";
 
-const NavBar = ({ onThemeChange, navLinks, profilePictureUrl }) => {
+const NavBar = ({ onThemeChange, navLinks, profilePictureUrl, onLog, log:loggedIn }) => {
     const navigate = useNavigate();
-    const [loggedIn, setLoggedIn] = useState(false); // Manage logged-in state
+
     const [anchorEl, setAnchorEl] = useState(null); // For managing the dropdown menu
 
     // Toggle login status for demonstration 
-    const handleLogin = () => setLoggedIn(true);
+    const handleLogin = async () => {
+
+        onLog(true);
+    }
+
+    const handelLogout = () =>{
+        AuthViewModel.logOut();
+        onLog(AuthViewModel.isLoggedIn());
+    } 
+
     const handleMenuClick = (event) => setAnchorEl(event.currentTarget); // Open dropdown
     const handleMenuClose = () => setAnchorEl(null); // Close dropdown
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" sx={{ backgroundColor: "purple" }}> 
+            <AppBar position="static" sx={{ backgroundColor: "purple" }}>
                 <Toolbar>
                     <IconButton
                         onClick={() => navigate("/")}
@@ -51,7 +61,7 @@ const NavBar = ({ onThemeChange, navLinks, profilePictureUrl }) => {
                     </ToggleButtonGroup>
                     {loggedIn ? (
                         <>
-                            <Avatar
+                            <img
                                 alt="Profile Picture"
                                 src={profilePictureUrl}
                                 sx={{ ml: 2, cursor: "pointer" }}
@@ -65,7 +75,7 @@ const NavBar = ({ onThemeChange, navLinks, profilePictureUrl }) => {
                                 <MenuItem onClick={() => { navigate("/sellerDashboard"); handleMenuClose(); }}>Seller Dashboard</MenuItem>
                                 <MenuItem onClick={() => { navigate("/profile"); handleMenuClose(); }}>Profile</MenuItem>
                                 <MenuItem onClick={() => { navigate("/wishlist"); handleMenuClose(); }}>Wishlist</MenuItem>
-                                <MenuItem onClick={() => { handleMenuClose(); }}>Logout</MenuItem>
+                                <MenuItem onClick={() => { handleMenuClose(); handelLogout(); }}>Logout</MenuItem>
                             </Menu>
                         </>
                     ) : (
