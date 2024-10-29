@@ -9,7 +9,7 @@ namespace DreamBid.Interfaces
     {
         Task<DBResult<Car>> AddCarAsync(Car car, string userId);
 
-        Task<DBResult<Car>> GetCarByIdAsync(int id, string userId, CarDetails carDetails);
+        Task<DBResult<Car>> GetCarByIdAsync(int id, string userId);
 
         Task<DBResult<List<Car>>> GetAllAsync(GetAllCarQueryObject queryObject, string userId);
 
@@ -17,6 +17,5 @@ namespace DreamBid.Interfaces
 
         Task<DBResult<Car>> DeleteCarAsync(int carId, string userId);
 
-        void LoadTheDetails(Car car, CarDetails carDetails);
     }
 }

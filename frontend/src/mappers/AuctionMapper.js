@@ -11,6 +11,8 @@ export default class AuctionMapper {
         auctionDto.highestBidAmount = data.highestBidAmount;
         auctionDto.isActive = data.isActive;
         auctionDto.carId = data.carId;
+        auctionDto.car = data.car ? data.car : null;
+        auctionDto.bids = data.bids ? data.bids : null;
         return auctionDto;
     }
 }

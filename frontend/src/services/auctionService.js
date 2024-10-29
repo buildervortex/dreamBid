@@ -1,15 +1,19 @@
 import API from "./api";
 
 export default class AuctionService {
-    static async createAuction(addAuctionDto, id) {
+    static async createAuction(addAuctionDto, id, queryParams) {
 
-        const response = await API.post(`/auctions/${id}`, addAuctionDto);
+        const response = await API.post(`/auctions/${id}`, addAuctionDto, {
+            params: queryParams
+        });
         return response.data;
     }
 
-    static async getAuction(id) {
+    static async getAuction(id, queryParams) {
 
-        const response = await API.get(`/auctions/${id}`);
+        const response = await API.get(`/auctions/${id}`, {
+            params: queryParams
+        });
         return response.data;
     }
 
@@ -19,8 +23,10 @@ export default class AuctionService {
         })
         return response.data;
     }
-    static async deleteAuction(id) {
-        const response = await API.delete(`/auctions/${id}`);
+    static async deleteAuction(id, queryParams) {
+        const response = await API.delete(`/auctions/${id}`, {
+            params: queryParams
+        });
         return response.data;
     }
 

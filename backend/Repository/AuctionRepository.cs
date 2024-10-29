@@ -95,6 +95,7 @@ namespace DreamBid.Repository
 
         private void LoadTheDetails(Auction auction, AuctionDetails auctionDetails)
         {
+            // var query = _context.Auction.AsQueryable();
             if (auctionDetails.WithCar && !this._context.Entry(auction).Reference(a => a.Car).IsLoaded)
             {
                 this._context.Entry(auction).Reference(a => a.Car).Load();

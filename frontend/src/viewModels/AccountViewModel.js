@@ -2,6 +2,7 @@ import AccountMapper from "../mappers/AccountMapper";
 import AccountService from "../services/accountService";
 import ErrorMessage from "./ErrorViewModel";
 import { validateUpdateAccountDto } from "../dto/account/updateAccountDto";
+import AuctionMapper from "../mappers/AuctionMapper";
 
 export default class AccountViewModel {
 
@@ -44,5 +45,24 @@ export default class AccountViewModel {
         }
         return AccountMapper.ToAccountDto(response);
 
+    }
+
+    static async addAuctionToWishlist(auctionId) {
+        const response = await AccountService.addToWishList(auctionId);
+        return AuctionMapper.ToAuctionDto(response.data);
+    }
+
+    static async getWishlist() {
+        const response = await AccountService.getWishList();
+        return response.data.map(auction => AuctionMapper.ToAuctionDto(auction));
+    }
+
+    static async deleteAllWishlistItems() {
+        await AccountService.deleteWishlistAllItems();
+    }
+
+    static async deleteWishlistItem(auctionId) {
+        const response = await AccountService.deleteWishlistItem(auctionId);
+        return AuctionMapper.ToAuctionDto(response.data);
     }
 }

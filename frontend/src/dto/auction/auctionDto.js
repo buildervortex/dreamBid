@@ -6,6 +6,8 @@ class AuctionDto {
     highestBidAmount = "";
     isActive = "";
     carId = "";
+    car = null;
+    bids = [null];
 }
 
 export default AuctionDto;

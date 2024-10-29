@@ -91,7 +91,7 @@ namespace DreamBid.Controllers
             var userId = User.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            if (user == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
             await user.CleanUpUser(this._fileManagerService, this._context, this._logger);
             var result = await _userManager.DeleteAsync(user);
@@ -110,7 +110,7 @@ namespace DreamBid.Controllers
 
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            if (user == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
             return Ok(user.ToUserDto());
         }
@@ -125,7 +125,7 @@ namespace DreamBid.Controllers
             var userId = User.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null) return NotFound(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
+            if (user == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The user doesn't exists"));
 
             var result = await _userManager.UpdateAsync(updateUserDto.ToUserFromUpdateUserDto(user));
 
@@ -135,5 +135,74 @@ namespace DreamBid.Controllers
             return Ok(user.ToUserDto());
         }
 
+        [HttpPost("me/wishlist/{auctionId:int}")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> AddToWishList([FromRoute] int auctionId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+
+            var userId = User.GetUserId();
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Wishlist).FirstOrDefaultAsync();
+            if (user == null) return BadRequest(ErrorMessage.UserNotFound);
+            if (user.Wishlist.Any(a => a.Id == auctionId)) return BadRequest(ErrorMessage.ErrorMessageFromString("The auction already exists in the wishlist"));
+
+            var auction = await _context.Auction.Where(a => a.IsActive == true).FirstOrDefaultAsync(a => a.Id == auctionId);
+            if (auction == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The auction is not active or not exists"));
+
+            user.Wishlist.Add(auction);
+            await _context.SaveChangesAsync();
+
+            return Ok(auction.ToAuctionDto());
+        }
+
+        [HttpGet("me/wishlist")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetWishList()
+        {
+            var userId = User.GetUserId();
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Wishlist).ThenInclude(a => a.Car).FirstOrDefaultAsync();
+            if (user == null) return BadRequest(ErrorMessage.UserNotFound);
+
+            return Ok(user.Wishlist.Select(a => a.ToAuctionDto()));
+        }
+
+        [HttpDelete("me/wishlist")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> DeleteWishList()
+        {
+            var userId = User.GetUserId();
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Wishlist).FirstOrDefaultAsync();
+            if (user == null) return BadRequest(ErrorMessage.UserNotFound);
+
+            foreach (var auction in user.Wishlist.ToList())
+            {
+                user.Wishlist.Remove(auction);
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        [HttpDelete("me/wishlist/{auctionId:int}")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> DeleteWishListItem([FromRoute] int auctionId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
+
+            var userId = User.GetUserId();
+            var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Wishlist).ThenInclude(a => a.Car).FirstOrDefaultAsync();
+            if (user == null) return BadRequest(ErrorMessage.UserNotFound);
+
+            var auction = user.Wishlist.FirstOrDefault(a => a.Id == auctionId);
+            if (auction == null) return BadRequest(ErrorMessage.ErrorMessageFromString("The auction does not exist in the wishlist"));
+
+            user.Wishlist.Remove(auction);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(auction.ToAuctionDto());
+        }
     }
 }

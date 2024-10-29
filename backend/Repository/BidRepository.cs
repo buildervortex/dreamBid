@@ -4,6 +4,7 @@ using DreamBid.Helpers;
 using DreamBid.Helpers.Bid;
 using DreamBid.Interfaces;
 using DreamBid.Models;
+using DreamBid.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace DreamBid.Repository
@@ -11,6 +12,7 @@ namespace DreamBid.Repository
     public class BidRepository : IBidRepository
     {
         private readonly ApplicationDbContext _context;
+        private long beforeSeconds = 300;
         public BidRepository(ApplicationDbContext context)
         {
             this._context = context;
@@ -30,9 +32,14 @@ namespace DreamBid.Repository
             if (auction == null) return new DBResult<Bid>(null, ErrorMessage.AuctionNotFound);
 
             if (!auction.IsActive) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString("The auction is not active"));
-            if (auction.auctionStartTime > DateTime.Now.ToUniversalTime() && DateTime.Now.ToUniversalTime() > auction.auctionEndTime) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString("The auction is not active"));
-            if (bid.BidAmount <= car.StartingPrice) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString($"The bid should be greater than the auction starting price {car.StartingPrice}"));
-            if (bid.BidAmount <= auction.highestBidAmount) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString($"The bid should be greater than the current current highest bid {auction.highestBidAmount}"));
+            if (!AuctionUtils.IsAuctionActive(auction, this.beforeSeconds))
+            {
+                auction.IsActive = false;
+                await _context.SaveChangesAsync();
+                return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString("The auction is not active"));
+            }
+            var error = AuctionUtils.CanAddABid(bid, auction, this.beforeSeconds);
+            if (error != null) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString(error));
 
             auction.Bids.Add(bid);
             auction.highestBidAmount = bid.BidAmount;
@@ -72,9 +79,15 @@ namespace DreamBid.Repository
             if (auction == null) return new DBResult<Bid>(null, ErrorMessage.AuctionNotFound);
 
             if (!auction.IsActive) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString("The auction is not active"));
-            if (auction.auctionStartTime > DateTime.Now.ToUniversalTime() && DateTime.Now.ToUniversalTime() > auction.auctionEndTime) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString("The auction is not active"));
-            if (bid.BidAmount <= car.StartingPrice) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString($"The bid should be greater than the auction starting price {car.StartingPrice}"));
-            if (bid.BidAmount <= auction.highestBidAmount) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString($"The bid should be greater than the current current highest bid {auction.highestBidAmount}"));
+            if (!AuctionUtils.IsAuctionActive(auction, this.beforeSeconds))
+            {
+                auction.IsActive = false;
+                await _context.SaveChangesAsync();
+                return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString("The auction is not active"));
+            }
+            var error = AuctionUtils.CanAddABid(bid, auction, this.beforeSeconds);
+            if (error != null) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString(error));
+
             if (bid == null) return new DBResult<Bid>(null, ErrorMessage.ErrorMessageFromString("Internal Server Error occoured when processing bid"));
 
             return new DBResult<Bid>(bid);

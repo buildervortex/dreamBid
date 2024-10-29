@@ -29,7 +29,7 @@ namespace DreamBid.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> AddCar([FromBody] AddCarDto addCarDto, [FromQuery] CarDetails carDetails)
+        public async Task<IActionResult> AddCar([FromBody] AddCarDto addCarDto)
         {
             if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
@@ -41,13 +41,13 @@ namespace DreamBid.Controllers
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
             if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to add car"));
 
-            _carRepository.LoadTheDetails(dbResult.Data, carDetails);
+            
             return Ok(dbResult.Data.ToCarDto());
         }
 
         [HttpGet("{id:int}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> GetCarById([FromRoute] int id, [FromQuery] CarDetails carDetails)
+        public async Task<IActionResult> GetCarById([FromRoute] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ErrorMessage.ErrorMessageFromString("Hello world"));
@@ -55,12 +55,12 @@ namespace DreamBid.Controllers
             var userId = User.GetUserId();
             if (userId == null) return Unauthorized(ErrorMessage.UserIdIncorrect);
 
-            var dbResult = await _carRepository.GetCarByIdAsync(id, userId,carDetails);
+            var dbResult = await _carRepository.GetCarByIdAsync(id, userId);
 
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
             if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to get car"));
 
-            // _carRepository.LoadTheDetails(dbResult.Data, carDetails);
+            
             return Ok(dbResult.Data.ToCarDto());
         }
 
@@ -79,7 +79,6 @@ namespace DreamBid.Controllers
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
             if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to add cars"));
 
-            dbResult.Data.ForEach(c => _carRepository.LoadTheDetails(c, getAllCarQueryObject));
             var carDtos = dbResult.Data.Select(c => c.ToCarDto()).ToList();
 
 
@@ -89,7 +88,7 @@ namespace DreamBid.Controllers
 
         [HttpPatch("{id:int}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> UpdateCar([FromBody] UpdateCarDto updateCarDto, [FromRoute] int id, [FromQuery] CarDetails carDetails)
+        public async Task<IActionResult> UpdateCar([FromBody] UpdateCarDto updateCarDto, [FromRoute] int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
@@ -102,14 +101,14 @@ namespace DreamBid.Controllers
             if (dbResult.Error != null) return BadRequest(dbResult.Error);
             if (dbResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to update car"));
 
-            _carRepository.LoadTheDetails(dbResult.Data, carDetails);
+            
 
             return Ok(dbResult.Data.ToCarDto());
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> DeleteCar([FromRoute] int id, [FromQuery] CarDetails carDetails)
+        public async Task<IActionResult> DeleteCar([FromRoute] int id)
         {
             if (!ModelState.IsValid) return BadRequest(ErrorMessage.ErrorMessageFromModelState(ModelState));
 
@@ -119,8 +118,6 @@ namespace DreamBid.Controllers
             var dBResult = await this._carRepository.DeleteCarAsync(id, userId);
             if (dBResult.Error != null) return BadRequest(dBResult.Error);
             if (dBResult.Data == null) return StatusCode(500, ErrorMessage.ErrorMessageFromString("Internal Server Error happend when tring to delete car"));
-
-            _carRepository.LoadTheDetails(dBResult.Data, carDetails);
 
             return Ok(dBResult.Data.ToCarDto());
         }

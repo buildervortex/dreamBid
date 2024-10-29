@@ -98,7 +98,7 @@ namespace DreamBid.Repository
             return new DBResult<List<Car>>(carResult);
         }
 
-        public async Task<DBResult<Car>> GetCarByIdAsync(int carId, string userId, CarDetails carDetails)
+        public async Task<DBResult<Car>> GetCarByIdAsync(int carId, string userId)
         {
 
             var user = await _context.Users.Where(u => u.Id == userId).Include(u => u.Cars).FirstOrDefaultAsync();
@@ -111,7 +111,6 @@ namespace DreamBid.Repository
 
             this._logger.LogInformation($"The car get for user id ( {userId} ), with car ( {car} )");
 
-            this.LoadTheDetails(car, carDetails);
 
             return new DBResult<Car>(car);
         }
@@ -143,17 +142,6 @@ namespace DreamBid.Repository
             return new DBResult<Car>(car);
         }
 
-        public async void LoadTheDetails(Car car, CarDetails carDetails)
-        {
-            if (carDetails.WithAuctions && !this._context.Entry(car).Collection(c => c.Auctions).IsLoaded)
-            {
-                this._context.Entry(car).Collection(c => c.Auctions).Load();
-            }
-
-            if (carDetails.WithImages && !this._context.Entry(car).Collection(c => c.Images).IsLoaded)
-            {
-                this._context.Entry(car).Collection(c => c.Images).Load();
-            }
-        }
+ 
     }
 }

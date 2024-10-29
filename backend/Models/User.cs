@@ -16,8 +16,9 @@ namespace DreamBid.Models
         // The Navigation property to the related images
         public Image Image { get; set; }
         public int? ImageId { get; set; } = null;
-
         public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+
+        public ICollection<Auction> Wishlist { get; set; } = new List<Auction>();
 
         public override string ToString()
         {

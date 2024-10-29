@@ -18,7 +18,7 @@ export async function testAddAuction(success, failed) {
         Test.assertEqual(response.auctionEndTime.toISOString(), Env.auctionEndTime.toISOString(), "addAuction endTime", success, failed)
         Test.assertNull(response.winnerId, "addAuction winnderId", success, failed)
         Test.assertNull(response.highestBidAmount, "addAuction highestBidAmount", success, failed)
-        Test.assertFalse(response.isActive, "addAuction isActive", success, failed)
+        Test.assertTrue(response.isActive, "addAuction isActive", success, failed)
 
         Env.auctionId = response.id;
         Env.auctionStartTime = response.auctionStartTime;
@@ -73,7 +73,7 @@ export async function testGetAllAuction(success, failed) {
             Test.assertEqual(element.auctionEndTime.toISOString(), Env.auctionEndTime.toISOString(), "getAuction endTime", success, failed)
             Test.assertEqual(element.winnerId, Env.winnerId, "getAuction winnerId", success, failed)
             Test.assertEqual(element.highestBidAmount, Env.highestBidAmount, "getAuction highestBidAmount", success, failed)
-            Test.assertFalse(element.isActive, "getAuction isActive", success, failed)
+            Test.assertTrue(element.isActive, "getAuction isActive", success, failed)
             Test.assertEqual(element.carId, Env.carId, "getAuction carId", success, failed)
         });
     }
@@ -93,7 +93,7 @@ export async function testDeleteAuction(success, failed) {
         Test.assertEqual(response.auctionEndTime.toISOString(), Env.auctionEndTime.toISOString(), "deleteAuction endTime", success, failed)
         Test.assertEqual(response.winnerId, Env.winnerId, "deleteAuction winnerId", success, failed)
         Test.assertEqual(response.highestBidAmount, Env.highestBidAmount, "deleteAuction highestBidAmount", success, failed)
-        Test.assertFalse(response.isActive, "deleteAuction isActive", success, failed)
+        Test.assertTrue(response.isActive, "deleteAuction isActive", success, failed)
         Test.assertEqual(response.carId, Env.carId, "deleteAuction carId", success, failed)
     }
     else {
