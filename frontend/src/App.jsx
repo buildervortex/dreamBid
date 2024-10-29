@@ -16,6 +16,8 @@ import SellerDashbordPage from './pages/sellerdashbord';
 import TestPage from './tests/test';
 import Helpcenter from './pages/helpcenter';
 import Auction from './pages/auction';
+import TransactionTable from './pages/TransactionTable';
+
 
 
 
@@ -30,7 +32,8 @@ const navLinks = [
   { path: "/sellerdashbord", name: "Seller Dashbord"},
   { path: "/helpcenter", name: "Helpcenter"},
   { path: "/auction", name: "Auction"},
-  {path: "/AuctionDetails",name:"AuctionDetails"}
+  {path: "/AuctionDetails",name:"AuctionDetails"},
+  {path: "/TransactionTable",name:"TransactionTable"}
 ]
 
 function App() {
@@ -69,6 +72,8 @@ function App() {
             <Route path="/test" element={<TestPage />} />
             <Route path="/helpcenter" element={<Helpcenter />} />
             <Route path="/auction" element={<Auction />} />
+            <Route path="/TransactionTable" element={<TransactionTable />} />
+            
           </Routes>
         </Layout>
       </ThemeProvider>
