@@ -7,37 +7,39 @@ namespace DreamBid.Service.Background
 {
     public class AuctionBackgroundScheduleService : BackgroundService
     {
-        private readonly TimeSpan _interval;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<AuctionBackgroundScheduleService> _logger;
 
         private readonly long beforeSeconds = 300;
 
-        public AuctionBackgroundScheduleService(IServiceProvider serviceProvider, TimeSpan timeSpan)
+        public AuctionBackgroundScheduleService(IServiceProvider serviceProvider, ILogger<AuctionBackgroundScheduleService> logger)
         {
-            this._interval = timeSpan;
             this._serviceProvider = serviceProvider;
+            this._logger = logger;
         }
 
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            this._logger.LogInformation("Auction Background Schedular Started");
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
                     await AuctionActivateService();
                     await AuctionDeActivateService();
-                    await Task.Delay(this._interval, stoppingToken);
+                    await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
                 }
                 catch (TaskCanceledException e)
                 {
-
+                    _logger.LogError(e, "Error happend when running the background schedular");
                 }
                 catch (Exception e)
                 {
-
+                    _logger.LogError(e, "Error happend when running the background schedular");
                 }
             }
+            this._logger.LogInformation("The Auction Background Schedular Service Stopped");
         }
 
         private async Task AuctionActivateService()
@@ -46,7 +48,8 @@ namespace DreamBid.Service.Background
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                var auctions = await dbContext.Auction.Where(a => a.IsActive == false && AuctionUtils.IsAuctionActive(a, this.beforeSeconds)).ToListAsync();
+                var auctions = await dbContext.Auction.Where(a => a.IsActive == false).Include(a => a.Bids).ThenInclude(b => b.User).ToListAsync();
+                auctions = auctions.Where(a => AuctionUtils.IsAuctionActive(a, this.beforeSeconds)).ToList();
                 foreach (var auction in auctions)
                 {
                     auction.IsActive = true;
@@ -61,7 +64,8 @@ namespace DreamBid.Service.Background
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                var auctions = await dbContext.Auction.Where(a => a.IsActive == true && AuctionUtils.AuctionRemainingTime(a, this.beforeSeconds) <= 0).Include(a => a.Bids).ThenInclude(b => b.User).ToListAsync();
+                var auctions = await dbContext.Auction.Where(a => a.IsActive == true).Include(a => a.Bids).ThenInclude(b => b.User).ToListAsync();
+                auctions = auctions.Where(a => AuctionUtils.AuctionRemainingTime(a, this.beforeSeconds) <= 0).ToList();
                 foreach (var auction in auctions)
                 {
                     auction.IsActive = false;

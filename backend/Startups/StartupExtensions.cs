@@ -15,6 +15,7 @@ namespace DreamBid.Startups
             services.ConfigureDependencies(configuration);
             services.ConfigureAuthentication(configuration);
             services.ConfigureSwagger();
+            services.ConfigureBackgroundServices();
         }
     }
 }
