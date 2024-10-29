@@ -17,6 +17,7 @@ import TestPage from './tests/test';
 import Helpcenter from './pages/helpcenter';
 import Auction from './pages/auction';
 import TransactionTable from './pages/TransactionTable';
+import CarManagementPage from './pages/CarManagement';
 
 
 
@@ -33,7 +34,8 @@ const navLinks = [
   { path: "/helpcenter", name: "Helpcenter"},
   { path: "/auction", name: "Auction"},
   {path: "/AuctionDetails",name:"AuctionDetails"},
-  {path: "/TransactionTable",name:"TransactionTable"}
+  {path: "/TransactionTable",name:"TransactionTable"},
+  {path: "/CarManagementPage",name:"CarManagementPage"}
 ]
 
 function App() {
@@ -73,6 +75,8 @@ function App() {
             <Route path="/helpcenter" element={<Helpcenter />} />
             <Route path="/auction" element={<Auction />} />
             <Route path="/TransactionTable" element={<TransactionTable />} />
+            <Route path="/CarManagementPage" element={<CarManagementPage />} />
+            
             
           </Routes>
         </Layout>
