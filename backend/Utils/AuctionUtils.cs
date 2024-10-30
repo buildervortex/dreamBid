@@ -6,8 +6,8 @@ namespace DreamBid.Utils
     {
         public static bool IsAuctionActive(Auction auction, long beforeSeconds = 300)
         {
-            var endTime = auction.auctionEndTime.AddSeconds(-beforeSeconds);
-            return auction.auctionStartTime < DateTime.UtcNow && endTime > DateTime.UtcNow;
+            var endTime = DateTime.SpecifyKind(auction.auctionEndTime.AddSeconds(-beforeSeconds), DateTimeKind.Utc);
+            return DateTime.SpecifyKind(auction.auctionStartTime, DateTimeKind.Utc) < DateTime.UtcNow && endTime > DateTime.UtcNow;
         }
 
         public static string? CanAddABid(Bid bid, Auction auction, long expireTimeBeforeSeconds = 300)
@@ -24,7 +24,7 @@ namespace DreamBid.Utils
 
         public static long AuctionRemainingTime(Auction auction, long expireTimeBeforeSeconds = 300)
         {
-            var endTime = auction.auctionEndTime.AddSeconds(-expireTimeBeforeSeconds);
+            var endTime = DateTime.SpecifyKind(auction.auctionEndTime.AddSeconds(-expireTimeBeforeSeconds), DateTimeKind.Utc);
             TimeSpan timeSpan = endTime - DateTime.UtcNow;
             if (timeSpan.Seconds <= 0) return 0;
             return timeSpan.Seconds;

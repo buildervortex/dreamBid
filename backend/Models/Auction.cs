@@ -10,11 +10,15 @@ namespace DreamBid.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
-        public DateTime auctionStartTime { get; set; }
+        private DateTime _auctionStartTime;
 
         [Required]
-        public DateTime auctionEndTime { get; set; }
+        public DateTime auctionStartTime { get => DateTime.SpecifyKind(_auctionStartTime, DateTimeKind.Utc); set => _auctionStartTime = value; }
+
+        public DateTime _auctionEndTime;
+
+        [Required]
+        public DateTime auctionEndTime { get => DateTime.SpecifyKind(_auctionEndTime, DateTimeKind.Utc); set => _auctionEndTime = value; }
 
         public string? WinnderId { get; set; } = null;
 
@@ -46,7 +50,7 @@ namespace DreamBid.Models
 
         public override string ToString()
         {
-            return $"Auction Model Object detials. ( Id: {Id} ), ( auctionStartTime: {auctionStartTime} ), ( auctionEndTime: {auctionEndTime} ), ( WinnerId: {WinnderId} ), ( highestBidAmount: {highestBidAmount} ), ( isActive: {IsActive} ), ( cardId: {CarId})";
+            return $"Auction Model Object detials. ( Id: {Id} ), ( auctionStartTime: {auctionStartTime.ToLocalTime()} ), ( auctionEndTime: {auctionEndTime.ToLocalTime()} ), ( WinnerId: {WinnderId} ), ( highestBidAmount: {highestBidAmount} ), ( isActive: {IsActive} ), ( cardId: {CarId})";
         }
 
     }

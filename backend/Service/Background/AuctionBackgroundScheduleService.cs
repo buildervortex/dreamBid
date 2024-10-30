@@ -48,10 +48,11 @@ namespace DreamBid.Service.Background
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                var auctions = await dbContext.Auction.Where(a => a.IsActive == false).Include(a => a.Bids).ThenInclude(b => b.User).ToListAsync();
+                var auctions = await dbContext.Auction.Where(a => a.IsActive == false).Include(a => a.Bids).ThenInclude(b => b.User).Include(a => a.Car).ToListAsync();
                 auctions = auctions.Where(a => AuctionUtils.IsAuctionActive(a, this.beforeSeconds)).ToList();
                 foreach (var auction in auctions)
                 {
+                    this._logger.LogDebug($"Activate the acution. {auction}");
                     auction.IsActive = true;
                 }
                 await dbContext.SaveChangesAsync();
@@ -64,12 +65,13 @@ namespace DreamBid.Service.Background
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                var auctions = await dbContext.Auction.Where(a => a.IsActive == true).Include(a => a.Bids).ThenInclude(b => b.User).ToListAsync();
+                var auctions = await dbContext.Auction.Where(a => a.IsActive == true).Include(a => a.Bids).ThenInclude(b => b.User).Include(a => a.Car).ToListAsync();
                 auctions = auctions.Where(a => AuctionUtils.AuctionRemainingTime(a, this.beforeSeconds) <= 0).ToList();
                 foreach (var auction in auctions)
                 {
                     auction.IsActive = false;
                     auction.WinnderId = AuctionUtils.WinnerId(auction);
+                    this._logger.LogDebug($"Deactivate the auction. {auction}");
                 }
                 await dbContext.SaveChangesAsync();
             }

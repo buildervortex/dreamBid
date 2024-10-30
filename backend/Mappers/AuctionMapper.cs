@@ -19,8 +19,8 @@ namespace DreamBid.Mappers
         {
             return new AuctionDto
             {
-                auctionEndTime = DateTime.SpecifyKind(auction.auctionEndTime, DateTimeKind.Utc),
-                auctionStartTime = DateTime.SpecifyKind(auction.auctionStartTime, DateTimeKind.Utc),
+                auctionEndTime = auction.auctionEndTime,
+                auctionStartTime = auction.auctionStartTime,
                 carId = auction.CarId,
                 highestBidAmount = auction.highestBidAmount,
                 id = auction.Id,
