@@ -18,7 +18,7 @@ export default class AuctionViewModel {
         }
         const response = await AuctionService.createAuction(addAuctionDto, carId, queryObject);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return AuctionMapper.ToAuctionDto(response);
@@ -31,7 +31,7 @@ export default class AuctionViewModel {
         }
         const response = await AuctionService.getAuction(id, queryObject);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return AuctionMapper.ToAuctionDto(response);
@@ -53,7 +53,7 @@ export default class AuctionViewModel {
         // t.find()
 
         const response = await AuctionService.getAllAuctions(queryObject);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return response.map(auction => AuctionMapper.ToAuctionDto(auction));
@@ -65,7 +65,7 @@ export default class AuctionViewModel {
             WithCar
         }
         const response = await AuctionService.deleteAuction(id, queryObject);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
 
         }

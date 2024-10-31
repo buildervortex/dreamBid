@@ -13,7 +13,7 @@ export default class ImageViewModel {
 
         const response = await ImageService.postProfilePicture(formData);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);
@@ -22,7 +22,7 @@ export default class ImageViewModel {
     static async getOwnProfilePicture() {
 
         const response = await ImageService.getProfileImage();
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);
@@ -31,7 +31,7 @@ export default class ImageViewModel {
     static async getProfilePictureById(id) {
 
         const response = await ImageService.getProfileImageById(id);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);
@@ -40,7 +40,7 @@ export default class ImageViewModel {
     static async deleteOwnProfilePicture() {
 
         const response = await ImageService.deleteProfilePicture();
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);
@@ -51,7 +51,7 @@ export default class ImageViewModel {
         formData.append("image", imageBlob, "carImage.jpg")
         const response = await ImageService.postCarImage(id, formData);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);
@@ -66,7 +66,7 @@ export default class ImageViewModel {
         }
 
         const response = await ImageService.getCarImages(id, queryObject);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return response.map(image => ImageMapper.ToImageDto(image));
@@ -75,7 +75,7 @@ export default class ImageViewModel {
 
     static async deleteCarImage(id, imageId) {
         const response = await ImageService.deleteCarImage(id, imageId);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);
@@ -84,7 +84,7 @@ export default class ImageViewModel {
     static async deleteAllImages(id) {
 
         const response = await ImageService.deleteAllImages(id);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return ImageMapper.ToImageDto(response);

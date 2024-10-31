@@ -11,7 +11,7 @@ export default class AccountViewModel {
 
         const response = await AccountService.deleteAccount();
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
 
         }
@@ -24,7 +24,7 @@ export default class AccountViewModel {
 
         const response = await AccountService.getAccount();
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
@@ -40,7 +40,7 @@ export default class AccountViewModel {
             return ErrorMessage.errorMessageFromJoiError(error);
 
         const response = await AccountService.updateAccount(updateAccountDto);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return AccountMapper.ToAccountDto(response);

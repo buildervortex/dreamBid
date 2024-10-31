@@ -14,7 +14,7 @@ export default class CarViewModel {
             return ErrorMessage.errorMessageFromJoiError(error);
         const response = await CarService.createCar(addCarDto);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return CarMapper.ToCarDto(response);
@@ -25,7 +25,7 @@ export default class CarViewModel {
 
         const response = await CarService.getCarById(id);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return CarMapper.ToCarDto(response);
@@ -43,10 +43,13 @@ export default class CarViewModel {
 
         const response = await CarService.getAllCars(queryObject);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
-        return response.map(car => CarMapper.ToCarDto(car));
+        else {
+            console.log(response)
+            return response.map(car => CarMapper.ToCarDto(car));
+        }
 
     }
 
@@ -57,7 +60,7 @@ export default class CarViewModel {
             return ErrorMessage.errorMessageFromJoiError(error);
         const response = await CarService.updateCar(carId, updateCarDto);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return CarMapper.ToCarDto(response);
@@ -67,7 +70,7 @@ export default class CarViewModel {
     static async deleteCar(id) {
 
         const response = await CarService.deleteCar(id);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return CarMapper.ToCarDto(response);

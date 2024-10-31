@@ -12,7 +12,7 @@ export default class AuthViewModel {
 
         const response = await AuthService.registerAccount(registerAccountDto);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
@@ -25,7 +25,7 @@ export default class AuthViewModel {
             return ErrorMessage.errorMessageFromJoiError(error);
 
         const response = await AuthService.loginAccount(loginAccountDto);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return AccountMapper.ToAccountDto(response);

@@ -28,7 +28,7 @@ const PaymentSuccess = () => {
     API.get("/v1/bids/payment/Success", {
       params: query,
     }).then((response) => {
-      if ("error" in response) toast.error(response.error);
+      if (response?.error !== undefined) toast.error(response.error);
       else {
         setPayment(response);
         toast.success(response);

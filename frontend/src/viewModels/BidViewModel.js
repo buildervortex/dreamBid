@@ -13,7 +13,7 @@ export default class BidViewModel {
             return ErrorMessage.errorMessageFromJoiError(error);
 
         const response = await BidService.placeBid(auctionId, addBidDto);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
 
             return ErrorMessage.errorMessageFromString(response.error);
         }
@@ -24,7 +24,7 @@ export default class BidViewModel {
     static async getBid(bidId) {
 
         const response = await BidService.getBid(bidId);
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return BidMapper.ToBidDto(response);
@@ -41,7 +41,7 @@ export default class BidViewModel {
 
         const response = await BidService.getBids(auctionId, queryObject);
 
-        if ("error" in response) {
+        if (response?.error !== undefined) {
             return ErrorMessage.errorMessageFromString(response.error);
         }
         return response.map(bid => BidMapper.ToBidDto(bid));
