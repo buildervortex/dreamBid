@@ -18,7 +18,6 @@ export default class CarService {
         const response = await API.get(`/accounts/cars`, {
             params: queryParamsObject
         });
-        console.log(response);
         return response.data;
 
     }

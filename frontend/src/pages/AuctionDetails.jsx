@@ -52,23 +52,16 @@ function AuctionDetails() {
   };
 
   return (
-    <div className="flex min-w-full justify-center">
-      <div className="flex-grow p-8 max-w-7xl">
+    <div className="flex justify-center">
+      <div className="flex-grow p-8 ">
         <AuctionStats />
         <div className="flex mt-8 space-x-4">
-          <div className="flex-grow max-w-3xl space-y-6">
+          <div className="flex-grow  space-y-6">
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <Table />
             </div>
             <div className="bg-white p-6 rounded-lg shadow-lg">
-              <DougTake />
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg">
               <CarDetails />
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <CommentForm onAddComment={addComment} />
-              <CommentsList comments={comments} />
             </div>
           </div>
           <div className="w-1/4 p-4">

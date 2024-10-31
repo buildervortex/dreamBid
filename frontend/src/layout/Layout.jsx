@@ -1,32 +1,17 @@
-import NavBar from './NavBar';
-import Footer from './Footer';
-import { Container,Box } from '@mui/material';
+import NavBar from "./NavBar";
+import Footer from "./Footer";
+import { Container, Box } from "@mui/material";
 
 const Layout = ({ children, ...rest }) => {
-    return (
-        <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh',  // Full height of the viewport
-        }}
-      >
-        <NavBar {...rest} />
-  
-        <Container
-          component="main"
-          maxWidth="2xl"
-          sx={{
-            flexGrow: 1,
-            py: 4,
-          }}
-        >
-          {children}
-        </Container>
-  
-        <Footer />
-      </Box>
-    );
-}
+  return (
+    <div className="h-full w-full z-0">
+      <NavBar {...rest} />
+
+      <div className="h-full w-full mb-5">{children}</div>
+
+      <Footer />
+    </div>
+  );
+};
 
 export default Layout;

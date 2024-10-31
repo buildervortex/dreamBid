@@ -1,3 +1,5 @@
+import CarDto from "../car/carDto";
+
 class AuctionDto {
     id = "";
     auctionStartTime = new Date();
@@ -6,7 +8,7 @@ class AuctionDto {
     highestBidAmount = "";
     isActive = "";
     carId = "";
-    car = null;
+    car = new CarDto();
     bids = [null];
 }
 

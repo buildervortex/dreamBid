@@ -2,7 +2,7 @@ import React from 'react';
 
 const AuctionStats = () => {
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="mx-auto space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -26,20 +26,19 @@ const AuctionStats = () => {
       </div>
 
       {/* Main Content Layout */}
-      <div className="flex mt-6 space-x-6">
+      <div className="flex mt-6 space-x-6 ">
         {/* Left Section: Large Image and Bid Part */}
-        <div className="w-2/3 space-y-4">
+        <div className="space-y-4 w-3/5">
           <div>
             <img
               src="/AuctionDetails/car1.jpg"
               alt="Main Car"
-              className="rounded-lg shadow-lg object-cover transition-transform duration-300 hover:scale-105"
-              style={{ width: '955px', height: '607px' }} // Large image size
+              className="rounded-lg w-full h-[700px] shadow-lg object-cover"
             />
           </div>
 
           {/* Auction Stats Section with Light Purple Background */}
-          <div className="bg-purple-100 p-4 rounded-lg shadow-lg">
+          <div className="bg-purple-100 p-4 w-full rounded-lg shadow-lg">
             <div className="flex justify-between items-center space-x-4">
               <div className="flex space-x-6 items-center">
                 <div className="flex items-center text-gray-700 space-x-2 transition-opacity duration-300 hover:opacity-70">
@@ -69,7 +68,7 @@ const AuctionStats = () => {
                   <span>Comments 17</span>
                 </div>
               </div>
-              <button className="bg-purple-700 text-white px-4 py-1 rounded-lg hover:bg-purple-800 transition-transform duration-300 hover:scale-105 hover:-translate-y-1">
+              <button className="bg-purple-700 text-white px-4 py-1 rounded-lg hover:bg-purple-800 ">
                 Place Bid
               </button>
             </div>
@@ -77,16 +76,15 @@ const AuctionStats = () => {
         </div>
 
         {/* Right Section: Small Pictures */}
-        <div className="w-1/3">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="w-2/5 h-[700px]">
+          <div className="grid grid-cols-2 gap-2 min-h-full">
             {/* Small Images */}
             {Array.from({ length: 6 }, (_, index) => (
               <img
                 key={index}
                 src={`/AuctionDetails/car${index + 2}.jpg`} 
                 alt={`Side View ${index + 1}`}
-                className="rounded-lg shadow-lg object-cover transition-transform duration-300 hover:scale-105"
-                style={{ width: '186px', height: '186px' }} // Small image size
+                className="block rounded-lg shadow-lg min-h-full object-cover transition-transform duration-300 w-full"
               />
             ))}
           </div>

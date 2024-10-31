@@ -38,7 +38,7 @@ export default class AuctionViewModel {
 
     }
 
-    static async getAllAuctions({ active = false, OrderBy = "StartTime", IsDecsending = true, PageNumber = 4, PageSize = 2, WithBids = false, WithCar = false }={}) {
+    static async getAllAuctions({ active = false, OrderBy = "StartTime", IsDecsending = true, PageNumber = 1, PageSize = 20, WithBids = false, WithCar = false }={}) {
         let queryObject = {
             OrderBy,
             active,
@@ -48,6 +48,9 @@ export default class AuctionViewModel {
             WithBids,
             WithCar
         }
+
+        // let t = [];
+        // t.find()
 
         const response = await AuctionService.getAllAuctions(queryObject);
         if ("error" in response) {

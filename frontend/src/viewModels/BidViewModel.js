@@ -18,7 +18,7 @@ export default class BidViewModel {
             return ErrorMessage.errorMessageFromString(response.error);
         }
 
-        return BidMapper.ToBidDto(response);
+        return BidMapper.ToLinkDto(response);
     }
 
     static async getBid(bidId) {

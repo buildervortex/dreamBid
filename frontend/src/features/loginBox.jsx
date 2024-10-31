@@ -1,53 +1,38 @@
 import { useState } from "react";
-import { useTheme } from "@mui/material/styles";
 import AuthViewModel from "../viewModels/AuthViewModel";
 import LoginAccountDto from "../dto/auth/loginAccountDto";
 import ErrorMessage from "../viewModels/ErrorViewModel";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginBox = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
-  if(AuthViewModel.isLoggedIn()) navigate("/sellerdashbord")
+  if (AuthViewModel.isLoggedIn()) navigate("/profile/dashbord");
 
-  let handleSubmit =async(e)=>{
+  let handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     let loginaccountDto = new LoginAccountDto();
     loginaccountDto.email = formData.username;
     loginaccountDto.password = formData.password;
 
+    const accountDto = await AuthViewModel.loginAccount(loginaccountDto);
 
-    const accountDto =await AuthViewModel.loginAccount(loginaccountDto);
-
-
-    if(accountDto instanceof ErrorMessage){
-      console.log(accountDto.error);
-
-
-
+    if (accountDto instanceof ErrorMessage) {
+      toast.error(accountDto.error);
+    } else {
+      toast.success("Login Success");
+      navigate("/profile/dashbord");
     }
+  };
 
-    else{
-      console.log(accountDto);
-    }
-
-    navigate("/sellerdashbord")
-
-
-    
-  }
-
-
-
-  
   // Manage form data using state
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
     stayLoggedIn: false,
   });
-  
+
   // Handle form data change
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -103,8 +88,6 @@ const LoginBox = () => {
             />
           </div>
 
-          
-
           {/* Submit Button */}
           <button
             type="submit"
@@ -112,7 +95,7 @@ const LoginBox = () => {
           >
             Sign in
           </button>
-          
+
           {/* Sign up link styled as a button */}
           <div className="mt-4 text-center">
             <span className="text-gray-600">Haven’t an account?</span>

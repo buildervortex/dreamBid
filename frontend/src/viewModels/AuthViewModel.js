@@ -41,6 +41,5 @@ export default class AuthViewModel {
 
     static logOut() {
         localStorage.removeItem("jwtToken");
-        window.location.href = "/";
     }
 }

@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { useTheme } from "@mui/material/styles";
 import RegisterAccountDto from "../dto/auth/registerAccountDto";
 import AuthViewModel from "../viewModels/AuthViewModel";
 import ErrorMessage from "../viewModels/ErrorViewModel";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RegisterBox = () => {
-  const theme = useTheme();
   const navigate = useNavigate();
-  if(AuthViewModel.isLoggedIn()) navigate("/sellerdashbord")
+  if (AuthViewModel.isLoggedIn()) navigate("/profile/dashbord");
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -16,13 +15,12 @@ const RegisterBox = () => {
     email: "",
     dob: "",
   });
-  const [error, setError] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]:value,
+      [name]: value,
     });
   };
 
@@ -46,7 +44,13 @@ const RegisterBox = () => {
       email: "",
       dob: "",
     });
-    navigate("/sellerdashbord")
+
+    if (response instanceof ErrorMessage) {
+      toast.error(response.error);
+    } else {
+      toast.success("Registration Successful");
+      navigate("/profile/dashbord");
+    }
   };
 
   return (
@@ -55,11 +59,13 @@ const RegisterBox = () => {
         <h1 className="mb-8 text-4xl font-extrabold text-center text-purple-900">
           Sign up
         </h1>
-        {error && <div className="mb-4 text-red-600">{error}</div>}
         <form onSubmit={handleSubmit}>
           {/* Full Name Field */}
           <div className="mb-6">
-            <label htmlFor="fullname" className="block mb-2 text-xl font-bold text-purple-900">
+            <label
+              htmlFor="fullname"
+              className="block mb-2 text-xl font-bold text-purple-900"
+            >
               Full Name
             </label>
             <input
@@ -75,7 +81,10 @@ const RegisterBox = () => {
           </div>
           {/* Email Field */}
           <div className="mb-6">
-            <label htmlFor="email" className="block mb-2 text-xl font-bold text-purple-900">
+            <label
+              htmlFor="email"
+              className="block mb-2 text-xl font-bold text-purple-900"
+            >
               Email
             </label>
             <input
@@ -91,7 +100,10 @@ const RegisterBox = () => {
           </div>
           {/* User Name Field */}
           <div className="mb-6">
-            <label htmlFor="username" className="block mb-2 text-xl font-bold text-purple-900">
+            <label
+              htmlFor="username"
+              className="block mb-2 text-xl font-bold text-purple-900"
+            >
               User Name
             </label>
             <input
@@ -107,7 +119,10 @@ const RegisterBox = () => {
           </div>
           {/* Password Field */}
           <div className="mb-6">
-            <label htmlFor="password" className="block mb-2 text-xl font-bold text-purple-900">
+            <label
+              htmlFor="password"
+              className="block mb-2 text-xl font-bold text-purple-900"
+            >
               Password
             </label>
             <input
@@ -123,7 +138,10 @@ const RegisterBox = () => {
           </div>
           {/* Date of birth Field */}
           <div className="mb-6">
-            <label htmlFor="dob" className="block mb-2 text-xl font-bold text-purple-900">
+            <label
+              htmlFor="dob"
+              className="block mb-2 text-xl font-bold text-purple-900"
+            >
               Date Of Birth
             </label>
             <input
@@ -147,7 +165,10 @@ const RegisterBox = () => {
               onChange={handleChange}
               className="mr-2"
             />
-            <label htmlFor="stayLoggedIn" className="text-xl font-bold text-purple-900">
+            <label
+              htmlFor="stayLoggedIn"
+              className="text-xl font-bold text-purple-900"
+            >
               Stay logged in
             </label>
           </div>

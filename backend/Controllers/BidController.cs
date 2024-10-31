@@ -22,8 +22,10 @@ namespace DreamBid.Controllers
         private readonly IBidRepository _bidRepository;
         private readonly IPayPalService _payPayService;
 
-        private readonly string returnUrl = "http://localhost:5189/api/v1/bids/payment/Success";
-        private readonly string cancleUrl = "http://localhost:5189/api/v1/bids/payment/Failure";
+        // private readonly string returnUrl = "http://localhost:5189/api/v1/bids/payment/Success";
+        private readonly string returnUrl = "http://localhost:3000/success";
+        // private readonly string cancleUrl = "http://localhost:5189/api/v1/bids/payment/Failure";
+        private readonly string cancleUrl = "http://localhost:3000/failed";
         public BidController(IBidRepository bidRepository, IPayPalService payPalService, ITransactionRepository transactionRepository)
         {
             this._bidRepository = bidRepository;

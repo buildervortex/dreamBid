@@ -1,4 +1,5 @@
 import BidDto from "../dto/bid/bidDto";
+import LinkDto from "../dto/bid/linkDto";
 
 export default class BidMapper {
 
@@ -10,5 +11,11 @@ export default class BidMapper {
         bidDto.auctionId = data.auctionId;
         bidDto.userId = data.userId;
         return bidDto;
+    }
+    static ToLinkDto(data) {
+        let linkDto = new LinkDto();
+        linkDto.approvalUrl = data.approvalUrl;
+
+        return linkDto;
     }
 }

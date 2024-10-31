@@ -38,9 +38,9 @@ const transactions = [
   },
 ];
 
-const TransactionTable = () => {
+const Transactions = () => {
   return (
-    <div className="max-w-7xl mx-auto p-4">
+    <>
       <h2 className="text-2xl font-bold mb-4">Manage Transactions</h2>
       <div className="bg-white shadow-md rounded-lg">
         <table className="min-w-full text-left">
@@ -77,8 +77,8 @@ const TransactionTable = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    </>
   );
 };
 
-export default TransactionTable;
+export default Transactions;
