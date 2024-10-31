@@ -19,6 +19,8 @@ import ImageViewModel from "./viewModels/ImageViewModel";
 import ErrorMessage from "./viewModels/ErrorViewModel";
 import PaymentSuccess from "./pages/paymentSuccess";
 import PaymentFailed from "./pages/paymentFailed";
+import AboutUs from "./pages/aboutUs";
+
 
 // Navigation links
 const navLinks = [
@@ -26,6 +28,7 @@ const navLinks = [
   { link: "/auction", title: "Auctions" },
   { link: "/AuctionDetails", title: "AuctionDetails" },
   { link: "/TransactionTable", title: "TransactionTable" },
+  { link: "/AboutUs", title: "AboutUs" },
 ];
 
 function App() {
@@ -59,6 +62,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage loggedIn={loggedIn} />} />
           <Route path="/helpcenter" element={<Helpcenter />} />
+          <Route path="/Aboutus" element={<AboutUs />} />
           <Route
             path="/register"
             element={<RegisterPage loggedIn={loggedIn} />}

@@ -1,4 +1,11 @@
 import React from 'react';
+import AboutUsImg from '../Assets/about.png'; // Ensure this path is correct
+import CounterCard from '../components/counterCard';
+import ContactForm from '../components/aboutUs/contactForm';
+import User from '../Assets/User.png'; // Importing user image
+import imgAbout from '../Assets/AboutUsImg.png'
+
+
 
 // Data for the counter cards
 const cardData = [
@@ -68,7 +75,7 @@ export default function AboutUs() {
             {/* Image and Text Section */}
             <div className='relative h-[50vh] mb-10'> {/* Set height to half screen */}
                 <img
-                    src={AboutUsImg}
+                    src={ AboutUsImg}
                     alt='A scenic image representing our mission'
                     className='absolute top-0 left-0 w-full h-full object-cover z-0 opacity-80'
                 />
@@ -78,7 +85,7 @@ export default function AboutUs() {
                         We drive your journey forward by connecting buyers and sellers with the perfect vehicle,<br />
                         making the car shopping experience smoother, smarter, and more accessible for everyone.
                     </h3>
-                    <button className='bg-white text-black py-2 px-4 mt-4 rounded-lg shadow-lg hover:bg-gray-200 transition duration-300'>
+                    <button className='bg-purple-600 text-white text-wi py-2 px-4 mt-4 rounded-lg shadow-lg hover:bg-gray-200 transition duration-300'>
                         Read More
                     </button>
                 </div>

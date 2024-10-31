@@ -5,12 +5,12 @@ const WishListCarCard = ({ car }) => {
     <div className="flex items-center max-w-full p-4 space-x-4 transition-transform duration-300 ease-in-out transform bg-purple-200 rounded-lg shadow-lg hover:scale-105 hover:shadow-2xl">
       {/* Checkbox & Image Section */}
       <div className="relative flex-shrink-0">
-       
+
         {/* Image */}
-        <img 
-          src={car.imageUrl} 
-          alt={car.name} 
-          className="object-cover w-32 h-24 transition-all duration-300 ease-in-out rounded-md md:w-40 md:h-32 lg:w-48 lg:h-36 hover:opacity-90 hover:shadow-md" 
+        <img
+          src={car.imageUrl}
+          alt={car.name}
+          className="object-cover w-32 h-24 transition-all duration-300 ease-in-out rounded-md md:w-40 md:h-32 lg:w-48 lg:h-36 hover:opacity-90 hover:shadow-md"
         />
       </div>
 
